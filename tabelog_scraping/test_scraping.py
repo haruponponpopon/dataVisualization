@@ -10,9 +10,12 @@ from datetime import datetime
 
 ##### 実際はこのurlを設定を自動化したい(今は手動で検索したときのurlを設定)####
 # 本郷三丁目の検索結果
-url = "https://tabelog.com/tokyo/A1310/A131004/R9108/rstLst/?vs=1&sa=%E6%9C%AC%E9%83%B7%E4%B8%89%E4%B8%81%E7%9B%AE%E9%A7%85&sk=&lid=hd_search1&vac_net=&svd=20211104&svt=1900&svps=2&hfc=1&sw="
+# url = "https://tabelog.com/tokyo/A1310/A131004/R9108/rstLst/?vs=1&sa=%E6%9C%AC%E9%83%B7%E4%B8%89%E4%B8%81%E7%9B%AE%E9%A7%85&sk=&lid=hd_search1&vac_net=&svd=20211104&svt=1900&svps=2&hfc=1&sw="
 # 渋谷駅の検索結果
 # url = "https://tabelog.com/tokyo/A1303/A130301/R4698/rstLst/?vs=1&sa=%E6%B8%8B%E8%B0%B7%E9%A7%85&sk=&lid=top_navi1&vac_net=&svd=20211104&svt=1900&svps=2&hfc=1&sw="
+# ゴンチャの検索結果
+url = "https://tabelog.com/rstLst/?vs=1&sa=&sk=%25E3%2582%25B4%25E3%2583%25B3%25E3%2583%2581%25E3%2583%25A3&lid=hd_search1&vac_net=&svd=20211104&svt=1900&svps=2&hfc=1&sw=%25E3%2582%25B4%25E3%2583%25B3%25E3%2583%2581%25E3%2583%25A3&sunday=&LstRange=&LstReserve=&ChkCard=&ChkCardType=&ChkRoom=&ChkSemiRoom=&ChkRoomType=&ChkCharter=&ChkCharterType=&LstSmoking=&ChkBunen=&ChkParking=&ChkVegKodawari=&ChkFishKodawari=&ChkHealthy=&ChkVegetarianMenu=&ChkSake=&ChkSakeKodawari=&ChkShochu=&ChkShochuKodawari=&ChkWine=&ChkWineKodawari=&ChkCocktail=&ChkCocktailKodawari=&ChkNomihoudai=&ChkOver180minNomihoudai=&ChkTabehoudai=&ChkFineView=&ChkNightView=&ChkOceanView=&ChkHotel=&ChkKakurega=&ChkHouse=&ChkSanitation=&ChkStylish=&ChkRelax=&ChkWideSeat=&ChkCoupleSeat=&ChkCounter=&ChkSofa=&ChkZashiki=&ChkHorikotatsu=&ChkTerrace=&ChkKaraoke=&ChkDarts=&ChkLive=&ChkSports=&ChkOver150minParty=&ChkCelebrate=&ChkCarryOnDrink=&ChkSommelier=&ChkPet=&ChkTakeout=&ChkDelivery=&ChkPremiumCoupon=&freecall=&ChkNewOpen=&award_prize=&chk_hyakumeiten_genres=&ChkTpointGive=&ChkTpointUse=&ChkGteMealTicket=&ChkEnglishMenu=&ChkMorningMenu=&ChkAllergyLabeling=&ChkCalorieLabeling=&ChkSweetsTabehoudai=&ChkEMoneyPayment=&ChkKoutsuuIcPayment=&ChkRakutenEdyPayment=&ChkNanacoPayment=&ChkWaonPayment=&ChkIdPayment=&ChkQuicPayPayment=&ChkKids=&ChkBabies=&ChkPreschoolChild=&ChkElementarySchoolStudent=&ChkKidsMenu=&ChkBabycar=&ChkTachiNomi=&ChkProjector=&ChkPowerSupply=&ChkWheelchair=&ChkFreeWifi=&ChkPaidWifi=&LstCos=&LstCosT=&RdoCosTp=2&LstSitu=&LstRev=&ChkCoupon=&ChkCampaign="
+
 res = requests.get(url)
 res.raise_for_status()  #エラーチェック
 
