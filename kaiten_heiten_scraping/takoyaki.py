@@ -49,27 +49,36 @@ def scrape():
             prefecture = ""
             address = soup.select('td')[1].text
             index = 0
-            if address[0]=='〒':
-                index = 10
-            elif address[0]>='0' and address[1]<='9':
-                index = 9
+            # if address[0]=='〒':
+            #     index = 10
+            # elif address[0]>='0' and address[1]<='9':
+            #     index = 9
             while True:
-                if index>=len(address):
-                    print(address)
+                if address[index]=='都':
+                    if address[index+1]=='府':
+                        prefecture = '京都府'
+                    else:
+                        prefecture = '東京都'
                     break
-                prefecture+=address[index]
-                if address[index]=='都' or address[index]=='道' or address[index]=='府' or address[index]=='県':
+                elif address[index]=='道' or address[index]=='府' or address[index]=='県':
+                    if address[index-1]=='川' and address[index-2]=='奈':
+                        prefecture = '神奈川県'
+                    elif address[index-2]=='歌':
+                        prefecture = '和歌山県'
+                    elif address[index-2]=='児':
+                        prefecture = '鹿児島県'
+                    else:
+                        prefecture = address[index-2:index+1]
                     break
-                else:
-                    index+=1
+                index+=1
             phone = soup.select('td')[3].text
             for i in range(len(phone)):
                 if phone[i]!='-' and (phone[i]<'0' or phone[i]>'9'):
                     phone = phone[0:i]
                     break
             dic.append([date,prefecture,shop_name,phone])
-            
         url = next_url
+
     return dic
 
 
