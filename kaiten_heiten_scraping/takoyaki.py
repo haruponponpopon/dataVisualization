@@ -55,10 +55,10 @@ def scrape():
             #     index = 9
             while True:
                 if address[index]=='都':
-                    if address[index+1]=='府':
-                        prefecture = '京都府'
-                    else:
+                    if index-2>=0 and address[index-2]=='東':
                         prefecture = '東京都'
+                    else:
+                        prefecture = '京都府'
                     break
                 elif address[index]=='道' or address[index]=='府' or address[index]=='県':
                     if address[index-1]=='川' and address[index-2]=='奈':
