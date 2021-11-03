@@ -12,8 +12,6 @@ def scrape():
     url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/1/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
     u_flag = True
     while u_flag:
-        # url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/'+str(i)+'/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
-        # url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/'+str(i)+'/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
         response = request.urlopen(url)
         soup = BeautifulSoup(response,'html.parser')
         next_url = soup.find('a', class_="next page-numbers")
@@ -65,10 +63,12 @@ def scrape():
                 else:
                     index+=1
             phone = soup.select('td')[3].text
+            for i in range(len(phone)):
+                if phone[i]!='-' and (phone[i]<'0' or phone[i]>'9'):
+                    phone = phone[0:i]
+                    break
             dic.append([date,prefecture,shop_name,phone])
-            # a_tag = soup.find('a', class_="next page-numbers")
-            # print(a_tag)
-            # print(url)
+            
         url = next_url
     return dic
 
