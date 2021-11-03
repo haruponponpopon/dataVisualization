@@ -8,12 +8,20 @@ import numpy as np
 
 def scrape():
     dic = []
-    for i in range(1,22):
-    # for i in range(1,2):
+    # for i in range(1,22):
+    url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/1/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
+    u_flag = True
+    while u_flag:
         # url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/'+str(i)+'/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
-        url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/'+str(i)+'/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
+        # url = 'https://kaiten-heiten.com/category/restaurant/takoyaki/page/'+str(i)+'/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'
         response = request.urlopen(url)
         soup = BeautifulSoup(response,'html.parser')
+        next_url = soup.find('a', class_="next page-numbers")
+        if next_url != None:
+            next_url = next_url.get('href')
+        else:
+            u_flag=False
+
         for a in soup.find_all('a', class_="post_links"): 
             link = a.get('href')
             date = a.text[6:16]
@@ -42,11 +50,15 @@ def scrape():
             soup = BeautifulSoup(response,'html.parser')
             prefecture = ""
             address = soup.select('td')[1].text
-            index = 10
+            index = 0
+            if address[0]=='〒':
+                index = 10
+            elif address[0]>='0' and address[1]<='9':
+                index = 9
             while True:
-                # if index>=len(address):
-                #     print(address)
-                #     break
+                if index>=len(address):
+                    print(address)
+                    break
                 prefecture+=address[index]
                 if address[index]=='都' or address[index]=='道' or address[index]=='府' or address[index]=='県':
                     break
@@ -54,6 +66,10 @@ def scrape():
                     index+=1
             phone = soup.select('td')[3].text
             dic.append([date,prefecture,shop_name,phone])
+            # a_tag = soup.find('a', class_="next page-numbers")
+            # print(a_tag)
+            # print(url)
+        url = next_url
     return dic
 
 
