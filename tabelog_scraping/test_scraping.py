@@ -6,7 +6,20 @@ import pandas as pd
 import time
 import openpyxl
 from datetime import datetime
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 
+
+options = Options()
+options.add_argument('--headless')
+driver = webdriver.Chrome()
+driver.get('https://tabelog.com/')
+input_element = driver.find_element_by_id('sk')
+input_element.send_keys('島たこやき MIKE トゥースマート店')
+input_element.send_keys(Keys.RETURN)
+time.sleep(2)
+print(driver.title)
 
 ##### 実際はこのurlを設定を自動化したい(今は手動で検索したときのurlを設定)####
 # 本郷三丁目の検索結果
