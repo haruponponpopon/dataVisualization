@@ -12,10 +12,10 @@
 
 1.　店名を指定する．
 2.　ChromeDriverを利用して食べログ上で店名を自動検索し，検索結果のurlを取得
-3. 一番上に出てきた店のurlを取得
-4. 取得した店のurlから情報を得る(ジャンル情報は`span[class="linktree__parent-target-text"]`の属性で設定されている)
-5. `(bs4.BeautifulSoup).select('span[class="rdheader-rating__score-val-dtl"]')`で駅名・地名・ジャンルのリストを得られ，その中のテキストだけを`.getText()`で得ることができる．
-6. 得られたリストの最初の一個目は最寄りの駅名，二個目は地名なので，その二つを除外するとジャンル一覧を得ることができる．
+3.　 一番上に出てきた店のurlを取得
+4.　 取得した店のurlから情報を得る(ジャンル情報は`span[class="linktree__parent-target-text"]`の属性で設定されている)
+5.　 `(bs4.BeautifulSoup).select('span[class="rdheader-rating__score-val-dtl"]')`で駅名・地名・ジャンルのリストを得られ，その中のテキストだけを`.getText()`で得ることができる．
+6.　 得られたリストの最初の一個目は最寄りの駅名，二個目は地名なので，その二つを除外するとジャンル一覧を得ることができる．
 
 ## 参考資料
 
