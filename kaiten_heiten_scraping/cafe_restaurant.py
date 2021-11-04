@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from urllib import request
 import datetime
 import numpy as np
+import time
 
 
 
@@ -78,7 +79,22 @@ def scrape():
                 if phone[i]!='-' and (phone[i]<'0' or phone[i]>'9'):
                     phone = phone[0:i]
                     break
-            dic.append([date,prefecture,shop_name,phone])
+
+
+            ## 緯度、経度の取得
+            test = soup.find('iframe')
+            if test==None:
+                print(date)
+                dic.append([date,prefecture,shop_name,phone,"-1","-1"])
+                continue
+            txt = test.get('src')
+            pos2d = txt.find('!2d')
+            pos3d = txt.find('!3d')
+            pos2m = txt.find('!2m')
+            ido = txt[pos2d+3:pos3d]
+            keido = txt[pos3d+3:pos2m]
+            # print(ido,keido)
+            dic.append([date,prefecture,shop_name,phone,ido,keido])
         url = next_url
 
     return dic
@@ -91,7 +107,7 @@ def scrape():
 if __name__ == "__main__":
     data = scrape()
     f = open('cafe_restaurant.csv', 'w')
-    f.write("Date,Prefecture,ShopName,Phone\n")
+    f.write("Date,Prefecture,ShopName,Phone,longitude,latitude\n")
     for d in data:
-        f.write(d[0]+","+d[1]+","+d[2]+","+d[3]+"\n")
+        f.write(d[0]+","+d[1]+","+d[2]+","+d[3]+","+d[4]+","+d[5]+"\n")
     f.close()
