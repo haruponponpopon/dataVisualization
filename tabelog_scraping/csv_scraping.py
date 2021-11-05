@@ -1,3 +1,5 @@
+import sys
+
 import bs4
 import os
 import re
@@ -6,13 +8,12 @@ import pandas as pd
 import time
 import openpyxl
 from datetime import datetime
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 
 
-def do_scraping(shop_name) {
+def do_scraping(shop_name):
     options = Options()
     options.add_argument('--headless')
     driver = webdriver.Chrome()
@@ -25,7 +26,6 @@ def do_scraping(shop_name) {
 
     res = requests.get(url)
     res.raise_for_status()  #エラーチェック
-
 
     no_starch_soup = bs4.BeautifulSoup(res.text, features="html.parser") # リクエストしたURLの内容を取得
 
@@ -52,11 +52,14 @@ def do_scraping(shop_name) {
     #########ジャンル取得#######
     genres = []
     genre_elems = soup_kobetsu.select('span[class="linktree__parent-target-text"]')
-    print("-----ジャンル一覧----")
     # 最初の二つは駅と地名？(一般的なのかは怪しい)
     for genre in genre_elems[2:]:
         genres.append(genre.getText())
-}
+    
+    return genres
 
+
+genres = do_scraping("島たこやき MIKE トゥースマート店")
+print(genres)
 
 
