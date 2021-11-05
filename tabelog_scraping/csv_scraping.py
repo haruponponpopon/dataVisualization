@@ -64,7 +64,15 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-df = pd.read_csv("./takoyaki.csv")
+df = pd.read_csv("./takoyaki_test.csv")
 for shop_name in df["ShopName"]:
-    genres = do_scraping(shop_name)
-    print(shop_name , ": ", genres)
+    genre = do_scraping(shop_name)
+    add_genre  = ""
+    if (genre == None) :
+        add_genres= "None"
+    else:
+        for i in genre:
+            add_genre = add_genre + " #" + i
+    print(shop_name , " : " , add_genre)
+    df['genres'] = add_genre
+df.to_csv("./takoyaki_test_out.csv")
