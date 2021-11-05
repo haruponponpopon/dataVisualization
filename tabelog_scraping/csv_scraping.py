@@ -11,12 +11,15 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+import csv
+import pprint
+
+options = Options()
+options.add_argument('--headless')
+driver = webdriver.Chrome()
 
 
 def do_scraping(shop_name):
-    options = Options()
-    options.add_argument('--headless')
-    driver = webdriver.Chrome()
     driver.get('https://tabelog.com/')
     input_element = driver.find_element_by_id('sk')
     input_element.send_keys(shop_name)
@@ -43,6 +46,8 @@ def do_scraping(shop_name):
 
 
     ######ページに出てきた一番上の店舗情報のみを取得#####
+    if len(elems) == 0:
+        return None
     shop_kobetsu_url = elems[0].get('href') #その店舗のURLにアクセス
     res_kobetsu = requests.get(shop_kobetsu_url)
     soup_kobetsu = bs4.BeautifulSoup(res_kobetsu.text, features="html.parser")
@@ -53,13 +58,13 @@ def do_scraping(shop_name):
     genres = []
     genre_elems = soup_kobetsu.select('span[class="linktree__parent-target-text"]')
     # 最初の二つは駅と地名？(一般的なのかは怪しい)
+    if (len(genre_elems) <= 2):
+        return None
     for genre in genre_elems[2:]:
         genres.append(genre.getText())
-    
     return genres
 
-
-genres = do_scraping("島たこやき MIKE トゥースマート店")
-print(genres)
-
-
+df = pd.read_csv("./takoyaki.csv")
+for shop_name in df["ShopName"]:
+    genres = do_scraping(shop_name)
+    print(shop_name , ": ", genres)
