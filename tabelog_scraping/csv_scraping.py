@@ -64,7 +64,7 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-df = pd.read_csv("./takoyaki_test.csv")
+df = pd.read_csv("./takoyaki.csv")
 df["genres"] = "None"
 for i in range(0,len(df)):
     shop_name = df.loc[i, "ShopName"]
@@ -77,4 +77,4 @@ for i in range(0,len(df)):
             add_genre = add_genre + " #" + g
     print(shop_name , " : " , add_genre)
     df.loc[i, "genres"] = add_genre
-    df.to_csv("./takoyaki_test_out.csv")
+    df.to_csv("./takoyaki_out.csv")
