@@ -1,4 +1,6 @@
 function showJapanMap(svg){
+    var tooltip = d3.select("body").append("div").attr("class", "tooltip");
+
     d3.json("./japan.topojson").then(function(data){
         var japan = topojson.feature(data, data.objects.japan);
 
@@ -17,7 +19,20 @@ function showJapanMap(svg){
             .append("path")
             .attr("d", path)
             .attr("fill", "ivory")
-            .attr("stroke", "#333333");
+            .attr("stroke", "#333333")
+            .on("mouseover", function(event, d){
+                tooltip
+                    .style("visibility", "visible")
+                    .html(d.properties.nam_ja);
+            })
+            .on("mousemove", function(event, d){
+                tooltip
+                    .style("top", (event.pageY - 40) + "px")
+                    .style("left", (event.pageX - 30) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.style("visibility", "hidden");
+            });
 
         var zoom = d3.zoom()
                     .scaleExtent([0.25, 10])
