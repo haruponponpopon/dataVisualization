@@ -8,12 +8,24 @@ function showJapanMap(svg){
             .scale(1500);
         var path = d3.geoPath().projection(projection);
         
-        svg.selectAll("path")
-            .data(japan.features)
-            .enter()
+        prefectures = svg.selectAll("path")
+                        .data(japan.features)
+                        .enter().append("g")
+                        .attr("class", "prefecture_group");
+        
+        svg.selectAll(".prefecture_group")
             .append("path")
             .attr("d", path)
-            .attr("fill", "lightgreen")
+            .attr("fill", "ivory")
             .attr("stroke", "#333333");
+
+        var zoom = d3.zoom()
+                    .scaleExtent([0.25, 10])
+                    .on("zoom", function(event){
+                        svg.selectAll(".prefecture_group")
+                            .attr("transform", event.transform);
+                    })
+        
+        svg.call(zoom);
     });
 }
