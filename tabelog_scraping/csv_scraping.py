@@ -13,6 +13,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import csv
 import pprint
+import re
 
 options = Options()
 options.add_argument('--headless')
@@ -64,9 +65,15 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-df = pd.read_csv("./takoyaki.csv")
-df["genres"] = "None"
+input_filename = "./takoyaki_out.csv"
+df = pd.read_csv(input_filename)
+###########二回目以降のファイルのときはコメントアウト!!!##################### 
+# df["genres"] = "None" 
+###########################################################
 for i in range(0,len(df)):
+    if df.loc[i, "genres"] != "None":
+        print("pass: ",df.loc[i, "ShopName"])
+        continue
     shop_name = df.loc[i, "ShopName"]
     genre = do_scraping(shop_name)
     add_genre  = ""
