@@ -37,7 +37,7 @@ function distQuant(data, id){
 
 	
 	function draw(type){
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var maxT = d3.max(data[type].map(function(d){ console.log(d);return d3.sum(d); }));
 		
 		function tW(d){ return x(d*(data[type].length - 1)/50); }
 		function tH(d){ return y(d*maxT/50); }
