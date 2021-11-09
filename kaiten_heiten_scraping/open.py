@@ -8,7 +8,6 @@ import numpy as np
 
 def scrape(url_set):
     dic = []
-    # url_set = ['https://kaiten-heiten.com/category/restaurant/indonesian/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
         url = url_set[ii]
         u_flag = True
@@ -24,6 +23,9 @@ def scrape(url_set):
             for a in soup.find_all('a', class_="post_links"): 
                 link = a.get('href')
                 date = a.text[6:16]
+                if ii==0 and date[0:4]=="2020":
+                    u_flag=False
+                    break
                 all_data = a.text
                 s_flag = False
                 shop_name = ""
@@ -138,22 +140,13 @@ def scrape(url_set):
 
 
 if __name__ == "__main__":
-    # url_set = ['https://kaiten-heiten.com/category/restaurant/curry/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#カレー
-    # url_set = ['https://kaiten-heiten.com/category/restaurant/doria-gratin/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#どりあ
-    # url_set = ['https://kaiten-heiten.com/category/restaurant/coffie/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#コーヒー
-    url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/coffie/page/72/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#コーヒー2020
-    # url_set = ['https://kaiten-heiten.com/category/restaurant/croquettes-fry/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
-    # 'https://kaiten-heiten.com/category/restaurant/sandwich/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'] #コロッケ、サンドイッチ
-    # url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/croquettes-fry/page/2/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#コロッケ2020
-    # url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/sandwich/page/12/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#サンドイッチ2010
-    # url_set = ['https://kaiten-heiten.com/category/restaurant/sea-food/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
-    # 'https://kaiten-heiten.com/category/restaurant/juice-stand/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91'] #シーフード、ジュース
-    # url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/juice-stand/page/10/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']#ジュース2010
-    
+    #うなぎ
+    url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    'https://kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
     data = scrape(url_set)
-    f = open('dataset.csv', 'a')
+    f = open('unagi.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
-    # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
+    f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
 
     for d in data:
         if len(d)==6:

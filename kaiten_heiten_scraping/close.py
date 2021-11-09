@@ -6,9 +6,9 @@ import numpy as np
 
 
 
-def scrape():
+def scrape(url_set):
     dic = []
-    url_set = ['https://kaiten-heiten.com/category/restaurant/india/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
+    # url_set = ['https://kaiten-heiten.com/category/restaurant/india/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
         url = url_set[ii]
         u_flag = True
@@ -24,6 +24,9 @@ def scrape():
             for a in soup.find_all('a', class_="post_links"): 
                 link = a.get('href')
                 date = a.text[6:16]
+                if ii==0 and date[0:4]=="2020":
+                    u_flag=False
+                    break
                 all_data = a.text
                 s_flag = False
                 shop_name = ""
@@ -133,8 +136,11 @@ def scrape():
 
 
 if __name__ == "__main__":
-    data = scrape()
-    f = open('dataset.csv', 'a')
+    #うなぎ
+    url_set = ['https://kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91',
+    'https://10-19.kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
+    data = scrape(url_set)
+    f = open('unagi.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
     # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
 
@@ -144,3 +150,4 @@ if __name__ == "__main__":
         else:
             print(d)
     f.close()
+
