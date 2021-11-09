@@ -1,10 +1,10 @@
-var dqData=[];
-dqData.push({title:'Product Groups',
+var ShopData=[];
+ShopData.push({title:'Test Data',
 genre_num: 5,
-genre:[ GROUP01, GROUP02, GROUP03, GROUP04, GROUP05],
+genre:[ "GROUP01", "GROUP02", "GROUP03", "GROUP04", "GROUP05"],
 min_date:-0.67930643331712,
 max_date:2.0725075529,
-datas:[
+dist:[
 [17,0,1,4,9],
 [68,1,8,21,24],
 [227,2,12,52,69],

@@ -3,12 +3,11 @@
 <link href='style.css' rel='stylesheet' type='text/css'>
 <body>
 <div id="contentDiv"></div>
-<script src="data.js"></script>
+<script src="data_test.js"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 
 <script>
 function distQuant(data, id){
-	var ganre_num = data.dP.length;
 
     var choice_legend = {}
     for(var i = 0; i < data.genre_num; i++) {
@@ -17,7 +16,7 @@ function distQuant(data, id){
     var true_num = 0;
     var legends = [];
     for(var i = 0; i < data.genre_num; i++) {
-        legends.push(data.datas[i].genre);
+        legends.push(data.genre[i]);
     }
 
 	function getPoints(_, i){		return _.map(function(d,j){ return {x:j, y:d[i]};});	}
@@ -38,7 +37,7 @@ function distQuant(data, id){
 
 	
 	function draw(type){
-		var maxT = d3.max(data[type].map(function(d){ console.log(d);return d3.sum(d); }));
+		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
 		
 		function tW(d){ return x(d*(data[type].length - 1)/50); }
 		function tH(d){ return y(d*maxT/50); }
@@ -68,7 +67,7 @@ function distQuant(data, id){
 		
 		function getHLabel(d,i){
 			if(type=="dist"){ // for distribution graph use the min and max to get the 5 label values.
-				var r= data.distMin+i*(data.distMax-data.distMin)/5; 
+				var r= data.min_date+i*(data.max_date-data.min_date)/5; 
 				return Math.round(r*100)/100;
 			}else{ // for quantile graph, use label 20, 40, 60, and 80.
 				return (i*20)+' %';
@@ -98,7 +97,7 @@ function distQuant(data, id){
 			.y1(function(d) { return y(d.y0 + d.y); })
 			.interpolate("basis");
 
-		var layers = d3.layout.stack().offset("zero")(data.dP.map(function(d,i){ return getPoints(data[type], i);}));
+		var layers = d3.layout.stack().offset("zero")(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
 		
 		svg.selectAll("path").data(layers).enter().append("path").attr("d", area)
 			.style("fill", function(d,i) { return colors[i]; })
@@ -110,18 +109,8 @@ function distQuant(data, id){
 		stat.append("rect").attr("x",-margin).attr("y",-margin)
 			.attr("width",width+2*margin).attr("height",margin).style("fill","white");
 			
-		// show sum and mean in statistics
-		if(type=="dist"){
-			stat.append("text").attr("class","count").attr("x",20).attr("y",-6)
-				.text(function(d){ 
-					var sum = d3.sum(data.dP.map(function(s){ return s[2];})); 
-					return "Count: " +toComma(sum)+" / "+toComma(sum)+" ( 100 % )";
-				});
-				
-			stat.append("text").attr("class","mean").attr("x",250).attr("y",-6)
-				.text(function(d){ return "Mean: " +data.mean;});
-		}
 	}
+	
 	
 	function transitionIn(type, p){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
@@ -160,6 +149,7 @@ function distQuant(data, id){
 		}
 	}
 	
+	
 	function transitionOut(type){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
 		
@@ -183,27 +173,19 @@ function distQuant(data, id){
 		svg.selectAll(".vlabels").selectAll("text").transition().duration(500)
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
 			
-		// for distribution graph, update the statistics rect.
-		if(type=="dist"){
-			svg.select(".stat").select(".count")
-				.text(function(d){ 
-					var sum = d3.sum(data.dP.map(function(s){ return s[2];})); 
-					return "Count: " +toComma(sum)+" / "+toComma(sum)+" ( 100 % )";
-				});
-			svg.select(".stat").select(".mean").text(function(d){ return "Mean: " +data.mean;});
-		}
 	}
+
 
     function transitionClick(type){
         if (true_num == 0) {
             transitionOut("dist");
-            transitionOut("quant");
+            // transitionOut("quant");
             return;
         }
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
 		var max  = d3.max(data[type].map(function(d){ 
             var sum_choice = 0;
-            for (var i = 0; i < data.dP.length; i++) {
+            for (var i = 0; i < data.genre_num; i++) {
                 if (choice_legend[i]) {
                     sum_choice += d[i];
                 }
@@ -232,38 +214,16 @@ function distQuant(data, id){
 		svg.selectAll(".vlabels").selectAll("text").transition().duration(500)
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
 		
-		//update the statistics rect for distribution graph.
-		if(type=="dist"){
-			svg.select(".stat").select(".count")
-				.text(function(d){ 
-					var sumseg = 0;
-                    for (var i = 0; i < data.dP.length; i++) {
-                        if (choice_legend[i]) {
-                            sumseg += data.dP[i][2];
-                        }
-                    } 
-					var sum = d3.sum(data.dP.map(function(s){ return s[2];})); 
-					return "Count: " +toComma(sumseg)+" / "+toComma(sum)+" ( "+Math.round(100*sumseg/sum)+" % )";
-				});
-			svg.select(".stat").select(".mean").text(function(d){ 
-                var sum = 0;
-                for (var i = 0; i < data.dP.length; i++) {
-                    if (choice_legend[i]) {
-                        sum += data.dP[i][1];
-                    }
-                }
-                return "Mean: " +sum;});
-		}
 	}
-	
+
 	function mouseoverLegend(_,p){	
-		transitionIn("dist", p);
-		transitionIn("quant", p);
+		transitionClick("dist");
+        // transitionClick("quant");
 	}
-		
+
 	function mouseoutLegend(){	
 		transitionClick("dist");
-        transitionClick("quant");
+        // transitionClick("quant");
 	}
 
 
@@ -280,56 +240,20 @@ function distQuant(data, id){
 	
 	// Draw the two graphs.
 	draw("dist");
-	draw("quant");			
+	// draw("quant");			
 		
 	// draw legends.
 	var legRow = d3.select("#"+id).append("div").attr("class","legend")
-		.append("table").selectAll("tr").data(data.dP).enter().append("tr").append("td");
-	legRow.append("div").style("background",function(d,i){ return colors[i];})
-		.on("mouseover",mouseoverLegend).on("mouseout",mouseoutLegend).style("cursor","pointer")
-        .on("click", function(event, d) {
-            if (choice_legend[d]) {
-                choice_legend[d] = false;
-                true_num--;
-            }
-            else {
-                choice_legend[d] = true;
-                true_num++;
-            }
-            legRow.style("background-color", function(d) {
-                var index = legends.indexOf(d[0]);
-                if (choice_legend[index]) {
-                    return "skyblue";
-                }
-                return "white";
-            });	
-        });
+		.append("table").selectAll("tr").data(data.genre).enter().append("tr").append("td");
+	legRow.append("div").style("background",function(d,i){ return colors[i];});
 		
-	legRow.append("span").text(function(d){ return d[0];})
-		.on("mouseover",mouseoverLegend).on("mouseout",mouseoutLegend).style("cursor","pointer")
-        .on("click", function(event, d) {
-            if (choice_legend[d]) {
-                choice_legend[d] = false;
-                true_num--;
-            }
-            else {
-                choice_legend[d] = true;
-                true_num++;
-            }
-            legRow.style("background-color", function(d) {
-                var index = legends.indexOf(d[0]);
-                if (choice_legend[index]) {
-                    return "skyblue";
-                }
-                return "white";
-            });	
-        });
+	legRow.append("span").text(function(d){ return d;});
 }
 
 function drawAll(data, id){
 
 	var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
-		.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","distquantdiv");
+		.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
 		
 	d3.range(data.length).forEach(function(d,i){ distQuant(ShopData[i], "segment"+i );});
 }
