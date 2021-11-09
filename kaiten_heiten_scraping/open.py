@@ -6,9 +6,8 @@ import numpy as np
 
 
 
-def scrape():
+def scrape(url_set):
     dic = []
-    url_set = ['https://kaiten-heiten.com/category/restaurant/takoyaki/page/1/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
         url = url_set[ii]
         u_flag = True
@@ -24,6 +23,9 @@ def scrape():
             for a in soup.find_all('a', class_="post_links"): 
                 link = a.get('href')
                 date = a.text[6:16]
+                if ii==0 and date[0:4]=="2020":
+                    u_flag=False
+                    break
                 all_data = a.text
                 s_flag = False
                 shop_name = ""
@@ -50,30 +52,35 @@ def scrape():
 
                 #都道府県データ
                 prefecture = ""
-                address = soup.select('td')[1].text
-                index = 0
-                while True:
-                    if index>=len(address):
-                        print(address)
-                        prefecture = "none"
-                        break
-                    if address[index]=='都':
-                        if index-2>=0 and address[index-2]=='東':
-                            prefecture = '東京都'
-                        else:
-                            prefecture = '京都府'
-                        break
-                    elif address[index]=='道' or address[index]=='府' or address[index]=='県':
-                        if address[index-1]=='川' and address[index-2]=='奈':
-                            prefecture = '神奈川県'
-                        elif address[index-2]=='歌':
-                            prefecture = '和歌山県'
-                        elif address[index-2]=='児':
-                            prefecture = '鹿児島県'
-                        else:
-                            prefecture = address[index-2:index+1]
-                        break
-                    index+=1
+                address_list = soup.find_all('td')
+                # address = soup.select('td')[1].text
+                if len(address_list)<=1:
+                    print(date, shop_name)
+                else:
+                    address = address_list[1].text
+                    index = 0
+                    while True:
+                        if index>=len(address):
+                            print(address)
+                            prefecture = "none"
+                            break
+                        if address[index]=='都':
+                            if index-2>=0 and address[index-2]=='東':
+                                prefecture = '東京都'
+                            else:
+                                prefecture = '京都府'
+                            break
+                        elif address[index]=='道' or address[index]=='府' or address[index]=='県':
+                            if address[index-1]=='川' and address[index-2]=='奈':
+                                prefecture = '神奈川県'
+                            elif address[index-2]=='歌':
+                                prefecture = '和歌山県'
+                            elif address[index-2]=='児':
+                                prefecture = '鹿児島県'
+                            else:
+                                prefecture = address[index-2:index+1]
+                            break
+                        index+=1
 
 
                 ## 緯度、経度の取得
@@ -133,10 +140,13 @@ def scrape():
 
 
 if __name__ == "__main__":
-    data = scrape()
-    f = open('dataset.csv', 'a')
+    #うなぎ
+    url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    'https://kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+    data = scrape(url_set)
+    f = open('unagi.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
-    # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
+    f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
 
     for d in data:
         if len(d)==6:

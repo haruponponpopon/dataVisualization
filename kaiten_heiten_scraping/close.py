@@ -3,14 +3,12 @@ from bs4 import BeautifulSoup
 from urllib import request
 import datetime
 import numpy as np
-import time
 
 
 
-def scrape():
+def scrape(url_set):
     dic = []
-    url_set = ['https://kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91',
-    'https://10-19.kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
+    # url_set = ['https://kaiten-heiten.com/category/restaurant/india/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
         url = url_set[ii]
         u_flag = True
@@ -138,10 +136,13 @@ def scrape():
 
 
 if __name__ == "__main__":
-    data = scrape()
-    f = open('dataset.csv', 'a')
+    #うなぎ
+    url_set = ['https://kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91',
+    'https://10-19.kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
+    data = scrape(url_set)
+    f = open('unagi.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
-    f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
+    # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
 
     for d in data:
         if len(d)==6:
@@ -149,3 +150,4 @@ if __name__ == "__main__":
         else:
             print(d)
     f.close()
+
