@@ -1,3 +1,7 @@
+// クリックされるたびに選択された都道府県の情報を
+// main.htmlに受け渡す方法がわからなかったので、main.html内に
+// 直接書くことにしました。このファイルは使いません。
+
 function showJapanMap(svg){
     var tooltip = d3.select("body").append("div").attr("class", "tooltip");
     var selectedPrefecture = null;
@@ -39,11 +43,11 @@ function showJapanMap(svg){
             })
             .on("click", function(event, d){
                 isSelected = true;
-                const name = d.properties.nam_ja;
-                selectedPrefecture = name;
+                data_selectedPrefecture = d;
+                selectedPrefecture = d.properties.nam_ja;
                 svg.selectAll("path")
                     .attr("fill", function(d){
-                        return d.properties.nam_ja === name ? "lightgreen" : "ivory";
+                        return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
                     });
             });
         
@@ -68,6 +72,7 @@ function showJapanMap(svg){
             } else{
                 svg.selectAll("path").attr("fill", "ivory");
                 selectedPrefecture = null;
+                data_selectedPrefecture = null;
             }
             textShowPrefecture.text(function() {
                 return selectedPrefecture ? `選択された都道府県：${selectedPrefecture}` : defaultText;

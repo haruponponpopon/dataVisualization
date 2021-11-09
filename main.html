@@ -6,7 +6,6 @@
         <title>Stores in Japan</title>
         <script src="./d3.js" charset="utf-8"></script>
         <script src="./topojson.js" charset="utf-8"></script>
-        <script src="./japan_map.js" charset="utf-8"></script>
         <script src="./japan_graph.js" charset="utf-8"></script>
         <script src="./prefecture_map.js" charset="utf-8"></script>
         <script src="./prefecture_graph.js" charset="utf-8"></script>
@@ -14,13 +13,14 @@
 <body>
 
 <script type="text/javascript">
-
 var width = 800;
 var height = 800;
 
-var svg = d3.select("body").append("svg")
+var svgJapanMap = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
+
+var data_selectedPrefecture = null;
 
 // ジャンル選択ボタン
 
@@ -29,13 +29,94 @@ var svg = d3.select("body").append("svg")
 // データの読み込み
 
 // 日本地図の表示
-showJapanMap(svg);
+showJapanMap(svgJapanMap);
 
 // 全国のグラフの表示
 
 // 都道府県の地図の表示
 
 // 都道府県のグラフの表示
+
+
+// 日本地図の処理
+function showJapanMap(svg){
+    var tooltip = d3.select("body").append("div").attr("class", "tooltip");
+    var selectedPrefecture = null;
+    var isSelected = false;
+
+    d3.json("./japan.topojson").then(function(data){
+        var japan = topojson.feature(data, data.objects.japan);
+
+        var projection = d3.geoMercator()
+            .center([140, 35])
+            .translate([width/2, height/2])
+            .scale(1500);
+        var path = d3.geoPath().projection(projection);
+
+        svg.on("click", clicked);
+
+        var prefectures = svg.selectAll("path")
+                        .data(japan.features)
+                        .enter().append("g")
+                        .attr("class", "prefecture_group");
+        
+        svg.selectAll(".prefecture_group")
+            .append("path")
+            .attr("d", path)
+            .attr("fill", "ivory")
+            .attr("stroke", "#333333")
+            .on("mouseover", function(event, d){
+                tooltip
+                    .style("visibility", "visible")
+                    .html(d.properties.nam_ja);
+            })
+            .on("mousemove", function(event, d){
+                tooltip
+                    .style("top", (event.pageY - 40) + "px")
+                    .style("left", (event.pageX - 30) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.style("visibility", "hidden");
+            })
+            .on("click", function(event, d){
+                isSelected = true;
+                data_selectedPrefecture = d;
+                selectedPrefecture = d.properties.nam_ja;
+                svg.selectAll("path")
+                    .attr("fill", function(d){
+                        return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
+                    });
+            });
+        
+        const defaultText = "都道府県を選択してください";
+        var textShowPrefecture = svg.append("text")
+            .attr("x", 20)
+            .attr("y", 60)
+            .text(defaultText);
+
+        var zoom = d3.zoom()
+                    .scaleExtent([1, 10])
+                    .on("zoom", function(event){
+                        svg.selectAll(".prefecture_group")
+                            .attr("transform", event.transform);
+                    })
+        
+        svg.call(zoom);
+
+        function clicked(){
+            if (isSelected){
+                isSelected = false;
+            } else{
+                svg.selectAll("path").attr("fill", "ivory");
+                selectedPrefecture = null;
+                data_selectedPrefecture = null;
+            }
+            textShowPrefecture.text(function() {
+                return selectedPrefecture ? `選択された都道府県：${selectedPrefecture}` : defaultText;
+            });
+        }
+    });
+}
 
 </script>
 </body></html>
