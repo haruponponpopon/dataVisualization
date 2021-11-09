@@ -25,7 +25,7 @@ def do_scraping(shop_name):
     input_element = driver.find_element_by_id('sk')
     input_element.send_keys(shop_name)
     input_element.send_keys(Keys.RETURN)
-    time.sleep(2)
+    time.sleep(1)
     url = driver.current_url
 
     res = requests.get(url)
@@ -65,16 +65,16 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-input_filename = "./takoyaki_out.csv"
+input_filename = "../kaiten_heiten_scraping/cafe_restaurant.csv"
 df = pd.read_csv(input_filename)
+df.set_index("ShopName", inplace = True)
 ###########二回目以降のファイルのときはコメントアウト!!!##################### 
-# df["genres"] = "None" 
+df["genres"] = "None" 
 ###########################################################
-for i in range(0,len(df)):
-    if df.loc[i, "genres"] != "None":
-        print("pass: ",df.loc[i, "ShopName"])
+for shop_name in df.index.values:
+    if df.loc[shop_name, "genres"] != "None":
+        print("pass: ",shop_name)
         continue
-    shop_name = df.loc[i, "ShopName"]
     genre = do_scraping(shop_name)
     add_genre  = ""
     if (genre == None):
@@ -83,5 +83,5 @@ for i in range(0,len(df)):
         for g in genre:
             add_genre = add_genre + " #" + g
     print(shop_name , " : " , add_genre)
-    df.loc[i, "genres"] = add_genre
-    df.to_csv("./takoyaki_out.csv")
+    df.loc[shop_name, "genres"] = add_genre
+    df.to_csv("./cafe_restaurant_out.csv")
