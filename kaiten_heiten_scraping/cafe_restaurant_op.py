@@ -9,6 +9,7 @@ import time
 
 def scrape():
     dic = []
+    #カフェ、レストランの開店の情報は2つのwebページに分裂して保存されている。
     url_set = ['https://kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
     'https://10-19.kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
@@ -50,51 +51,60 @@ def scrape():
 
 
                 url = link
-                url = 'https://10-19.kaiten-heiten.com/dogcafe-rollick/'
                 response = request.urlopen(url)
                 soup = BeautifulSoup(response,'html.parser')
 
-                #都道府県データが必要になったらここのコメントを外す
-                # prefecture = ""
-                # address = soup.select('td')[1].text
-                # index = 0
-                # while True:
-                #     if index>=len(address):
-                #         print(address)
-                #         break
-                #     if address[index]=='都':
-                #         if index-2>=0 and address[index-2]=='東':
-                #             prefecture = '東京都'
-                #         else:
-                #             prefecture = '京都府'
-                #         break
-                #     elif address[index]=='道' or address[index]=='府' or address[index]=='県':
-                #         if address[index-1]=='川' and address[index-2]=='奈':
-                #             prefecture = '神奈川県'
-                #         elif address[index-2]=='歌':
-                #             prefecture = '和歌山県'
-                #         elif address[index-2]=='児':
-                #             prefecture = '鹿児島県'
-                #         else:
-                #             prefecture = address[index-2:index+1]
-                #         break
-                #     index+=1
+                #都道府県データ
+                prefecture = ""
+                address = soup.select('td')[1].text
+                index = 0
+                while True:
+                    if index>=len(address):
+                        print(address)
+                        prefecture = "none"
+                        break
+                    if address[index]=='都':
+                        if index-2>=0 and address[index-2]=='東':
+                            prefecture = '東京都'
+                        else:
+                            prefecture = '京都府'
+                        break
+                    elif address[index]=='道' or address[index]=='府' or address[index]=='県':
+                        if address[index-1]=='川' and address[index-2]=='奈':
+                            prefecture = '神奈川県'
+                        elif address[index-2]=='歌':
+                            prefecture = '和歌山県'
+                        elif address[index-2]=='児':
+                            prefecture = '鹿児島県'
+                        else:
+                            prefecture = address[index-2:index+1]
+                        break
+                    index+=1
 
 
                 ## 緯度、経度の取得
                 map_link = soup.find_all('iframe')
                 if len(map_link)==0:
-                    # print(date)
-                    dic.append([date,shop_name,"-1","-1"])
+                    dic.append([date,shop_name,prefecture,"-1","-1","1"])
                     continue
-                test = map_link[len(map_link)-1]
-                txt = test.get('src')
+                txt = ""
+                pos = -1
+                for ml in map_link:
+                    txt = ml.get('src')
+                    pos = txt.find('maps')
+                    if pos>=0:
+                        break
+                if pos<0:
+                    dic.append([date,shop_name,prefecture,"-1","-1","1"])
+                    continue
                 pos2d = txt.find('!2d')
                 possll = txt.find('&sll')
                 posll = txt.find('&ll')
                 ido=""
                 keido=""
+                ido_start = -1
                 if pos2d>0:
+                    ido_start = pos2d+3
                     pos3d = txt.find('!3d')
                     ido = txt[pos2d+3:pos3d]
                     pos2m = txt.find('!2m')
@@ -103,29 +113,22 @@ def scrape():
                         keido = txt[pos3d+3:pos2m]
                     elif pos3m>0:
                         keido = txt[pos3d+3:pos3m]
+                    dic.append([date,shop_name,prefecture,ido,keido,"1"])
+                    continue
                 elif possll>0:
-                    possspn = txt.find('&sspn')
-                    possll += 5
-                    while txt[possll]!=',':
-                        ido += txt[possll]
-                        possll+=1
-                    possll+=1
-                    if possspn>0:
-                        keido = txt[possll:possspn-1]
-                    else:
-                        poshl = txt.find('&hl')
-                        keido = txt[possll:poshl-1]
-
-                else:
-                    posspn = txt.find('&spn')
-                    posll += 4
-                    while txt[posll]!=',':
-                        ido += txt[posll]
-                        posll+=1
-                    posll+=1
-                    keido = txt[posll:posspn-1]
-
-                dic.append([date,shop_name,ido,keido])
+                    ido_start = possll+5
+                elif posll>0:
+                    ido_start = posll+4
+                index = ido_start
+                while ('0'<=txt[index] and txt[index]<='9') or txt[index]=='.':
+                    ido += txt[index]
+                    index+=1
+                index+=1
+                while ('0'<=txt[index] and txt[index]<='9') or txt[index]=='.':
+                    keido += txt[index]
+                    index+=1
+                #最後が閉店の0
+                dic.append([date,shop_name,prefecture,ido,keido,"1"])
             url = next_url
 
     return dic
@@ -137,8 +140,13 @@ def scrape():
 
 if __name__ == "__main__":
     data = scrape()
-    f = open('cafe_restaurant_op_2020.csv', 'w')
-    f.write("Date,ShopName,longitude,latitude\n")
+    f = open('dataset.csv', 'a')
+    #csvファイルがまっさらな状態の時のみコメントを外す
+    # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
+
     for d in data:
-        f.write(d[0]+","+d[1]+","+d[2]+","+d[3]+"\n")
+        if len(d)==6:
+            f.write(d[0]+","+d[1]+","+d[2]+","+d[3]+","+d[4]+","+d[5]+"\n")
+        else:
+            print(d)
     f.close()

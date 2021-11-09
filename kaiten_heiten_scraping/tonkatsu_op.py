@@ -3,14 +3,12 @@ from bs4 import BeautifulSoup
 from urllib import request
 import datetime
 import numpy as np
-import time
 
 
 
 def scrape():
     dic = []
-    url_set = ['https://kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91',
-    'https://10-19.kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
+    url_set = ['https://kaiten-heiten.com/category/restaurant/tonkatsu/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
         url = url_set[ii]
         u_flag = True
@@ -26,9 +24,6 @@ def scrape():
             for a in soup.find_all('a', class_="post_links"): 
                 link = a.get('href')
                 date = a.text[6:16]
-                if ii==0 and date[0:4]=="2020":
-                    u_flag=False
-                    break
                 all_data = a.text
                 s_flag = False
                 shop_name = ""
@@ -55,36 +50,41 @@ def scrape():
 
                 #都道府県データ
                 prefecture = ""
-                address = soup.select('td')[1].text
-                index = 0
-                while True:
-                    if index>=len(address):
-                        print(address)
-                        prefecture = "none"
-                        break
-                    if address[index]=='都':
-                        if index-2>=0 and address[index-2]=='東':
-                            prefecture = '東京都'
-                        else:
-                            prefecture = '京都府'
-                        break
-                    elif address[index]=='道' or address[index]=='府' or address[index]=='県':
-                        if address[index-1]=='川' and address[index-2]=='奈':
-                            prefecture = '神奈川県'
-                        elif address[index-2]=='歌':
-                            prefecture = '和歌山県'
-                        elif address[index-2]=='児':
-                            prefecture = '鹿児島県'
-                        else:
-                            prefecture = address[index-2:index+1]
-                        break
-                    index+=1
+                address_list = soup.find_all('td')
+                # address = soup.select('td')[1].text
+                if len(address_list)<=1:
+                    print(date, shop_name)
+                else:
+                    address = address_list[1].text
+                    index = 0
+                    while True:
+                        if index>=len(address):
+                            print(address)
+                            prefecture = "none"
+                            break
+                        if address[index]=='都':
+                            if index-2>=0 and address[index-2]=='東':
+                                prefecture = '東京都'
+                            else:
+                                prefecture = '京都府'
+                            break
+                        elif address[index]=='道' or address[index]=='府' or address[index]=='県':
+                            if address[index-1]=='川' and address[index-2]=='奈':
+                                prefecture = '神奈川県'
+                            elif address[index-2]=='歌':
+                                prefecture = '和歌山県'
+                            elif address[index-2]=='児':
+                                prefecture = '鹿児島県'
+                            else:
+                                prefecture = address[index-2:index+1]
+                            break
+                        index+=1
 
 
                 ## 緯度、経度の取得
                 map_link = soup.find_all('iframe')
                 if len(map_link)==0:
-                    dic.append([date,shop_name,prefecture,"-1","-1","0"])
+                    dic.append([date,shop_name,prefecture,"-1","-1","1"])
                     continue
                 txt = ""
                 pos = -1
@@ -94,7 +94,7 @@ def scrape():
                     if pos>=0:
                         break
                 if pos<0:
-                    dic.append([date,shop_name,prefecture,"-1","-1","0"])
+                    dic.append([date,shop_name,prefecture,"-1","-1","1"])
                     continue
                 pos2d = txt.find('!2d')
                 possll = txt.find('&sll')
@@ -112,7 +112,7 @@ def scrape():
                         keido = txt[pos3d+3:pos2m]
                     elif pos3m>0:
                         keido = txt[pos3d+3:pos3m]
-                    dic.append([date,shop_name,prefecture,ido,keido,"0"])
+                    dic.append([date,shop_name,prefecture,ido,keido,"1"])
                     continue
                 elif possll>0:
                     ido_start = possll+5
@@ -127,7 +127,7 @@ def scrape():
                     keido += txt[index]
                     index+=1
                 #最後が閉店の0
-                dic.append([date,shop_name,prefecture,ido,keido,"0"])
+                dic.append([date,shop_name,prefecture,ido,keido,"1"])
             url = next_url
 
     return dic
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     data = scrape()
     f = open('dataset.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
-    f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
+    # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
 
     for d in data:
         if len(d)==6:
