@@ -141,10 +141,16 @@ def scrape(url_set):
 
 if __name__ == "__main__":
     #うなぎ
-    url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
-    'https://kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+    # url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    # 'https://kaiten-heiten.com/category/restaurant/eel/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+    # data = scrape(url_set)
+    # f = open('unagi.csv', 'a')
+
+    #カフェ
+    url_set = ['https://10-19.kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    'https://kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
     data = scrape(url_set)
-    f = open('unagi.csv', 'a')
+    f = open('cafe.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
     f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
 
