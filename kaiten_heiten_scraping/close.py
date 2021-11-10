@@ -7,6 +7,7 @@ import numpy as np
 
 
 def scrape(url_set):
+    f = open('cafe.csv', 'a')
     dic = []
     # url_set = ['https://kaiten-heiten.com/category/restaurant/india/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
     for ii in range(len(url_set)):
@@ -82,7 +83,8 @@ def scrape(url_set):
                 ## 緯度、経度の取得
                 map_link = soup.find_all('iframe')
                 if len(map_link)==0:
-                    dic.append([date,shop_name,prefecture,"-1","-1","0"])
+                    # dic.append([date,shop_name,prefecture,"-1","-1","0"])
+                    f.write(date+","+shop_name+","+prefecture+",-1,-1,0\n")
                     continue
                 txt = ""
                 pos = -1
@@ -92,7 +94,8 @@ def scrape(url_set):
                     if pos>=0:
                         break
                 if pos<0:
-                    dic.append([date,shop_name,prefecture,"-1","-1","0"])
+                    # dic.append([date,shop_name,prefecture,"-1","-1","0"])
+                    f.write(date+","+shop_name+","+prefecture+",-1,-1,0\n")
                     continue
                 pos2d = txt.find('!2d')
                 possll = txt.find('&sll')
@@ -110,7 +113,8 @@ def scrape(url_set):
                         keido = txt[pos3d+3:pos2m]
                     elif pos3m>0:
                         keido = txt[pos3d+3:pos3m]
-                    dic.append([date,shop_name,prefecture,ido,keido,"0"])
+                    # dic.append([date,shop_name,prefecture,ido,keido,"0"])
+                    f.write(date+","+shop_name+","+prefecture+","+ido+","+keido+","+"0"+"\n")
                     continue
                 elif possll>0:
                     ido_start = possll+5
@@ -125,9 +129,10 @@ def scrape(url_set):
                     keido += txt[index]
                     index+=1
                 #最後が閉店の0
-                dic.append([date,shop_name,prefecture,ido,keido,"0"])
+                # dic.append([date,shop_name,prefecture,ido,keido,"0"])
+                f.write(date+","+shop_name+","+prefecture+","+ido+","+keido+","+"0"+"\n")
             url = next_url
-
+    f.close()
     return dic
 
 
@@ -147,11 +152,11 @@ if __name__ == "__main__":
     'https://10-19.kaiten-heiten.com/category/restaurant/cafe-restaurant/?s=%E3%80%90%E9%96%89%E5%BA%97%E3%80%91']
     #csvファイルがまっさらな状態の時のみコメントを外す
     # f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
-
-    for d in data:
-        if len(d)==6:
-            f.write(d[0]+","+d[1]+","+d[2]+","+d[3]+","+d[4]+","+d[5]+"\n")
-        else:
-            print(d)
-    f.close()
+    scrape(url_set)
+    # for d in data:
+    #     if len(d)==6:
+    #         f.write(d[0]+","+d[1]+","+d[2]+","+d[3]+","+d[4]+","+d[5]+"\n")
+    #     else:
+    #         print(d)
+    # f.close()
 

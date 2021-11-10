@@ -7,12 +7,8 @@ for i in range(1,len(datalist)):
   genres = arr[5].split('#')
   for j in (1,len(genres)-1):
       if j==len(genres)-1:
-          minidict = {}
-          minidict[arr[0][0:7]] = 1
-          mydict[genres[j][0:len(genres[j])-1]] = minidict
+          mydict[genres[j][0:len(genres[j])-1], arr[0][0:7]] = 1
       else:
-          minidict = {}
-          minidict[arr[0][0:7]] = 1
-          mydict[genres[j][0:len(genres[j])]] = minidict
+          mydict[genres[j][0:len(genres[j])], arr[0][0:7]] = 1
 print(mydict)
 f_r.close()
