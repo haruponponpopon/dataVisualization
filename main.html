@@ -7,7 +7,7 @@
         <script src="./d3.js" charset="utf-8"></script>
         <script src="./topojson.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
-        <!-- <script src="./prefecture_map.js" charset="utf-8"></script> -->
+        <script src="./prefecture_map.js" charset="utf-8"></script>
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
@@ -25,6 +25,7 @@ var svgPrefectureMap = d3.select("body").append("svg")
     .attr("height", height);
 
 var data_selectedPrefecture = null;
+var topojsonPrefecture = makeTopojsonPrefecture();
 
 // ジャンル選択ボタン
 
@@ -33,18 +34,17 @@ var data_selectedPrefecture = null;
 // データの読み込み
 
 // 日本地図の表示
-showJapanMap(svgJapanMap);
+// 都道府県の地図の表示
+showJapanMap(svgJapanMap, svgPrefectureMap);
 
 // 全国のグラフの表示
 
-// 都道府県の地図の表示
-showPrefectureMap(svgPrefectureMap);
 
 // 都道府県のグラフの表示
 
 
 // 日本地図の処理
-function showJapanMap(svg){
+function showJapanMap(svg, svgPrefectureMap){
     var tooltip = d3.select("body").append("div").attr("class", "tooltip");
     var selectedPrefecture = null;
     var isSelected = false;
@@ -60,6 +60,7 @@ function showJapanMap(svg){
 
         svg.on("click", clicked);
 
+        console.log(japan.features);
         var prefectures = svg.selectAll("path")
                         .data(japan.features)
                         .enter().append("g")
@@ -91,6 +92,7 @@ function showJapanMap(svg){
                     .attr("fill", function(d){
                         return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
                     });
+                showPrefectureMap(svgPrefectureMap);
             });
         
         const defaultText = "都道府県を選択してください";
@@ -124,23 +126,22 @@ function showJapanMap(svg){
 }
 
 function showPrefectureMap(svg){
+    var prefecture = topojson.feature(...topojsonPrefecture[data_selectedPrefecture.properties.id]);
+
     var projection = d3.geoMercator()
         .center([140, 35])
         .translate([width/2, height/2])
         .scale(1500);
+
     var path = d3.geoPath().projection(projection);
 
-    var prefecture = svg.selectAll("path")
-        .data(data_selectedPrefecture)
+    svg.selectAll("path")
+        .data(prefecture.features)
         .enter().append("g")
-        .attr("class", "prefecture")
-    
-    svg.selectAll(".prefecture")
         .append("path")
         .attr("d", path)
         .attr("fill", "ivory")
         .attr("stroke", "#333333");
-    
 }
 
 </script>
