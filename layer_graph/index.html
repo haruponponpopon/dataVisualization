@@ -3,7 +3,7 @@
 <link href='style.css' rel='stylesheet' type='text/css'>
 <body>
 <div id="contentDiv"></div>
-<script src="data_test.js"></script>
+<script src="../data_analysis/unagi.js"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 
 <script>
@@ -19,7 +19,7 @@ function distQuant(data, id){
         legends.push(data.genre[i]);
     }
 
-	function getPoints(_, i){		return _.map(function(d,j){ return {x:j, y:d[i]};});	}
+	function getPoints(_, i){		return _.map(function(d,j){ return {x:j, y:0};});	}
 	/* function to return 0 for all attributes except k-th attribute.*/
     function getPointsZeroMulti(_, i) {return _.map(function(d,j){ return {x:j, y:(choice_legend[i] ? d[i] : 0 )};});	}
 	function toComma(x) {    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
@@ -34,6 +34,10 @@ function distQuant(data, id){
 "#3BC58B","#6EE259","#52D170","#D2A867","#5C9CCD","#DB6472","#B9E8E0","#CDE067","#9C5615","#536C4F","#A74725","#CBD88A","#DF3066","#E9D235","#EE404C","#7DB362",
 "#B1EDA3","#71D2E1","#A954DC","#91DF6E","#CB6429","#D64ADC"];
 
+	var min_date_list = data.min_date.split("-");
+	var max_date_list = data.max_date.split("-");
+	dateMin = Number(min_date_list[0]) + 1/12*Number(min_date_list[1]);
+	dateMax = Number(max_date_list[0]) + 1/12*Number(max_date_list[1]);
 	
 	function draw(type){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
@@ -66,8 +70,10 @@ function distQuant(data, id){
 		
 		function getHLabel(d,i){
 			if(type=="dist"){ // for distribution graph use the min and max to get the 5 label values.
-				var r= data.min_date+i*(data.max_date-data.min_date)/5; 
-				return Math.round(r*100)/100;
+				var r= dateMin +i*(dateMax-dateMin)/5; 
+				var y = Math.trunc(r);
+				var d = Math.trunc((r - y)/(1/12));
+				return y + "-" + d;
 			}else{ // for quantile graph, use label 20, 40, 60, and 80.
 				return (i*20)+' %';
 			}	
