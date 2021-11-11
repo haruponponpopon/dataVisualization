@@ -75,17 +75,13 @@ function distQuant(data, id){
 				var year = Math.trunc(r);
 				var day = Math.trunc((r - year)/(1/12));
 				return year;
-			}else{ // for quantile graph, use label 20, 40, 60, and 80.
-				return (i*20)+' %';
-			}	
+			}
 		}
 		
 		function getVLabel(d,i){
 			if(type=="dist"){ // for dist use the maximum for sum of frequencies and divide it into 5 pieces.
 				return Math.round(maxT*i/5);
-			}else{ // for quantile graph, use percentages in increments of 20%.
-				return (i*20)+' %';
-			}	
+			}
 		}
 		// add horizontal axis labels
 		svg.append("g").attr("class","hlabels")
@@ -104,7 +100,12 @@ function distQuant(data, id){
 		dataset = data.genre.map(function(d,i){ return getPoints(data[type], i);});
 
 		svg.selectAll("path").data(dataset).enter()
-			.append("path").attr("d", graph_line).attr("stroke-width", 2)
+			.append("path").attr("d", graph_line)
+			.attr("stroke-width", function(d,i) {
+				if (choice_legend[i]) {
+					return 2;
+				}
+				return 0;})
 			.attr("stroke", function(d,i) {return colors[i]; }).attr("fill", "none");
 
 			
@@ -133,7 +134,13 @@ function distQuant(data, id){
 		svg.selectAll("path")
 			.data(dataset)
 			.transition().duration(500)
-			.attr("d", graph_line);// .attr("fill", "none");
+			.attr("d", graph_line)
+			.attr("stroke-width", function(d,i) {
+				if (choice_legend[i]) {
+					return 2;
+				}
+				return 0;
+			});// .attr("fill", "none");
 
 		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			
 		svg.selectAll(".hlines").transition().duration(500).attr("y1",tH).attr("y2",tH);			
@@ -187,7 +194,13 @@ function distQuant(data, id){
 		svg.selectAll("path")
 			.data(dataset)
 			.transition().duration(500)
-			.attr("d", graph_line).attr("fill", "none");
+			.attr("d", graph_line).attr("fill", "none")
+			.attr("stroke-width", function(d,i) {
+				if (choice_legend[i]) {
+					return 2;
+				}
+				return 0;
+			});
 
 			
 		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			
@@ -204,13 +217,8 @@ function distQuant(data, id){
 	d3.select("#"+id).append("svg").attr("width",width+2*margin).attr("height",height+2*margin)
 		.append("g").attr("transform","translate("+margin+","+margin+")").attr("class","dist");
 		
-	//add svg and set attributes for quantil.
-	d3.select("#"+id).append("svg").attr("width",width+2*margin).attr("height",height+2*margin)
-		.append("g").attr("transform","translate("+margin+","+margin+")").attr("class","quant");
-	
-	// Draw the two graphs.
-	draw("dist");
-	// draw("quant");			
+	// Draw the a graph.
+	draw("dist");			
 		
 	// draw legends.
 	var legRow = d3.select("#"+id).append("div").attr("class","legend")
