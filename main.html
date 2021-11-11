@@ -124,19 +124,20 @@ function showJapanMap(svg, svgPrefectureMap){
 
 function showPrefectureMap(svg){
     var prefecture = topojson.feature(...topojsonPrefecture[data_selectedPrefecture.properties.id]);
+    var center = d3.geoCentroid(data_selectedPrefecture);
 
-    var projection = d3.geoMercator()
-        .center([140, 35])
+    var projection_pref = d3.geoMercator()
+        .center(center)
         .translate([width/2, height/2])
-        .scale(1500);
+        .scale(4500);
 
-    var path = d3.geoPath().projection(projection);
+    var path_pref = d3.geoPath().projection(projection_pref);
 
-    var selectedPref = svg.selectAll("path")
+    var selectedPref = svg.selectAll("path.pref")
         .data(prefecture.features)
         .enter().append("g")
         .append("path")
-        .attr("d", path)
+        .attr("d", path_pref)
         .attr("fill", "ivory")
         .attr("stroke", "#333333");
 }
