@@ -7,7 +7,7 @@ import numpy as np
 
 
 def scrape(url_set):
-    f = open('takoyaki.csv', 'a')
+    f = open('oden.csv', 'a')
     #csvファイルがまっさらな状態の時のみコメントを外す
     f.write("Date,ShopName,Prefecture,longitude,latitude,Open\n")
     dic = []
@@ -171,8 +171,25 @@ if __name__ == "__main__":
     # 'https://10-19.kaiten-heiten.com/category/restaurant/takoyaki/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
 
     #からあげ
-    url_set = ['https://kaiten-heiten.com/?s=%E9%96%8B%E5%BA%97%E3%80%80%E3%81%8B%E3%82%89%E3%81%82%E3%81%92',
-    'https://10-19.kaiten-heiten.com/?s=%E9%96%8B%E5%BA%97%E3%80%80%E3%81%8B%E3%82%89%E3%81%82%E3%81%92']
+    # url_set = ['https://kaiten-heiten.com/?s=%E9%96%8B%E5%BA%97%E3%80%80%E3%81%8B%E3%82%89%E3%81%82%E3%81%92',
+    # 'https://10-19.kaiten-heiten.com/?s=%E9%96%8B%E5%BA%97%E3%80%80%E3%81%8B%E3%82%89%E3%81%82%E3%81%92']
+
+    #カレー
+    # url_set = ['https://kaiten-heiten.com/category/restaurant/curry/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    # 'https://10-19.kaiten-heiten.com/category/restaurant/curry/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+
+    #おでん
+    # url_set = ['https://kaiten-heiten.com/category/restaurant/oden/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    # 'https://10-19.kaiten-heiten.com/category/restaurant/oden/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+
+    #寿司
+    # url_set = ['https://kaiten-heiten.com/category/restaurant/sushi/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    # 'https://10-19.kaiten-heiten.com/category/restaurant/sushi/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+
+    #コーヒー
+    url_set = ['https://kaiten-heiten.com/category/restaurant/coffie/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91',
+    'https://10-19.kaiten-heiten.com/category/restaurant/coffie/?s=%E3%80%90%E9%96%8B%E5%BA%97%E3%80%91']
+
     
     data = scrape(url_set)
 
