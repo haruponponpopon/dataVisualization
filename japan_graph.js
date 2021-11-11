@@ -1,5 +1,5 @@
-var choice_legend = {};
-var legends = [];
+// var choice_legend = {};
+// var legends = [];
 var colors = ["#7D74FE","#7DFF26","#F84F1B","#28D8D5","#FB95B6","#9D9931","#F12ABF","#27EA88","#549AD5","#FEA526","#7B8D8B","#BB755F","#432E16",
 "#D75CFB","#44E337","#51EBE3","#ED3D24","#4069AE","#E1CC72","#E33E88","#D8A3B3","#428B50","#66F3A3","#E28A2A","#B2594D","#609297","#E8F03F","#3D2241",
 "#954EB3","#6A771C","#58AE2E","#75C5E9","#BBEB85","#A7DAB9","#6578E6","#932C5F","#865A26","#CC78B9","#2E5A52","#8C9D79","#9F6270","#6D3377","#551927","#DE8D5A",
@@ -10,15 +10,24 @@ var colors = ["#7D74FE","#7DFF26","#F84F1B","#28D8D5","#FB95B6","#9D9931","#F12A
 "#B1EDA3","#71D2E1","#A954DC","#91DF6E","#CB6429","#D64ADC"];
 var color_len = colors.length;
 
-function MakeGraph(data, id){
+var choice_legend;
+var true_num;
+var legends;
 
-    for(var i = 0; i < data.genre_num; i++) {
-        choice_legend[i] = false;
-    }
-    var true_num = 0;
-    for(var i = 0; i < data.genre_num; i++) {
-        legends.push(data.genre[i]);
-    }
+function pull_choice_data() {
+    choice_legend = JSON.parse(sessionStorage.getItem("choice_genres"));
+    true_num = JSON.parse(sessionStorage.getItem("true_num"));
+    legends = JSON.parse(sessionStorage.getItem("order_genres"));
+}
+
+function push_choice_data() {
+    sessionStorage.setItem("choice_genres" , JSON.stringify(choice_legend) );
+    sessionStorage.setItem("true_num", true_num);
+    sessionStorage.setItem("order_genres", JSON.stringify(legends));
+}
+
+function MakeGraph(data, id){
+    pull_choice_data();
 
 	function getPoints(_, i){		return _.map(function(d,j){ return {x:j, y:0};});	}
 	/* function to return 0 for all attributes except k-th attribute.*/
@@ -225,7 +234,8 @@ function MakeGraph(data, id){
             return "#FFFFFF";})
         .style("cursor","pointer")
 		.on("click", function(event, d) {
-			var index = legends.indexOf(d);
+            pull_choice_data();
+			var index = legends[d];
             if (choice_legend[index]) {
                 choice_legend[index] = false;
                 true_num--;
@@ -234,8 +244,9 @@ function MakeGraph(data, id){
                 choice_legend[index] = true;
                 true_num++;
             }
+            push_choice_data();
             legRow.style("background-color", function(d) {
-                    var index = legends.indexOf(d);
+                    var index = legends[d];
                     if (choice_legend[index]) {
                         return "skyblue";
                     }
@@ -243,7 +254,7 @@ function MakeGraph(data, id){
                 });
             legRow.selectAll("div")
                 .style("background",function(d,i){ 
-                    var index = legends.indexOf(d);
+                    var index = legends[d];
                     if (choice_legend[index]) {
                         return colors[index%color_len];
                     }
@@ -255,7 +266,8 @@ function MakeGraph(data, id){
     legRow.append("span").text(function(d){ return d;})
         .style("cursor","pointer")
 		.on("click", function(event, d) {
-			var index = legends.indexOf(d);
+            pull_choice_data();
+			var index = legends[d];
             if (choice_legend[index]) {
                 choice_legend[index] = false;
                 true_num--;
@@ -264,8 +276,9 @@ function MakeGraph(data, id){
                 choice_legend[index] = true;
                 true_num++;
             }
+            push_choice_data();
             legRow.style("background-color", function(d) {
-				var index = legends.indexOf(d);
+				var index = legends[d];
                 if (choice_legend[index]) {
                     return "skyblue";
                 }
@@ -273,7 +286,7 @@ function MakeGraph(data, id){
             });
             legRow.selectAll("div")
                 .style("background",function(d,i){ 
-                    var index = legends.indexOf(d);
+                    var index = legends[d];
                     if (choice_legend[index]) {
                         return colors[index%color_len];
                     }

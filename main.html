@@ -13,8 +13,6 @@
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
-<label for="genreChoiceBox">ジャンルを選択してください</label>
-<select id="genreChoiceBox" multiple> </select>
 
 <div id="contentDiv"></div>
 
@@ -22,10 +20,22 @@
 var width = 800;
 var height = 800;
 
-var choice_genres = {}
-ShopData[0]["genre"].forEach(function(elem, index) {
-    choice_genres[elem] = false;
-});
+// 選択されたジャンルを保持する辞書{index: true or false}
+var choice_genres = {};
+for(var i = 0; i < ShopData[0].genre_num; i++) {
+        choice_genres[i] = false;
+}
+var true_num = 0;
+
+// ジャンル名 : index
+var order_genres = {};
+for(var i = 0; i < ShopData[0].genre_num; i++) {
+    order_genres[ShopData[0].genre[i]] = i;
+}
+
+sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres));
+sessionStorage.setItem("true_num", true_num);
+sessionStorage.setItem("order_genres", JSON.stringify(order_genres));
 
 
 var svgJapanMap = d3.select("body").append("svg")
@@ -40,16 +50,6 @@ var data_selectedPrefecture = null;
 var topojsonPrefecture = makeTopojsonPrefecture();
 
 // ジャンル選択ボタン
-var selectGenre = document.getElementById("genreChoiceBox");
-function addOptionGenre() {
-    for (key in choice_genres) {
-        var option = document.createElement("option");
-        option.text = key;
-        option.value = key;
-        selectGenre.appendChild(option);
-    }
-}
-addOptionGenre();
 
 // 年度指定のスクロールバー
 
@@ -62,7 +62,6 @@ showJapanMap(svgJapanMap, svgPrefectureMap);
 // 全国のグラフの表示
 
 drawAll(ShopData, "contentDiv");
-console.log(choice_legend);
 
 
 // 都道府県のグラフの表示
