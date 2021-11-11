@@ -1,11 +1,21 @@
-function distQuant(data, id){
+var choice_legend = {};
+var legends = [];
+var colors = ["#7D74FE","#7DFF26","#F84F1B","#28D8D5","#FB95B6","#9D9931","#F12ABF","#27EA88","#549AD5","#FEA526","#7B8D8B","#BB755F","#432E16",
+"#D75CFB","#44E337","#51EBE3","#ED3D24","#4069AE","#E1CC72","#E33E88","#D8A3B3","#428B50","#66F3A3","#E28A2A","#B2594D","#609297","#E8F03F","#3D2241",
+"#954EB3","#6A771C","#58AE2E","#75C5E9","#BBEB85","#A7DAB9","#6578E6","#932C5F","#865A26","#CC78B9","#2E5A52","#8C9D79","#9F6270","#6D3377","#551927","#DE8D5A",
+"#E3DEA8","#C3C9DB","#3A5870","#CD3B4F","#E476E3","#DCAB94","#33386D","#4DA284","#817AA5","#8D8384","#624F49","#8E211F","#9E785B","#355C22","#D4ADDE",
+"#A98229","#E88B87","#28282D","#253719","#BD89E1","#EB33D8","#6D311F","#DF45AA","#E86723","#6CE5BC","#765175","#942C42","#986CEB","#8CC488","#8395E3",
+"#D96F98","#9E2F83","#CFCBB8","#4AB9B7","#E7AC2C","#E96D59","#929752","#5E54A9","#CCBA3F","#BD3CB8","#408A2C","#8AE32E","#5E5621","#ADD837","#BE3221","#8DA12E",
+"#3BC58B","#6EE259","#52D170","#D2A867","#5C9CCD","#DB6472","#B9E8E0","#CDE067","#9C5615","#536C4F","#A74725","#CBD88A","#DF3066","#E9D235","#EE404C","#7DB362",
+"#B1EDA3","#71D2E1","#A954DC","#91DF6E","#CB6429","#D64ADC"];
+var color_len = colors.length;
 
-    var choice_legend = {}
+function MakeGraph(data, id){
+
     for(var i = 0; i < data.genre_num; i++) {
         choice_legend[i] = false;
     }
     var true_num = 0;
-    var legends = [];
     for(var i = 0; i < data.genre_num; i++) {
         legends.push(data.genre[i]);
     }
@@ -16,14 +26,6 @@ function distQuant(data, id){
 	function toComma(x) {    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 		
 	var width=400, height=300, margin=20;
-	var colors = ["#7D74FE","#7DFF26","#F84F1B","#28D8D5","#FB95B6","#9D9931","#F12ABF","#27EA88","#549AD5","#FEA526","#7B8D8B","#BB755F","#432E16",
-"#D75CFB","#44E337","#51EBE3","#ED3D24","#4069AE","#E1CC72","#E33E88","#D8A3B3","#428B50","#66F3A3","#E28A2A","#B2594D","#609297","#E8F03F","#3D2241",
-"#954EB3","#6A771C","#58AE2E","#75C5E9","#BBEB85","#A7DAB9","#6578E6","#932C5F","#865A26","#CC78B9","#2E5A52","#8C9D79","#9F6270","#6D3377","#551927","#DE8D5A",
-"#E3DEA8","#C3C9DB","#3A5870","#CD3B4F","#E476E3","#DCAB94","#33386D","#4DA284","#817AA5","#8D8384","#624F49","#8E211F","#9E785B","#355C22","#D4ADDE",
-"#A98229","#E88B87","#28282D","#253719","#BD89E1","#EB33D8","#6D311F","#DF45AA","#E86723","#6CE5BC","#765175","#942C42","#986CEB","#8CC488","#8395E3",
-"#D96F98","#9E2F83","#CFCBB8","#4AB9B7","#E7AC2C","#E96D59","#929752","#5E54A9","#CCBA3F","#BD3CB8","#408A2C","#8AE32E","#5E5621","#ADD837","#BE3221","#8DA12E",
-"#3BC58B","#6EE259","#52D170","#D2A867","#5C9CCD","#DB6472","#B9E8E0","#CDE067","#9C5615","#536C4F","#A74725","#CBD88A","#DF3066","#E9D235","#EE404C","#7DB362",
-"#B1EDA3","#71D2E1","#A954DC","#91DF6E","#CB6429","#D64ADC"];
 
 	var min_date_list = data.min_date.split("-");
 	var max_date_list = data.max_date.split("-");
@@ -97,7 +99,7 @@ function distQuant(data, id){
 					return 2;
 				}
 				return 0;})
-			.attr("stroke", function(d,i) {return colors[i]; }).attr("fill", "none");
+			.attr("stroke", function(d,i) {return colors[i%color_len]; }).attr("fill", "none");
 
 			
 	}
@@ -202,7 +204,7 @@ function distQuant(data, id){
 	}
 
 	// add title.
-	d3.select("#"+id).append("h3").text(data.title);
+	d3.select("#"+id).append("h3").text("全国の店舗数遷移");
 	
 	// add svg and set attributes for distribution.
 	d3.select("#"+id).append("svg").attr("width",width+2*margin).attr("height",height+2*margin)
@@ -210,11 +212,18 @@ function distQuant(data, id){
 		
 	// Draw the a graph.
 	draw("dist");			
-		
+        
+    
 	// draw legends.
 	var legRow = d3.select("#"+id).append("div").attr("class","legend")
 		.append("table").selectAll("tr").data(data.genre).enter().append("tr").append("td");
-	legRow.append("div").style("background",function(d,i){ return colors[i];})
+    legRow.append("div")
+        .style("background",function(d,i){ 
+            if (choice_legend[i]) {
+                return colors[i%color_len];
+            }
+            return "#FFFFFF";})
+        .style("cursor","pointer")
 		.on("click", function(event, d) {
 			var index = legends.indexOf(d);
             if (choice_legend[index]) {
@@ -226,16 +235,25 @@ function distQuant(data, id){
                 true_num++;
             }
             legRow.style("background-color", function(d) {
-				var index = legends.indexOf(d);
-                if (choice_legend[index]) {
-                    return "skyblue";
-                }
-                return "white";
-            });	
+                    var index = legends.indexOf(d);
+                    if (choice_legend[index]) {
+                        return "skyblue";
+                    }
+                    return "white";
+                });
+            legRow.selectAll("div")
+                .style("background",function(d,i){ 
+                    var index = legends.indexOf(d);
+                    if (choice_legend[index]) {
+                        return colors[index%color_len];
+                    }
+                    return "#FFFFFF";
+                });	
 			transitionClick("dist");
         });
 		
-	legRow.append("span").text(function(d){ return d;})
+    legRow.append("span").text(function(d){ return d;})
+        .style("cursor","pointer")
 		.on("click", function(event, d) {
 			var index = legends.indexOf(d);
             if (choice_legend[index]) {
@@ -252,9 +270,18 @@ function distQuant(data, id){
                     return "skyblue";
                 }
                 return "white";
-            });	
+            });
+            legRow.selectAll("div")
+                .style("background",function(d,i){ 
+                    var index = legends.indexOf(d);
+                    if (choice_legend[index]) {
+                        return colors[index%color_len];
+                    }
+                    return "#FFFFFF";
+                });		
 			transitionClick("dist");
         });
+    
 }
 
 function drawAll(data, id){
@@ -262,6 +289,6 @@ function drawAll(data, id){
         var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
             .append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
             
-        d3.range(data.length).forEach(function(d,i){distQuant(data[i], "segment"+i );});
+        d3.range(data.length).forEach(function(d,i){MakeGraph(data[i], "segment"+i );});
     });
 }
