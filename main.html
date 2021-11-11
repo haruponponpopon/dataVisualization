@@ -13,11 +13,20 @@
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
+<label for="genreChoiceBox">ジャンルを選択してください</label>
+<select id="genreChoiceBox" multiple> </select>
+
 <div id="contentDiv"></div>
 
 <script type="text/javascript">
 var width = 800;
 var height = 800;
+
+var choice_genres = {}
+ShopData[0]["genre"].forEach(function(elem, index) {
+    choice_genres[elem] = false;
+});
+
 
 var svgJapanMap = d3.select("body").append("svg")
     .attr("width", width)
@@ -31,6 +40,16 @@ var data_selectedPrefecture = null;
 var topojsonPrefecture = makeTopojsonPrefecture();
 
 // ジャンル選択ボタン
+var selectGenre = document.getElementById("genreChoiceBox");
+function addOptionGenre() {
+    for (key in choice_genres) {
+        var option = document.createElement("option");
+        option.text = key;
+        option.value = key;
+        selectGenre.appendChild(option);
+    }
+}
+addOptionGenre();
 
 // 年度指定のスクロールバー
 
@@ -43,6 +62,7 @@ showJapanMap(svgJapanMap, svgPrefectureMap);
 // 全国のグラフの表示
 
 drawAll(ShopData, "contentDiv");
+console.log(choice_legend);
 
 
 // 都道府県のグラフの表示

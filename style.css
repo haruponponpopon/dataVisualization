@@ -64,11 +64,12 @@ svg{
 .legend div{
 	width:20px;
 	height:20px;
-	float: left;
+  float: left;
+  border: 1px solid #505050;
 }
 .legend span{
 	padding: 0 5px;
-	margin:0
+	margin:0;
 }
 .legend tr:hover{
 	background:silver;
