@@ -3,8 +3,8 @@
 <link href='style.css' rel='stylesheet' type='text/css'>
 <body>
 <div id="contentDiv"></div>
-<script src="../data_analysis/unagi.js"></script>
-<script src="../d3.js"></script>
+<script src="./unagi.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
 
 <script>
 function distQuant(data, id){
@@ -48,8 +48,8 @@ function distQuant(data, id){
 		var svg =d3.select("#"+id).select("."+type);
 		
 		//x and y axis maps.
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, maxT]).range([height, 0]);
+		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
+		var y = d3.scale.linear().domain([0, maxT]).range([height, 0]);
 		
 		//draw yellow background for graph.
 		svg.append("rect").attr("x",0).attr("y",0).attr("width",width).attr("height",height).style("fill","rgb(235,235,209)");
@@ -97,22 +97,17 @@ function distQuant(data, id){
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 		
-		var area = d3.area().x(function(d) {console.log(d); return x(d.x); })
+		var area = d3.svg.area().x(function(d) {return x(d.x); })
 			.y0(function(d) { return y(d.y0); })
-			.y1(function(d) { return y(d.y0 + d.y); });
-			//.interpolate("basis");
+			.y1(function(d) { return y(d.y0 + d.y); })
+			.interpolate("basis");
 
-		var stack = d3.stack().offset(d3.stackOffsetNone).order(d3.stackOrderNone).keys(legends);
-		var layers = stack(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
+		var layers = d3.layout.stack().offset("zero")(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
 		
-		svg.selectAll("path")
-			.data(layers)
-			.enter()
-			.append("path")
-			.attr("d", area)
+		svg.selectAll("path").data(layers).enter().append("path").attr("d", area)
 			.style("fill", function(d,i) { return colors[i]; })
 			.style("stroke", function(d,i) { return colors[i]; });
-			
+
 		//draw a white rectangle to hide and to show some statistics.
 		var stat = svg.append("g").attr("class","stat");
 		
@@ -127,14 +122,14 @@ function distQuant(data, id){
 		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, maxT]).range([height, 0]);
+		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
+		var y = d3.scale.linear().domain([0, maxT]).range([height, 0]);
 
-		var area = d3.area().x(function(d) { return x(d.x); })
+		var area = d3.svg.area().x(function(d) { return x(d.x); })
 			.y0(function(d) { return y(d.y0); })
-			.y1(function(d) { return y(d.y0 + d.y); });
-			// .interpolate("basis");
-		var layers = d3.stack().offset(d3.stackOffsetNone)(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
+			.y1(function(d) { return y(d.y0 + d.y); })
+			.interpolate("basis");
+		var layers = d3.layout.stack().offset("zero")(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
 		
 		// transition the lines, areas, and labels.
 		var svg = d3.select("#"+id).select("."+type);		
@@ -163,19 +158,18 @@ function distQuant(data, id){
             return sum_choice; 
         }));
 		
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
+		var y = d3.scale.linear().domain([0, max]).range([height, 0]);
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 
-		var area = d3.area().x(function(d) { return x(d.x); })
+		var area = d3.svg.area().x(function(d) {return x(d.x); })
 			.y0(function(d) { return y(d.y0); })
-			.y1(function(d) { return y(d.y0 + d.y); });
+			.y1(function(d) { return y(d.y0 + d.y); })
+			.interpolate("basis");
 
-		console.log(data.genre.map(function(d, i){ return getPointsZeroMulti(data[type], i);}));
-		var layers = d3.stack().offset(d3.stackOffsetNone)(data.genre.map(function(d, i){ return getPointsZeroMulti(data[type], i);}));
-		console.log(layers);
+		var layers = d3.layout.stack().offset("zero")(data.genre.map(function(d, i){ return getPointsZeroMulti(data[type], i);}));
 		var svg = d3.select("#"+id).select("."+type);
 		//transition all the lines, labels, and areas.
 		svg.selectAll("path").data(layers).transition().duration(500).attr("d", area);
@@ -251,7 +245,7 @@ function drawAll(data, id){
 	var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
 		.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
 		
-	d3.range(data.length).forEach(function(d,i){distQuant(data[i], "segment"+i );});
+	d3.range(data.length).forEach(function(d,i){ distQuant(ShopData[i], "segment"+i );});
 }
 drawAll(ShopData, "contentDiv");
 
