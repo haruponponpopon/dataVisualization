@@ -65,7 +65,7 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-input_filename = "./unagi_out.csv"
+input_filename = "./data/cafe_out1.csv"
 df = pd.read_csv(input_filename)
 df.set_index("ShopName", inplace = True)
 ###########二回目以降のファイルのときはコメントアウト!!!##################### 
@@ -73,7 +73,8 @@ df.set_index("ShopName", inplace = True)
 ###########################################################
 for shop_name in df.index.values:
     if isinstance(df.loc[shop_name, "genres"], pd.core.series.Series):
-        print("error! There is duplication: ", shop_name)
+        
+        print("caution! There is duplication: ", shop_name)
         genre = do_scraping(shop_name)
         add_genre  = ""
         if (genre == None):
@@ -92,10 +93,10 @@ for shop_name in df.index.values:
     genre = do_scraping(shop_name)
     add_genre  = ""
     if (genre == None):
-        add_genre= "None"
+        add_genre= "Unfound"
     else:
         for g in genre:
             add_genre = add_genre + " #" + g
     print(shop_name , " : " , add_genre)
     df.loc[shop_name, "genres"] = add_genre
-    df.to_csv("./unagi_out.csv")
+    df.to_csv("./data/cafe_out1.csv")
