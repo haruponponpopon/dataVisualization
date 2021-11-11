@@ -58,15 +58,12 @@ function showJapanMap(svg, svgPrefectureMap){
             .scale(1500);
         var path = d3.geoPath().projection(projection);
 
-        svg.on("click", clicked);
+        svg.on("click", svgClicked);
 
         console.log(japan.features);
         var prefectures = svg.selectAll("path")
-                        .data(japan.features)
-                        .enter().append("g")
-                        .attr("class", "prefecture_group");
-        
-        svg.selectAll(".prefecture_group")
+            .data(japan.features)
+            .enter().append("g")
             .append("path")
             .attr("d", path)
             .attr("fill", "ivory")
@@ -84,43 +81,43 @@ function showJapanMap(svg, svgPrefectureMap){
             .on("mouseout", function() {
                 tooltip.style("visibility", "hidden");
             })
-            .on("click", function(event, d){
-                isSelected = true;
-                data_selectedPrefecture = d;
-                selectedPrefecture = d.properties.nam_ja;
-                svg.selectAll("path")
-                    .attr("fill", function(d){
-                        return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
-                    });
-                showPrefectureMap(svgPrefectureMap);
-            });
+            .on("click", prefectureClicked);
         
+        var zoom = d3.zoom()
+            .scaleExtent([1, 10])
+            .on("zoom", function(event){
+                prefectures.attr("transform", event.transform);
+            })
+        
+        svg.call(zoom);
+
         const defaultText = "都道府県を選択してください";
         var textShowPrefecture = svg.append("text")
             .attr("x", 20)
             .attr("y", 60)
             .text(defaultText);
 
-        var zoom = d3.zoom()
-                    .scaleExtent([1, 10])
-                    .on("zoom", function(event){
-                        svg.selectAll(".prefecture_group")
-                            .attr("transform", event.transform);
-                    })
-        
-        svg.call(zoom);
-
-        function clicked(){
+        function svgClicked(){
             if (isSelected){
                 isSelected = false;
             } else{
-                svg.selectAll("path").attr("fill", "ivory");
+                prefectures.attr("fill", "ivory");
                 selectedPrefecture = null;
                 data_selectedPrefecture = null;
             }
             textShowPrefecture.text(function() {
                 return selectedPrefecture ? `選択された都道府県：${selectedPrefecture}` : defaultText;
             });
+        }
+
+        function prefectureClicked(event, d){
+            isSelected = true;
+            data_selectedPrefecture = d;
+            selectedPrefecture = d.properties.nam_ja;
+            prefectures.attr("fill", function(d){
+                    return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
+                });
+            showPrefectureMap(svgPrefectureMap);
         }
     });
 }
@@ -135,7 +132,7 @@ function showPrefectureMap(svg){
 
     var path = d3.geoPath().projection(projection);
 
-    svg.selectAll("path")
+    var selectedPref = svg.selectAll("path")
         .data(prefecture.features)
         .enter().append("g")
         .append("path")
