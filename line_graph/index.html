@@ -3,7 +3,7 @@
 <link href='style.css' rel='stylesheet' type='text/css'>
 <body>
 <div id="contentDiv"></div>
-<script src="../data_analysis/unagi.js"></script>
+<script src="../data/data_graph/unagi_line.js"></script>
 <script src="../d3.js"></script>
 
 <script>
@@ -41,15 +41,16 @@ function distQuant(data, id){
 	
 	function draw(type){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var minT = d3.min(data[type].map(function(d){ return d3.sum(d); }));
 		
 		function tW(d){ return x(d); }
-		function tH(d){ return y(d*maxT/50); }
+		function tH(d){ return y(minT + d*(maxT-minT)/50); }
 		
 		var svg =d3.select("#"+id).select("."+type);
 		
 		//x and y axis maps.
 		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, maxT]).range([height, 0]);
+		var y = d3.scaleLinear().domain([minT, maxT]).range([height, 0]);
 		
 		//draw yellow background for graph.
 		svg.append("rect").attr("x",0).attr("y",0).attr("width",width).attr("height",height).style("fill","rgb(235,235,209)");
@@ -111,12 +112,13 @@ function distQuant(data, id){
 	
 	function transitionDefault(type){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var minT = d3.min(data[type].map(function(d){ return d3.sum(d); }));
 		
 		function tW(d){ return x(d); }
-		function tH(d){ return y(d*maxT/50); }
+		function tH(d){ return y(minT + d*(maxT-minT)/50); }
 
 		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, maxT]).range([height, 0]);
+		var y = d3.scaleLinear().domain([minT, maxT]).range([height, 0]);
 
 
 		// transition the lines, areas, and labels.
@@ -147,21 +149,32 @@ function distQuant(data, id){
             return;
         }
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var minT = d3.min(data[type].map(function(d){ return d3.sum(d); }));
 		var max  = d3.max(data[type].map(function(d){ 
-            var sum_choice = 0;
+            var max_choice = 0;
             for (var i = 0; i < data.genre_num; i++) {
                 if (choice_legend[i]) {
-                    sum_choice += d[i];
+                    max_choice = max_choice < d[i] ? d[i] : max_choice;
                 }
             }
-            return sum_choice; 
+            return max_choice; 
+        }));
+
+		var min  = d3.min(data[type].map(function(d){ 
+            var min_choice = 0;
+            for (var i = 0; i < data.genre_num; i++) {
+                if (choice_legend[i]) {
+                    min_choice = min_choice > d[i] ? d[i] : min_choice;;
+                }
+            }
+            return min_choice; 
         }));
 		
 		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+		var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
 		
 		function tW(d){ return x(d); }
-		function tH(d){ return y(d*maxT/50); }
+		function tH(d){ return y(minT + d*(maxT-minT)/50); }
 
 		var svg = d3.select("#"+id).select("."+type);
 		//transition all the lines, labels, and areas.
