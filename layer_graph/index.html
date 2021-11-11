@@ -36,13 +36,13 @@ function distQuant(data, id){
 
 	var min_date_list = data.min_date.split("-");
 	var max_date_list = data.max_date.split("-");
-	dateMin = Number(min_date_list[0]) + 1/12*Number(min_date_list[1]);
-	dateMax = Number(max_date_list[0]) + 1/12*Number(max_date_list[1]);
+	dateMin = Number(min_date_list[0]) + 1/12*(Number(min_date_list[1])-1);
+	dateMax = Number(max_date_list[0]) + 1/12*(Number(max_date_list[1])-1);
 	
 	function draw(type){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
 		
-		function tW(d){ return x(d*(data[type].length - 1)/50); }
+		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 		
 		var svg =d3.select("#"+id).select("."+type);
@@ -55,9 +55,9 @@ function distQuant(data, id){
 		svg.append("rect").attr("x",0).attr("y",0).attr("width",width).attr("height",height).style("fill","rgb(235,235,209)");
 		
 		// draw vertical lines of the grid.
-		svg.selectAll(".vlines").data(d3.range(51)).enter().append("line").attr("class","vlines")
+		svg.selectAll(".vlines").data(d3.range(data.dist.length)).enter().append("line").attr("class","vlines")
 			.attr("x1",tW).attr("y1",0)
-			.attr("x2", tW).attr("y2",function(d,i){ return d%10 ==0 && d!=50? height+12: height;});
+			.attr("x2", tW).attr("y2",function(d,i){ return  (Number(min_date_list[1]) + d) % 12 == 1 && (Number(min_date_list[1]) + d) % 12 != 1? height+12: height;});
 		
 		//draw horizontal lines of the grid.
 		svg.selectAll(".hlines").data(d3.range(51)).enter().append("line").attr("class","hlines")
@@ -66,14 +66,14 @@ function distQuant(data, id){
 			
 		// make every 10th line in the grid darker.	
 		svg.selectAll(".hlines").filter(function(d){ return d%10==0}).style("stroke-opacity",0.7);
-		svg.selectAll(".vlines").filter(function(d){ return d%10==0}).style("stroke-opacity",0.7);
+		svg.selectAll(".vlines").filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1}).style("stroke-opacity",0.7);
 		
 		function getHLabel(d,i){
 			if(type=="dist"){ // for distribution graph use the min and max to get the 5 label values.
-				var r= dateMin +i*(dateMax-dateMin)/5; 
-				var y = Math.trunc(r);
-				var d = Math.trunc((r - y)/(1/12));
-				return y + "-" + d;
+				var r= dateMin +d*(1/12); 
+				var year = Math.trunc(r);
+				var day = Math.trunc((r - year)/(1/12));
+				return year;
 			}else{ // for quantile graph, use label 20, 40, 60, and 80.
 				return (i*20)+' %';
 			}	
@@ -88,7 +88,7 @@ function distQuant(data, id){
 		}
 		// add horizontal axis labels
 		svg.append("g").attr("class","hlabels")
-			.selectAll("text").data(d3.range(41).filter(function(d){ return d%10==0})).enter().append("text")
+			.selectAll("text").data(d3.range(data.dist.length).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
 			.text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",height+14);	
 			
 		// add vertical axes labels.
@@ -119,7 +119,7 @@ function distQuant(data, id){
 	function transitionDefault(type){
 		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
 		
-		function tW(d){ return x(d*(data[type].length - 1)/50); }
+		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 
 		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
@@ -161,7 +161,7 @@ function distQuant(data, id){
 		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
 		var y = d3.scale.linear().domain([0, max]).range([height, 0]);
 		
-		function tW(d){ return x(d*(data[type].length - 1)/50); }
+		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 
 		var area = d3.svg.area().x(function(d) { return x(d.x); })
