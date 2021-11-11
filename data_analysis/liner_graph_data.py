@@ -34,7 +34,7 @@ f_w.write("var ShopData=[];\n")
 f_w.write("ShopData.push({title:'Unagi Data',\n")
 f_w.write("genre_num: "+str(len(genres_dict))+",\n")
 #ジャンル
-f_w.write("genres: [")
+f_w.write("genre: [")
 genres = []
 for key in genres_dict.keys():
     genres.append(key)
@@ -43,8 +43,8 @@ for i in range(len(genres)):
         f_w.write("\""+genres[i]+"\"],\n")
     else:
         f_w.write("\""+genres[i]+"\", ")
-f_w.write("min_date: 2011-09,\n")#手動です。ごめんなさいごめんなさいごめんなさい
-f_w.write("max_date: 2021-11,\n")
+f_w.write("min_date: \"2011-09\",\n")#手動です。ごめんなさいごめんなさいごめんなさい
+f_w.write("max_date: \"2021-11\",\n")
 
 
 #データ
