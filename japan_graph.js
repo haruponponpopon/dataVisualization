@@ -33,8 +33,8 @@ function MakeGraph(data, id){
 	dateMax = Number(max_date_list[0]) + 1/12*(Number(max_date_list[1])-1);
 	
 	function draw(type){
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
-		var minT = d3.min(data[type].map(function(d){ return d3.sum(d); }));
+		var maxT = d3.max(data[type].map(function(d){ return d3.max(d); }));
+		var minT = d3.min(data[type].map(function(d){ return d3.min(d); }));
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(minT + d*(maxT-minT)/50); }
@@ -73,7 +73,7 @@ function MakeGraph(data, id){
 		
 		function getVLabel(d,i){
 			if(type=="dist"){ // for dist use the maximum for sum of frequencies and divide it into 5 pieces.
-				return Math.round(maxT*i/5);
+				return Math.round(minT + (maxT - minT)*i/5);
 			}
 		}
 		// add horizontal axis labels
@@ -83,7 +83,7 @@ function MakeGraph(data, id){
 			
 		// add vertical axes labels.
 		svg.append("g").attr("class","vlabels")
-			.selectAll("text").data(d3.range(41).filter(function(d){ return d%10==0 })).enter().append("text")
+			.selectAll("text").data(d3.range(41).filter(function(d){return d%10==0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 		
