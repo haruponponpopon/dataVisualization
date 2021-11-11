@@ -8,9 +8,12 @@
         <script src="./topojson.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./prefecture_map.js" charset="utf-8"></script>
+        <script src="./data/data_graph/unagi_line.js" charset="utf-8"></script>
+        <script src="./japan_graph.js" charset="utf-8"></script>
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
+<div id="contentDiv"></div>
 
 <script type="text/javascript">
 var width = 800;
@@ -39,11 +42,14 @@ showJapanMap(svgJapanMap, svgPrefectureMap);
 
 // 全国のグラフの表示
 
+drawAll(ShopData, "contentDiv");
+
 
 // 都道府県のグラフの表示
 
 
 // 日本地図の処理
+
 function showJapanMap(svg, svgPrefectureMap){
     var tooltip = d3.select("body").append("div").attr("class", "tooltip");
     var selectedPrefecture = null;
@@ -141,6 +147,7 @@ function showPrefectureMap(svg){
         .attr("fill", "ivory")
         .attr("stroke", "#333333");
 }
+
 
 </script>
 </body></html>
