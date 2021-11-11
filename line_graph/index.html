@@ -97,12 +97,15 @@ function distQuant(data, id){
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 		
-			
-		//draw a white rectangle to hide and to show some statistics.
-		var stat = svg.append("g").attr("class","stat");
-		
-		stat.append("rect").attr("x",-margin).attr("y",-margin)
-			.attr("width",width+2*margin).attr("height",margin).style("fill","white");
+		var graph_line = d3.line().x(function(d) { return x(d.x); })
+			.y(function(d) { return y(d.y); });
+
+		dataset = data.genre.map(function(d,i){ return getPoints(data[type], i);});
+
+		svg.selectAll("path").data(dataset).enter()
+			.append("path").attr("d", graph_line).attr("stroke-width", 2)
+			.attr("stroke", function(d,i) {return colors[i]; }).attr("fill", "none");
+
 			
 	}
 	
@@ -119,17 +122,16 @@ function distQuant(data, id){
 		// transition the lines, areas, and labels.
 		var svg = d3.select("#"+id).select("."+type);	
 
-		var line = d3.line().x(function(d) { return x(d.x); })
+		var graph_line = d3.line().x(function(d) { return x(d.x); })
 			.y(function(d) { return y(d.y); });
 
 		dataset = data.genre.map(function(d,i){ return getPoints(data[type], i);});
 
-		svg.append("path")
+
+		svg.selectAll("path")
 			.data(dataset)
-			.attr("d", line)
-			.attr("stroke", function(d,i) { return colors[i]; })
-			.attr("stroke-width", 3)
-			.attr("fill", "none");
+			.transition().duration(500)
+			.attr("d", graph_line);// .attr("fill", "none");
 
 		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			
 		svg.selectAll(".hlines").transition().duration(500).attr("y1",tH).attr("y2",tH);			
@@ -163,18 +165,16 @@ function distQuant(data, id){
 
 		var svg = d3.select("#"+id).select("."+type);
 		//transition all the lines, labels, and areas.
-		var line = d3.line().x(function(d) { return x(d.x); })
+		var graph_line = d3.line().x(function(d) { return x(d.x); })
 			.y(function(d) { return y(d.y); });
 
 		dataset = data.genre.map(function(d,i){ return getPointsZeroMulti(data[type], i);});
 
 
-		svg.selectAll("path").append("path")
+		svg.selectAll("path")
 			.data(dataset)
-			.attr("d", line)
-			.attr("stroke-width", 3)
-			.attr("stroke", function(d,i) { return colors[i]; })
-			.attr("fill", "none");
+			.transition().duration(500)
+			.attr("d", graph_line).attr("fill", "none");
 
 			
 		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			

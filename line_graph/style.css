@@ -1,6 +1,6 @@
 path{
 	fill-opacity:0.8;
-	stroke-opacity:0;
+	/* stroke-opacity:1; */
 }
 .vlines, .hlines{
 	stroke:rgb(150,148,109);
