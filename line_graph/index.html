@@ -40,7 +40,7 @@ function distQuant(data, id){
 	dateMax = Number(max_date_list[0]) + 1/12*(Number(max_date_list[1])-1);
 	
 	function draw(type){
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var maxT = d3.max(data[type].map(function(d){ return d3.max(d); }));
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
@@ -48,8 +48,8 @@ function distQuant(data, id){
 		var svg =d3.select("#"+id).select("."+type);
 		
 		//x and y axis maps.
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, maxT]).range([height, 0]);
+		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
+		var y = d3.scale.linear().domain([0, maxT]).range([height, 0]);
 		
 		//draw yellow background for graph.
 		svg.append("rect").attr("x",0).attr("y",0).attr("width",width).attr("height",height).style("fill","rgb(235,235,209)");
@@ -97,12 +97,12 @@ function distQuant(data, id){
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 		
-		var area = d3.area().x(function(d) { return x(d.x); })
+		var area = d3.svg.area().x(function(d) { return x(d.x); })
 			.y0(function(d) { return y(d.y0); })
-			.y1(function(d) { return y(d.y0 + d.y); });
-			//.interpolate("basis");
+			.y1(function(d) { return y(d.y0 + d.y); })
+			.interpolate("basis");
 
-		var layers = d3.stack(data.genre.map(function(d,i){ return getPoints(data[type], i);})).offset;
+		var layers = d3.layout.stack().offset("zero")(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
 		
 		svg.selectAll("path").data(layers).enter().append("path").attr("d", area)
 			.style("fill", function(d,i) { return colors[i]; })
@@ -117,19 +117,19 @@ function distQuant(data, id){
 	}
 	
 	function transitionDefault(type){
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var maxT = d3.max(data[type].map(function(d){ return d3.max(d); }));
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, maxT]).range([height, 0]);
+		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
+		var y = d3.scale.linear().domain([0, maxT]).range([height, 0]);
 
-		var area = d3.area().x(function(d) { return x(d.x); })
+		var area = d3.svg.area().x(function(d) { return x(d.x); })
 			.y0(function(d) { return y(d.y0); })
-			.y1(function(d) { return y(d.y0 + d.y); });
-			// .interpolate("basis");
-		var layers = d3.stack().offset("zero")(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
+			.y1(function(d) { return y(d.y0 + d.y); })
+			.interpolate("basis");
+		var layers = d3.layout.stack().offset("zero")(data.genre.map(function(d,i){ return getPoints(data[type], i);}));
 		
 		// transition the lines, areas, and labels.
 		var svg = d3.select("#"+id).select("."+type);		
@@ -147,24 +147,24 @@ function distQuant(data, id){
             transitionDefault("dist");
             return;
         }
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
+		var maxT = d3.max(data[type].map(function(d){ return d3.max(d); }));
 		var max  = d3.max(data[type].map(function(d){ 
-            var sum_choice = 0;
+            var max_choice = 0;
             for (var i = 0; i < data.genre_num; i++) {
                 if (choice_legend[i]) {
-                    sum_choice += d[i];
+                    max_choice = ;
                 }
             }
             return sum_choice; 
         }));
 		
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([0, max]).range([height, 0]);
+		var x = d3.scale.linear().domain([0, data[type].length - 1]).range([0, width]);
+		var y = d3.scale.linear().domain([0, max]).range([height, 0]);
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(d*maxT/50); }
 
-		var area = d3.area().x(function(d) { return x(d.x); })
+		var area = d3.svg.area().x(function(d) { return x(d.x); })
 			.y0(function(d) { return y(d.y0); })
 			.y1(function(d) { return y(d.y0 + d.y); })
 			.interpolate("basis");
@@ -245,7 +245,7 @@ function drawAll(data, id){
 	var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
 		.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
 		
-	d3.scan(data).forEach(function(d,i){ distQuant(ShopData[i], "segment"+i );});
+	d3.range(data.length).forEach(function(d,i){ distQuant(ShopData[i], "segment"+i );});
 }
 drawAll(ShopData, "contentDiv");
 
