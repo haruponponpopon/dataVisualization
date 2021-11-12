@@ -11,7 +11,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 
-
 shop_name = "島たこやき MIKE トゥースマート店"  #ここを自由に店名を変える
 options = Options()
 options.add_argument('--headless')

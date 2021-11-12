@@ -65,7 +65,7 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-input_filename = "./data/cafe_out1.csv"
+input_filename = "./data/taiyaki_out.csv"
 df = pd.read_csv(input_filename)
 df.set_index("ShopName", inplace = True)
 ###########二回目以降のファイルのときはコメントアウト!!!##################### 
@@ -99,4 +99,4 @@ for shop_name in df.index.values:
             add_genre = add_genre + " #" + g
     print(shop_name , " : " , add_genre)
     df.loc[shop_name, "genres"] = add_genre
-    df.to_csv("./data/cafe_out1.csv")
+    df.to_csv("./data/taiyaki_out.csv")
