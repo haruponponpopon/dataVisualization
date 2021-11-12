@@ -47,60 +47,52 @@ f_w.write("max_date: \"2021-11\",\n")
 
 
 #データ
-f_w.write("dist: [\n")
-#店の閉店開店の累積データの配列
-sum = [0]*len(genres)
-#2011年
-for month in range(9,13):
-    f_w.write("[")
-    date = "2011-"
-    if month<10:
-        date += "0"+str(month)
-    else:
-        date += str(month)
-    for i in range(len(genres)):
-        if mydict.get((genres[i],date))!=None:
-            sum[i]+=mydict[(genres[i],date)]
-        f_w.write(str(sum[i]))
-        if i==len(genres)-1:
-            f_w.write("],\n")
-        else:
-            f_w.write(", ")
-#2012-2020年
-for year in range(12,21):
-    for month in range(1,13):
-        f_w.write("[")
-        date = "20"+str(year)+"-"
+f_w.write("dist: {\n")
+
+for genre in genres:
+    f_w.write("\""+genre+"\": [")
+    #店の閉店開店の累積データの配列
+    sum = 0
+    #2011年
+    for month in range(9,13):
+        date = "2011-"
         if month<10:
             date += "0"+str(month)
         else:
             date += str(month)
-        for i in range(len(genres)):
-            if mydict.get((genres[i],date))!=None:
-                sum[i]+=mydict[(genres[i],date)]
-            f_w.write(str(sum[i]))
-            if i==len(genres)-1:
-                f_w.write("],\n")
+        if mydict.get((genre,date))!=None:
+            sum+=mydict[(genre,date)]
+        f_w.write(" "+str(sum)+",")
+    #2012年-2020年
+    for year in range(12,21):
+        for month in range(1,13):
+            date = "20"+str(year)+"-"
+            if month<10:
+                date += "0"+str(month)
             else:
-                f_w.write(", ")
-#2021年
-for month in range(1,12):
-    f_w.write("[")
-    date = "2021-"
-    if month<10:
-        date += "0"+str(month)
-    else:
-        date += str(month)
-    for i in range(len(genres)):
-        if mydict.get((genres[i],date))!=None:
-            sum[i]+=mydict[(genres[i],date)]
-        f_w.write(str(sum[i]))
-        if i==len(genres)-1:
-            if month==11:
-                f_w.write("]\n")
-            else:
-                f_w.write("],\n")
+                date += str(month)
+            if mydict.get((genre,date))!=None:
+                sum+=mydict[(genre,date)]
+            f_w.write(" "+str(sum)+",")
+    #2021年
+    for month in range(1,12):
+        date = "2021-"
+        if month<10:
+            date += "0"+str(month)
         else:
-            f_w.write(", ")
-f_w.write("]});\n")
+            date += str(month)
+        if mydict.get((genre,date))!=None:
+            sum+=mydict[(genre,date)]
+        if month!=11:
+            f_w.write(" "+str(sum)+",")
+        else:
+            f_w.write(" "+str(sum)+"]")
+    if genre!=genres[len(genres)-1]:
+        f_w.write(",\n")
+    else:
+        f_w.write("\n")
+
+
+
+f_w.write("}});\n")
 f_w.close()
