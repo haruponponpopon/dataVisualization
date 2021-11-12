@@ -88,6 +88,7 @@ ShopPrefectureData = {
 ```javaScript
 ShopPrefectureData = {
     genre_num: [ジャンル総数],
+    data_num: [年月の数],
     min_date: "(日付最小値)", 
     max_date: "(日付最大値)",
     genre: [ジャンル1, ジャンル2, ジャンル3...], 
