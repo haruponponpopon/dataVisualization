@@ -13,6 +13,8 @@
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
+<input type="range" id = "yearInput">
+<h2><span id="yearCurrentValue"></span></h2>
 
 <div id="contentDiv"></div>
 
@@ -22,7 +24,7 @@ var height = 800;
 
 var choice_genres = {};
 for(var i of ShopData[0].genre) {
-        choice_genres[i] = false;
+    choice_genres[i] = false;
 }
 var true_num = 0;
 
@@ -42,9 +44,29 @@ for (var c of color_palette) {
 	index++;
 }
 
+var current_date;
+
+
 sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres));
 sessionStorage.setItem("true_num", true_num);
 sessionStorage.setItem("colors" , JSON.stringify(colors));
+
+
+// 選択状態の更新用関数
+function pull_all_data() {
+    choice_genres = JSON.parse(sessionStorage.getItem("choice_genres"));
+    true_num = JSON.parse(sessionStorage.getItem("true_num"));
+	colors = JSON.parse(sessionStorage.getItem("colors"));
+    current_date = JSON.parse(sessionStorage.getItem("current_date"));
+}
+
+function push_all_data() {
+    sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres) );
+    sessionStorage.setItem("true_num", true_num);
+    sessionStorage.setItem("colors", JSON.stringify(colors));
+    sessionStorage.setItem("current_date" , JSON.stringify(current_date));
+}
+
 
 var svgJapanMap = d3.select("body").append("svg")
     .attr("width", width)
@@ -60,6 +82,35 @@ var topojsonPrefecture = makeTopojsonPrefecture();
 // ジャンル選択ボタン
 
 // 年度指定のスクロールバー
+var year_input = document.getElementById("yearInput");
+var min_date_list = ShopData[0].min_date.split("-");
+var max_date_list = ShopData[0].max_date.split("-");
+dateMin = Number(min_date_list[0]) + 1/12*(Number(min_date_list[1])-1);
+dateMax = Number(max_date_list[0]) + 1/12*(Number(max_date_list[1])-1);
+year_input.min = dateMin;
+year_input.max = dateMax;
+year_input.value = dateMin;
+year_input.step = 1/12;
+var year_current_value = document.getElementById("yearCurrentValue");
+// 現在の値をspanに埋め込む関数
+const setCurrentValue = (val) => {
+    var year = Math.floor(val);
+    var month = Math.round((val - year) * 12) + 1;
+    current_date = val;
+    sessionStorage.setItem("current_date" , JSON.stringify(current_date));
+    year_current_value.innerText = "" + year + "-" + month;
+    updateVline(ShopData, "contentDiv");
+}
+
+// inputイベント時に値をセットする関数
+const rangeOnChange = (e) =>{
+    setCurrentValue(e.target.value);
+}
+
+window.onload = () => {
+    year_input.addEventListener('input', rangeOnChange); // スライダー変化時にイベントを発火
+    setCurrentValue(year_input.value); // ページ読み込み時に値をセット
+}
 
 // データの読み込み
 
