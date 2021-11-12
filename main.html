@@ -44,12 +44,12 @@ for (var c of color_palette) {
 	index++;
 }
 
-var current_date = ShopData[0].min_date;
+var current_date;
+
 
 sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres));
 sessionStorage.setItem("true_num", true_num);
 sessionStorage.setItem("colors" , JSON.stringify(colors));
-sessionStorage.setItem("current_date" , JSON.stringify(current_date));
 
 
 // 選択状態の更新用関数
@@ -96,7 +96,10 @@ var year_current_value = document.getElementById("yearCurrentValue");
 const setCurrentValue = (val) => {
     var year = Math.floor(val);
     var month = Math.round((val - year) * 12) + 1;
+    current_date = val;
+    sessionStorage.setItem("current_date" , JSON.stringify(current_date));
     year_current_value.innerText = "" + year + "-" + month;
+    updateVline(ShopData, "contentDiv");
 }
 
 // inputイベント時に値をセットする関数
@@ -105,7 +108,7 @@ const rangeOnChange = (e) =>{
 }
 
 window.onload = () => {
-  year_input.addEventListener('input', rangeOnChange); // スライダー変化時にイベントを発火
+    year_input.addEventListener('input', rangeOnChange); // スライダー変化時にイベントを発火
     setCurrentValue(year_input.value); // ページ読み込み時に値をセット
 }
 
