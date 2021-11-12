@@ -1,37 +1,46 @@
-// var choice_legend = {};
-// var legends = [];
-var colors = ["#7D74FE","#7DFF26","#F84F1B","#28D8D5","#FB95B6","#9D9931","#F12ABF","#27EA88","#549AD5","#FEA526","#7B8D8B","#BB755F","#432E16",
-"#D75CFB","#44E337","#51EBE3","#ED3D24","#4069AE","#E1CC72","#E33E88","#D8A3B3","#428B50","#66F3A3","#E28A2A","#B2594D","#609297","#E8F03F","#3D2241",
-"#954EB3","#6A771C","#58AE2E","#75C5E9","#BBEB85","#A7DAB9","#6578E6","#932C5F","#865A26","#CC78B9","#2E5A52","#8C9D79","#9F6270","#6D3377","#551927","#DE8D5A",
-"#E3DEA8","#C3C9DB","#3A5870","#CD3B4F","#E476E3","#DCAB94","#33386D","#4DA284","#817AA5","#8D8384","#624F49","#8E211F","#9E785B","#355C22","#D4ADDE",
-"#A98229","#E88B87","#28282D","#253719","#BD89E1","#EB33D8","#6D311F","#DF45AA","#E86723","#6CE5BC","#765175","#942C42","#986CEB","#8CC488","#8395E3",
-"#D96F98","#9E2F83","#CFCBB8","#4AB9B7","#E7AC2C","#E96D59","#929752","#5E54A9","#CCBA3F","#BD3CB8","#408A2C","#8AE32E","#5E5621","#ADD837","#BE3221","#8DA12E",
-"#3BC58B","#6EE259","#52D170","#D2A867","#5C9CCD","#DB6472","#B9E8E0","#CDE067","#9C5615","#536C4F","#A74725","#CBD88A","#DF3066","#E9D235","#EE404C","#7DB362",
-"#B1EDA3","#71D2E1","#A954DC","#91DF6E","#CB6429","#D64ADC"];
-var color_len = colors.length;
-
 var choice_legend;
 var true_num;
-var legends;
+var colors;
+var color_dict;
+var genre_list;
 
 function pull_choice_data() {
     choice_legend = JSON.parse(sessionStorage.getItem("choice_genres"));
     true_num = JSON.parse(sessionStorage.getItem("true_num"));
-    legends = JSON.parse(sessionStorage.getItem("order_genres"));
+	colors = JSON.parse(sessionStorage.getItem("colors"));
+    color_dict = {};
+    for (var index in colors) {
+        if (colors[index].genre !== undefined) {
+            color_dict[colors[index].genre] = index;
+        }
+    }
 }
 
 function push_choice_data() {
     sessionStorage.setItem("choice_genres" , JSON.stringify(choice_legend) );
     sessionStorage.setItem("true_num", true_num);
-    sessionStorage.setItem("order_genres", JSON.stringify(legends));
+    sessionStorage.setItem("colors", JSON.stringify(colors));
 }
 
 function MakeGraph(data, id){
-    pull_choice_data();
+	pull_choice_data();
+	var ganre_list;
 
-	function getPoints(_, i){		return _.map(function(d,j){ return {x:j, y:0};});	}
-	/* function to return 0 for all attributes except k-th attribute.*/
-    function getPointsZeroMulti(_, i) {return _.map(function(d,j){ return {x:j, y:(choice_legend[i] ? d[i] : 0 )};});	}
+	function getPoints(_){
+		var zahyou = [];
+		ganre_list = []
+		for (var g in _) {
+			if (choice_legend[g]) { 
+				zahyou.push(_[g].map(function(d,j){ return {x:j, y:d};}));
+			}
+			else {
+				zahyou.push(_[g].map(function(d,j){ return {x:j, y:0};}))
+			}
+			ganre_list.push(g);
+		}		
+		return zahyou;
+	}
+
 	function toComma(x) {    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 		
 	var width=400, height=300, margin=20;
@@ -40,10 +49,18 @@ function MakeGraph(data, id){
 	var max_date_list = data.max_date.split("-");
 	dateMin = Number(min_date_list[0]) + 1/12*(Number(min_date_list[1])-1);
 	dateMax = Number(max_date_list[0]) + 1/12*(Number(max_date_list[1])-1);
+	var maxT = 0;
+	var minT = 0;
+	var type = "dist";
+	for (var g in data[type]) {
+		var M = d3.max(data[type][g]);
+		maxT = M > maxT ? M : maxT;
+		var m = d3.min(data[type][g]);
+		minT = m < minT ? m : minT;
+	}
+
 	
-	function draw(type){
-		var maxT = d3.max(data[type].map(function(d){ return d3.max(d); }));
-		var minT = d3.min(data[type].map(function(d){ return d3.min(d); }));
+	function draw(){
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(minT + d*(maxT-minT)/50); }
@@ -51,14 +68,14 @@ function MakeGraph(data, id){
 		var svg =d3.select("#"+id).select("."+type);
 		
 		//x and y axis maps.
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
+		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, width]);
 		var y = d3.scaleLinear().domain([minT, maxT]).range([height, 0]);
 		
 		//draw yellow background for graph.
 		svg.append("rect").attr("x",0).attr("y",0).attr("width",width).attr("height",height).style("fill","rgb(235,235,209)");
 		
 		// draw vertical lines of the grid.
-		svg.selectAll(".vlines").data(d3.range(data.dist.length)).enter().append("line").attr("class","vlines")
+		svg.selectAll(".vlines").data(d3.range(data.data_num)).enter().append("line").attr("class","vlines")
 			.attr("x1",tW).attr("y1",0)
 			.attr("x2", tW).attr("y2",function(d,i){ return  (Number(min_date_list[1]) + d) % 12 == 1 && (Number(min_date_list[1]) + d) % 12 != 1? height+12: height;});
 		
@@ -75,7 +92,6 @@ function MakeGraph(data, id){
 			if(type=="dist"){ // for distribution graph use the min and max to get the 5 label values.
 				var r= dateMin +d*(1/12); 
 				var year = Math.trunc(r);
-				var day = Math.trunc((r - year)/(1/12));
 				return year;
 			}
 		}
@@ -87,7 +103,7 @@ function MakeGraph(data, id){
 		}
 		// add horizontal axis labels
 		svg.append("g").attr("class","hlabels")
-			.selectAll("text").data(d3.range(data.dist.length).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
+			.selectAll("text").data(d3.range(data.data_num).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
 			.text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",height+14);	
 			
 		// add vertical axes labels.
@@ -96,31 +112,36 @@ function MakeGraph(data, id){
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 		
-		var graph_line = d3.line().x(function(d) { return x(d.x); })
+		var graph_line = d3.line().x(function(d) {return x(d.x); })
 			.y(function(d) { return y(d.y); });
 
-		dataset = data.genre.map(function(d,i){ return getPoints(data[type], i);});
+		var dataset = getPoints(data[type]);
 
 		svg.selectAll("path").data(dataset).enter()
 			.append("path").attr("d", graph_line)
-			.attr("stroke-width", function(d,i) {
-				if (choice_legend[i]) {
+			.attr("stroke-width",function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
 					return 2;
 				}
-				return 0;})
-			.attr("stroke", function(d,i) {return colors[i%color_len]; }).attr("fill", "none");
+				return 0;
+			})
+			.attr("stroke", function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return colors[color_dict[ganre_list[i]]].color;
+				}
+				return "#000000";
+			})
+			.attr("fill", "none");
 
 			
 	}
 	
-	function transitionDefault(type){
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
-		var minT = d3.min(data[type].map(function(d){ return d3.sum(d); }));
+	function transitionDefault(){
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(minT + d*(maxT-minT)/50); }
 
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
+		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, width]);
 		var y = d3.scaleLinear().domain([minT, maxT]).range([height, 0]);
 
 
@@ -130,19 +151,25 @@ function MakeGraph(data, id){
 		var graph_line = d3.line().x(function(d) { return x(d.x); })
 			.y(function(d) { return y(d.y); });
 
-		dataset = data.genre.map(function(d,i){ return getPoints(data[type], i);});
-
+		var dataset = getPoints(data[type]);
 
 		svg.selectAll("path")
 			.data(dataset)
 			.transition().duration(500)
 			.attr("d", graph_line)
-			.attr("stroke-width", function(d,i) {
-				if (choice_legend[i]) {
+			.attr("stroke-width",function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
 					return 2;
 				}
 				return 0;
-			});// .attr("fill", "none");
+			})
+			.attr("stroke", function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return colors[color_dict[ganre_list[i]]].color;
+				}
+				return "#000000";
+			})
+			.attr("fill", "none");
 
 		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			
 		svg.selectAll(".hlines").transition().duration(500).attr("y1",tH).attr("y2",tH);			
@@ -152,56 +179,50 @@ function MakeGraph(data, id){
 	}
 
 
-    function transitionClick(type){
+    function transitionClick(){
         if (true_num == 0) {
-            transitionDefault("dist");
+            transitionDefault();
             return;
         }
-		var maxT = d3.max(data[type].map(function(d){ return d3.sum(d); }));
-		var minT = d3.min(data[type].map(function(d){ return d3.sum(d); }));
-		var max  = d3.max(data[type].map(function(d){ 
-            var max_choice = 0;
-            for (var i = 0; i < data.genre_num; i++) {
-                if (choice_legend[i]) {
-                    max_choice = max_choice < d[i] ? d[i] : max_choice;
-                }
-            }
-            return max_choice; 
-        }));
-
-		var min  = d3.min(data[type].map(function(d){ 
-            var min_choice = 0;
-            for (var i = 0; i < data.genre_num; i++) {
-                if (choice_legend[i]) {
-                    min_choice = min_choice > d[i] ? d[i] : min_choice;;
-                }
-            }
-            return min_choice; 
-        }));
+		var maxCurrent = 0;
+		var minCurrent = 0;
+		for (var g in data[type]) {
+			if (choice_legend[g]) {
+				var M = d3.max(data[type][g]);
+				maxCurrent = M > maxCurrent ? M : maxCurrent;
+				var m = d3.min(data[type][g]);
+				minCurrent = m < minCurrent ? m : minCurrent;
+			}
+		}
 		
-		var x = d3.scaleLinear().domain([0, data[type].length - 1]).range([0, width]);
-		var y = d3.scaleLinear().domain([min, max]).range([height, 0]);
+		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, width]);
+		var y = d3.scaleLinear().domain([minCurrent, maxCurrent]).range([height, 0]);
 		
 		function tW(d){ return x(d); }
 		function tH(d){ return y(minT + d*(maxT-minT)/50); }
 
 		var svg = d3.select("#"+id).select("."+type);
 		//transition all the lines, labels, and areas.
-		var graph_line = d3.line().x(function(d) { return x(d.x); })
+		var graph_line = d3.line().x(function(d) {return x(d.x); })
 			.y(function(d) { return y(d.y); });
 
-		dataset = data.genre.map(function(d,i){ return getPointsZeroMulti(data[type], i);});
-
+		var dataset = getPoints(data[type]);
 
 		svg.selectAll("path")
 			.data(dataset)
 			.transition().duration(500)
 			.attr("d", graph_line).attr("fill", "none")
-			.attr("stroke-width", function(d,i) {
-				if (choice_legend[i]) {
+			.attr("stroke-width",function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
 					return 2;
 				}
 				return 0;
+			})
+			.attr("stroke", function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return colors[color_dict[ganre_list[i]]].color;
+				}
+				return "#000000";
 			});
 
 			
@@ -227,78 +248,88 @@ function MakeGraph(data, id){
 	var legRow = d3.select("#"+id).append("div").attr("class","legend")
 		.append("table").selectAll("tr").data(data.genre).enter().append("tr").append("td");
     legRow.append("div")
-        .style("background",function(d,i){ 
-            if (choice_legend[i]) {
-                return colors[i%color_len];
+        .style("background",function(d){ 
+            if (choice_legend[d]) {
+                return colors[color_dict[d]].color;
             }
             return "#FFFFFF";})
         .style("cursor","pointer")
-		.on("click", function(event, d) {
-            pull_choice_data();
-			var index = legends[d];
-            if (choice_legend[index]) {
-                choice_legend[index] = false;
+		.on("click", function(event,d) {
+			pull_choice_data();
+            if (choice_legend[d]) {
+				choice_legend[d] = false;
+				colors[color_dict[d]].genre = undefined;
                 true_num--;
             }
             else {
-                choice_legend[index] = true;
+				choice_legend[d] = true;
+				for (var index in colors) {
+					if (colors[index].genre === undefined) {
+						colors[index].genre = d;
+						color_dict[d] = index;
+						break;
+					}
+				}
                 true_num++;
             }
             push_choice_data();
             legRow.style("background-color", function(d) {
-                    var index = legends[d];
-                    if (choice_legend[index]) {
+                    if (choice_legend[d]) {
                         return "skyblue";
                     }
                     return "white";
                 });
             legRow.selectAll("div")
-                .style("background",function(d,i){ 
-                    var index = legends[d];
-                    if (choice_legend[index]) {
-                        return colors[index%color_len];
+                .style("background",function(d){ 
+                    if (choice_legend[d]) {
+                        return colors[color_dict[d]].color;
                     }
                     return "#FFFFFF";
                 });	
-			transitionClick("dist");
+			transitionClick();
         });
 		
     legRow.append("span").text(function(d){ return d;})
         .style("cursor","pointer")
-		.on("click", function(event, d) {
+		.on("click", function(event,d) {
             pull_choice_data();
-			var index = legends[d];
-            if (choice_legend[index]) {
-                choice_legend[index] = false;
+            if (choice_legend[d]) {
+				choice_legend[d] = false;
+				colors[color_dict[d]].genre = undefined;
                 true_num--;
             }
             else {
-                choice_legend[index] = true;
+				choice_legend[d] = true;
+				for (var index in colors) {
+					if (colors[index].genre === undefined) {
+						colors[index].genre = d;
+						color_dict[d] = index;
+						break;
+					}
+				}
                 true_num++;
             }
             push_choice_data();
             legRow.style("background-color", function(d) {
-				var index = legends[d];
-                if (choice_legend[index]) {
-                    return "skyblue";
-                }
-                return "white";
-            });
+                    if (choice_legend[d]) {
+                        return "skyblue";
+                    }
+                    return "white";
+                });
             legRow.selectAll("div")
-                .style("background",function(d,i){ 
-                    var index = legends[d];
-                    if (choice_legend[index]) {
-                        return colors[index%color_len];
+                .style("background",function(d){ 
+                    if (choice_legend[d]) {
+                        return colors[color_dict[d]].color;
                     }
                     return "#FFFFFF";
-                });		
-			transitionClick("dist");
+                });	
+			transitionClick();
         });
     
 }
 
 function drawAll(data, id){
-    import("./d3.js").then(module => {
+    import("../d3.js").then(module => {
         var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
             .append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
             
