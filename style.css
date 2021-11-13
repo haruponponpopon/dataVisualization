@@ -76,13 +76,13 @@ svg{
 .legend tr:hover{
 	background:silver;
 }
-.distquantdiv{
+.shopdatadiv{
 	clear:both;
 	padding:10px;
 	overflow:hidden;
 	margin: 20px;
 }
-.distquantdiv h3{
+.shopdatadiv h3{
 	padding-left: 40px;
 	margin-bottom:0;
 }

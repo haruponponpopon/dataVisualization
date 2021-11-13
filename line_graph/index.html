@@ -3,8 +3,11 @@
 <link href='style.css' rel='stylesheet' type='text/css'>
 <body>
 <div id="contentDiv"></div>
+<div id="contentDivPre"></div>
 <script src="../data/data_graph/unagi_line_v2.js"></script>
+<script src="../data/data_graph/unagi_line_pref_v2.js"></script>
 <script src="./test_line_graph.js"></script>
+<script src="./pre_line_graph.js"></script>
 <script src="../d3.js"></script>
 
 <script>
@@ -30,9 +33,14 @@ for (var c of color_palette) {
 	index++;
 }
 
+var current_pre = "北海道";
+
 sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres));
 sessionStorage.setItem("true_num", true_num);
 sessionStorage.setItem("colors" , JSON.stringify(colors));
+sessionStorage.setItem("current_pre" , current_pre);
 drawAll(ShopData, "contentDiv");
+initAllPre(ShopPrefectureData, "contentDivPre");
+drawAllPre(ShopPrefectureData, "contentDivPre")
 
 </script>

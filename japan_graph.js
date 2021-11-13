@@ -343,12 +343,10 @@ function MakeGraph(data, id){
 }
 
 function drawAll(data, id){
-    import("../d3.js").then(module => {
-        var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
-            .append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
-            
-        d3.range(data.length).forEach(function(d,i){MakeGraph(data[i], "segment"+i );});
-    });
+	var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
+		.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
+		
+	d3.range(data.length).forEach(function(d,i){MakeGraph(data[i], "segment"+i );});
 }
 
 function updateVline(input_data, id){

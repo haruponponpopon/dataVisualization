@@ -19,7 +19,8 @@ function pull_choice_data() {
 function push_choice_data() {
     sessionStorage.setItem("choice_genres" , JSON.stringify(choice_legend) );
     sessionStorage.setItem("true_num", true_num);
-    sessionStorage.setItem("colors", JSON.stringify(colors));
+	sessionStorage.setItem("colors", JSON.stringify(colors));
+	sessionStorage.setItem("color_dict", JSON.stringify(color_dict));
 }
 
 function MakeGraph(data, id){
@@ -287,6 +288,7 @@ function MakeGraph(data, id){
                     return "#FFFFFF";
                 });	
 			transitionClick();
+			updateGanrePre(ShopPrefectureData, "contentDivPre");
         });
 		
     legRow.append("span").text(function(d){ return d;})
@@ -324,12 +326,13 @@ function MakeGraph(data, id){
                     return "#FFFFFF";
                 });	
 			transitionClick();
+			updateGanrePre(ShopPrefectureData, "contentDivPre");
         });
     
 }
 
 function drawAll(data, id){
-    import("../d3.js").then(module => {
+    import("./test_line_graph.js").then(module => {
         var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
             .append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
             
