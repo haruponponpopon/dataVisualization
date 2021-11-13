@@ -296,6 +296,7 @@ function updateGraphPre(data, id) {
 		
     }
     transitionClick();
+    
 
 }
 
@@ -321,7 +322,7 @@ function updateGanrePre(data, id){
 
 
 function updateVlinePre(input_data, id){
-	var svg = d3.select("#"+id).select("."+"distPre");	
-	svg.selectAll(".selectDatePre").transition().duration(50)
+	var svg = d3.select("#"+id).select("."+"dist");	
+	svg.selectAll(".selectDate").transition().duration(50)
 		.attr("x1",currentVline).attr("x2",currentVline);
 }
