@@ -44,9 +44,12 @@ f_r.close()
 #データの書き込み
 f_w = open('unagi_line_pref_v2.js','w')
 #最初の方の諸々データ
-f_w.write("var ShopData=[];\n")
-f_w.write("ShopData.push({title:'Unagi Data',\n")
+f_w.write("var ShopPrefectureData=[];\n")
+f_w.write("ShopPrefectureData.push({title:'Unagi Data',\n")
 f_w.write("genre_num: "+str(len(genres_dict))+",\n")
+f_w.write("data_num: 123,\n")
+f_w.write("min_date: \"2011-09\",\n")#手動です。ごめんなさいごめんなさいごめんなさい
+f_w.write("max_date: \"2021-11\",\n")
 #ジャンル
 f_w.write("genre: [")
 genres = []
@@ -57,9 +60,6 @@ for i in range(len(genres)):
         f_w.write("\""+genres[i]+"\"],\n")
     else:
         f_w.write("\""+genres[i]+"\", ")
-f_w.write("min_date: \"2011-09\",\n")#手動です。ごめんなさいごめんなさいごめんなさい
-f_w.write("max_date: \"2021-11\",\n")
-
 
 #描画されるデータの書き込み
 f_w.write("dist: {\n")
@@ -111,7 +111,6 @@ for prefecture in prefectures:
         f_w.write("},\n")
     else:
         f_w.write("}\n")
-
 
 f_w.write("}});\n")
 f_w.close()
