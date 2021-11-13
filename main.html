@@ -9,7 +9,9 @@
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./prefecture_map.js" charset="utf-8"></script>
         <script src="./data/data_graph/unagi_line_v2.js" charset="utf-8"></script>
+        <script src="./data/data_graph/unagi_line_pref_v2.js" charset="utf-8"></script>
         <script src="./japan_graph.js" charset="utf-8"></script>
+        <script src="./prefecture_graph.js" charset="utf-8"></script>
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
@@ -17,6 +19,7 @@
 <h2><span id="yearCurrentValue"></span></h2>
 
 <div id="contentDiv"></div>
+<div id="contentDivPre"></div>
 
 <script type="text/javascript">
 var width = 800;
@@ -45,11 +48,13 @@ for (var c of color_palette) {
 }
 
 var current_date;
+var current_pre = undefined;
 
 
 sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres));
 sessionStorage.setItem("true_num", true_num);
 sessionStorage.setItem("colors" , JSON.stringify(colors));
+sessionStorage.setItem("current_pre" , current_pre);
 
 
 // 選択状態の更新用関数
@@ -100,6 +105,7 @@ const setCurrentValue = (val) => {
     sessionStorage.setItem("current_date" , JSON.stringify(current_date));
     year_current_value.innerText = "" + year + "-" + month;
     updateVline(ShopData, "contentDiv");
+    updateVlinePre(ShopPrefectureData, "contentDivPre");
 }
 
 // inputイベント時に値をセットする関数
@@ -124,6 +130,14 @@ drawAll(ShopData, "contentDiv");
 
 
 // 都道府県のグラフの表示
+initAllPre(ShopPrefectureData, "contentDivPre");
+
+// ---------都道府県グラフの更新はこんな感じ-----------
+current_pre = "北海道";
+sessionStorage.setItem("current_pre" , current_pre);
+
+drawAllPre(ShopPrefectureData, "contentDivPre");
+// ---------都道府県グラフの更新はこんな感じ-----------
 
 
 // 日本地図の処理

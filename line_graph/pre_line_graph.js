@@ -296,6 +296,7 @@ function updateGraphPre(data, id) {
 		
     }
     transitionClick();
+    
 
 }
 
