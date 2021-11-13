@@ -6,6 +6,7 @@
         <title>Stores in Japan</title>
         <script src="./d3.js" charset="utf-8"></script>
         <script src="./topojson.js" charset="utf-8"></script>
+        <script src="./data/data_plot/unagi_plot.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./prefecture_map.js" charset="utf-8"></script>
         <script src="./data/data_graph/unagi_line_v2.js" charset="utf-8"></script>
@@ -83,6 +84,14 @@ var svgPrefectureMap = d3.select("body").append("svg")
 
 var data_selectedPrefecture = null;
 var topojsonPrefecture = makeTopojsonPrefecture();
+
+const genreMap = new Map([
+    ["unagi", unagi]
+]);
+
+let selectedGenre = "unagi";
+let currentYear = 2021;
+let currentMonth = 3;
 
 // ジャンル選択ボタン
 
@@ -180,11 +189,27 @@ function showJapanMap(svg, svgPrefectureMap){
                 tooltip.style("visibility", "hidden");
             })
             .on("click", prefectureClicked);
+
+        var plot = svg.selectAll("circle.plot")
+            .data(genreMap.get(selectedGenre)[currentYear][currentMonth])
+            .enter().append("g")
+            .append("circle")
+            .attr("cx", function(d){
+                return projection(d.longitude_latitude)[0];
+            })
+            .attr("cy", function(d){
+                return projection(d.longitude_latitude)[1];
+            })
+            .attr("r", 3)
+            .attr("fill", function(d){
+                return d.open ? "red" : "blue";
+            });
         
         var zoom = d3.zoom()
             .scaleExtent([1, 10])
             .on("zoom", function(event){
                 prefectures.attr("transform", event.transform);
+                plot.attr("transform", event.transform);
             })
         
         svg.call(zoom);
