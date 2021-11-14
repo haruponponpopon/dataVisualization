@@ -19,6 +19,9 @@ for i in range(1,len(datalist)):
     for j in (range(1,len(genres))):
         result = mydict.get((genres[j][0:len(genres[j])-1], arr[year_index][0:7]))
         genres_dict[genres[j][0:len(genres[j])-1]]=1
+        # print([genres[j][0:len(genres[j])-1]])
+        if "ジューススタンド" == genres[j][0:len(genres[j])-1]:
+            print(i)
         if result==None:
             mydict[(genres[j][0:len(genres[j])-1], arr[year_index][0:7])] = op
         else:
@@ -30,15 +33,16 @@ f_r.close()
 f_w = open('aggregated_line_v2.js','w')
 #最初の方の諸々データ
 f_w.write("var ShopData=[];\n")
-f_w.write("ShopData.push({title:'Unagi Data',\n")
+f_w.write("ShopData.push({title:'Shop Data',\n")
 f_w.write("genre_num: "+str(len(genres_dict))+",\n")
+f_w.write("data_num: 136,\n")
 #ジャンル
 f_w.write("genre: [")
 genres = []
 for key in genres_dict.keys():
     genres.append(key)
-    print(key, end=', ')
-print()
+#     print(key, end=', ')
+# print()
 for i in range(len(genres)):
     if i == len(genres)-1:
         f_w.write("\""+genres[i]+"\"],\n")
@@ -92,7 +96,6 @@ for genre in genres:
         f_w.write(",\n")
     else:
         f_w.write("\n")
-
 
 
 f_w.write("}});\n")
