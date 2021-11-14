@@ -62,3 +62,7 @@
 東季17、恋茶、FORTUNER tea-box、台楽茶、JiMO、SAHANJI、黒糖兄弟、綿茶、千禧茶、答案、茶 MARUKI、MAX SEE(マックスシー)、Colon茶、茶千歳、春水堂、四葉茶坊、烏煎道黒龍茶、Chatime、珍煮丹、CoCo都可、TEA PUBLIC、吉龍糖、茶BAR、CHA NUNG、comma tea、 CHAYAM、TEA18、teaven、烏煎道黒龍茶、TP TEA、春水堂、一芳水果茶、に#タピオカ #スイーツ(その他)を付加
 - LEMONADE by Lemonicaに#ジュースバーを付加
 - edited/tea_genre_edited.csvにいじった後のcsvファイルを保存
+### からあげ
+- 閉店開店.comスクレイピング  
+- 食べログのスクレイピング 
+- 店名に唐揚げが入っている店舗でunfoundのものに#からあげを付加

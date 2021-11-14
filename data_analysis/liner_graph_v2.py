@@ -1,6 +1,6 @@
 #データの読み込み、分析
 #累積
-f_r = open('unagi.csv', 'r')
+f_r = open('sampledata.csv', 'r')
 
 datalist = f_r.readlines()
 mydict = {}
@@ -27,7 +27,7 @@ f_r.close()
 
 
 #データの書き込み
-f_w = open('unagi_line.js','w')
+f_w = open('sample_line.js','w')
 #最初の方の諸々データ
 f_w.write("var ShopData=[];\n")
 f_w.write("ShopData.push({title:'Unagi Data',\n")
