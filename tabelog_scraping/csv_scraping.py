@@ -65,11 +65,11 @@ def do_scraping(shop_name):
         genres.append(genre.getText())
     return genres
 
-input_filename = "./data/taiyaki_out.csv"
+input_filename = "../data/data_kaiten/taiyaki.csv"
 df = pd.read_csv(input_filename)
 df.set_index("ShopName", inplace = True)
 ###########二回目以降のファイルのときはコメントアウト!!!##################### 
-# df["genres"] = "None" 
+df["genres"] = "None" 
 ###########################################################
 for shop_name in df.index.values:
     if isinstance(df.loc[shop_name, "genres"], pd.core.series.Series):
