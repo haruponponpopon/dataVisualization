@@ -141,14 +141,6 @@ drawAll(ShopData, "contentDiv");
 // 都道府県のグラフの表示
 initAllPre(ShopPrefectureData, "contentDivPre");
 
-// ---------都道府県グラフの更新はこんな感じ-----------
-current_pre = "北海道";
-sessionStorage.setItem("current_pre" , current_pre);
-
-drawAllPre(ShopPrefectureData, "contentDivPre");
-// ---------都道府県グラフの更新はこんな感じ-----------
-
-
 // 日本地図の処理
 
 function showJapanMap(svg, svgPrefectureMap){
@@ -232,6 +224,9 @@ function showJapanMap(svg, svgPrefectureMap){
             textShowPrefecture.text(function() {
                 return selectedPrefecture ? `選択された都道府県：${selectedPrefecture}` : defaultText;
             });
+
+           sessionStorage.setItem("current_pre" , selectedPrefecture);
+           drawAllPre(ShopPrefectureData, "contentDivPre");
         }
 
         function prefectureClicked(event, d){
