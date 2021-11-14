@@ -168,6 +168,7 @@ function InitGraphPre(data, id){
 }
 
 function updateGraphPre(data, id) {
+	d3.select("#"+id).select("h3").text(current_pre + "の店舗数遷移");
     pull_choice_data_pre();
     var type = "dist";
     var ganre_list;
@@ -303,8 +304,12 @@ function updateGraphPre(data, id) {
 function drawAllPre(data, id){
     current_pre = sessionStorage.getItem("current_pre");
     if (current_pre !== undefined) {      
-        d3.range(data.length).forEach(function(d,i){MakeGraphPre(data[i], "segmentPre"+i );});
-    }
+		d3.range(data.length).forEach(function(d,i){MakeGraphPre(data[i], "segmentPre"+i );});
+		updateGanrePre(data, id);
+	}
+	else {
+		d3.range(data.length).forEach(function(d,i){InitGraphPre(data[i], "segmentPre"+i );});
+	}
 }
 
 function initAllPre(data, id) {
