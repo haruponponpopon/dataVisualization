@@ -35,7 +35,10 @@
 - 全てに#やきそばを付加
 - ../data/data_kaiten/yakisoba_genresのファイル
 ### たいやき
-todo!!!!!!!!!!!!!
+- 開店閉店.comのスクレイピング  
+- 食べログのスクレイピング 
+- unfoundで店名にたい焼きが入っている店に#たい焼き・大判焼きを付加
+- edited/taiyaki_genre_edited.csv
 ### コーヒー
 - 開店閉店.comのスクレイピング  
 - 全てに#コーヒーを付加
@@ -47,7 +50,15 @@ todo!!!!!!!!!!!!!
 - edited/cafe_genre_edited.csvにあります
 - 食べログで見つからない店があり、noneのまま放置。
 ### たこ焼き、お好み焼き
+- 閉店開店.comスクレイピング  
+- 食べログのスクレイピング  
+- unfoundの店は手動で調べました。  
+- 一店舗食べログで見つからない店があり、noneのまま放置。
+- edited/takoyaki_genre_edited.csvにいじった後のcsvファイルを保存
 ### 紅茶
+- 閉店開店.comスクレイピング  
+- 食べログのスクレイピング  
 - ごんちゃ、梨山堂、THE ALLEY 、Bull Pulu、チーターズ、ジェリカフェ、徳茶、謝謝珍珠、瑪蜜黛、琥珀、新東京紅茶、辰杏珠、一期一笑、sanchaya3、茶咖匠、友茶、新時沏、台湾甜商店、麗茶亭、HEEK TEA、BOBO TEA 、panda sugar、利客坊、Tik Tea、藤本舗、宣喜茶、101,
 東季17、恋茶、FORTUNER tea-box、台楽茶、JiMO、SAHANJI、黒糖兄弟、綿茶、千禧茶、答案、茶 MARUKI、MAX SEE(マックスシー)、Colon茶、茶千歳、春水堂、四葉茶坊、烏煎道黒龍茶、Chatime、珍煮丹、CoCo都可、TEA PUBLIC、吉龍糖、茶BAR、CHA NUNG、comma tea、 CHAYAM、TEA18、teaven、烏煎道黒龍茶、TP TEA、春水堂、一芳水果茶、に#タピオカ #スイーツ(その他)を付加
 - LEMONADE by Lemonicaに#ジュースバーを付加
+- edited/tea_genre_edited.csvにいじった後のcsvファイルを保存
