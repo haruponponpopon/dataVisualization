@@ -168,7 +168,12 @@ function InitGraphPre(data, id){
 }
 
 function updateGraphPre(data, id) {
-	d3.select("#"+id).select("h3").text(current_pre + "の店舗数遷移");
+	if (current_pre == undefined) {
+		d3.select("#"+id).select("h3").text("都道府県ごとの店舗数遷移");
+	}
+	else {
+		d3.select("#"+id).select("h3").text(current_pre + "の店舗数遷移");
+	}
     pull_choice_data_pre();
     var type = "dist";
     var ganre_list;

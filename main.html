@@ -19,6 +19,7 @@
 <input type="range" id = "yearInput">
 <h2><span id="yearCurrentValue"></span></h2>
 
+<div id="Legends"></div>
 <div id="contentDiv"></div>
 <div id="contentDivPre"></div>
 
@@ -47,7 +48,7 @@ for (var c of color_palette) {
 	colors[index] = {color: c, genre:undefined};
 	index++;
 }
-
+var color_dict;
 var current_date;
 var current_pre = undefined;
 
@@ -64,12 +65,19 @@ function pull_all_data() {
     true_num = JSON.parse(sessionStorage.getItem("true_num"));
 	colors = JSON.parse(sessionStorage.getItem("colors"));
     current_date = JSON.parse(sessionStorage.getItem("current_date"));
+    color_dict = {};
+    for (var index in colors) {
+        if (colors[index].genre !== undefined) {
+            color_dict[colors[index].genre] = index;
+        }
+    }
 }
 
 function push_all_data() {
     sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres) );
     sessionStorage.setItem("true_num", true_num);
     sessionStorage.setItem("colors", JSON.stringify(colors));
+    sessionStorage.setItem("color_dict", JSON.stringify(color_dict));
     sessionStorage.setItem("current_date" , JSON.stringify(current_date));
 }
 
@@ -94,6 +102,90 @@ let currentYear = 2021;
 let currentMonth = 3;
 
 // ジャンル選択ボタン
+var legends_width = 500;
+var legends_height = 400;
+var legRow = d3.select("#Legends").append("div").attr("class","legend")
+		.append("table").selectAll("tr").data(ShopData[0].genre).enter().append("tr").append("td");
+    legRow.append("div")
+        .style("background",function(d){ 
+            if (choice_genres[d]) {
+                return colors[color_dict[d]].color;
+            }
+            return "#FFFFFF";})
+        .style("cursor","pointer")
+		.on("click", function(event,d) {
+			pull_all_data();
+            if (choice_genres[d]) {
+				choice_genres[d] = false;
+				colors[color_dict[d]].genre = undefined;
+                true_num--;
+            }
+            else {
+				choice_genres[d] = true;
+				for (var index in colors) {
+					if (colors[index].genre === undefined) {
+						colors[index].genre = d;
+						color_dict[d] = index;
+						break;
+					}
+				}
+                true_num++;
+            }
+            push_all_data();
+            legRow.style("background-color", function(d) {
+                    if (choice_genres[d]) {
+                        return "skyblue";
+                    }
+                    return "white";
+                });
+            legRow.selectAll("div")
+                .style("background",function(d){ 
+                    if (choice_genres[d]) {
+                        return colors[color_dict[d]].color;
+                    }
+                    return "#FFFFFF";
+                });	
+			updateGanre(ShopData, "contentDiv");
+			updateGanrePre(ShopPrefectureData, "contentDivPre");
+        });
+		
+    legRow.append("span").text(function(d){ return d;})
+        .style("cursor","pointer")
+		.on("click", function(event,d) {
+            pull_all_data();
+            if (choice_genres[d]) {
+				choice_genres[d] = false;
+				colors[color_dict[d]].genre = undefined;
+                true_num--;
+            }
+            else {
+				choice_genres[d] = true;
+				for (var index in colors) {
+					if (colors[index].genre === undefined) {
+						colors[index].genre = d;
+						color_dict[d] = index;
+						break;
+					}
+				}
+                true_num++;
+            }
+            push_all_data();
+            legRow.style("background-color", function(d) {
+                    if (choice_genres[d]) {
+                        return "skyblue";
+                    }
+                    return "white";
+                });
+            legRow.selectAll("div")
+                .style("background",function(d){ 
+                    if (choice_genres[d]) {
+                        return colors[color_dict[d]].color;
+                    }
+                    return "#FFFFFF";
+                });	
+			updateGanre(ShopData, "contentDiv");
+			updateGanrePre(ShopPrefectureData, "contentDivPre");
+        });
 
 // 年度指定のスクロールバー
 var year_input = document.getElementById("yearInput");
