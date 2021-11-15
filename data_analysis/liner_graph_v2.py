@@ -18,16 +18,25 @@ for i in range(1,len(datalist)):
         continue
     for j in (range(1,len(genres))):
         result = mydict.get((genres[j][0:len(genres[j])-1], arr[year_index][0:7]))
-        genres_dict[genres[j][0:len(genres[j])-1]]=1
+        #ジャンル数のカウント
+        find = genres_dict.get(genres[j][0:len(genres[j])-1])
+        if find == None:
+            genres_dict[genres[j][0:len(genres[j])-1]]=1
+        else:
+            genres_dict[genres[j][0:len(genres[j])-1]]= find + 1
         # print([genres[j][0:len(genres[j])-1]])
-        if "ジューススタンド" == genres[j][0:len(genres[j])-1]:
-            print(i)
+        # if "ジューススタンド" == genres[j][0:len(genres[j])-1]:
+        #     print(i)
         if result==None:
             mydict[(genres[j][0:len(genres[j])-1], arr[year_index][0:7])] = op
         else:
             mydict[(genres[j][0:len(genres[j])-1], arr[year_index][0:7])] = result + op
 f_r.close()
-
+result_dict = sorted(genres_dict.items(), key=lambda x:x[1], reverse=True)
+ranking = 1
+for i in result_dict:
+    print(ranking, i[0], i[1],"  ")
+    ranking += 1
 
 #データの書き込み
 f_w = open('aggregated_line_v2.js','w')
@@ -39,10 +48,10 @@ f_w.write("data_num: 136,\n")
 #ジャンル
 f_w.write("genre: [")
 genres = []
-for key in genres_dict.keys():
-    genres.append(key)
-#     print(key, end=', ')
-# print()
+# for key in genres_dict.keys():
+#     genres.append(key)
+for i in result_dict:
+    genres.append(i[0])
 for i in range(len(genres)):
     if i == len(genres)-1:
         f_w.write("\""+genres[i]+"\"],\n")
