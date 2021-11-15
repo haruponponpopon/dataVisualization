@@ -33,10 +33,11 @@ for i in range(1,len(datalist)):
             mydict[(genres[j][0:len(genres[j])-1], arr[year_index][0:7])] = result + op
 f_r.close()
 result_dict = sorted(genres_dict.items(), key=lambda x:x[1], reverse=True)
-ranking = 1
-for i in result_dict:
-    print(ranking, i[0], i[1],"  ")
-    ranking += 1
+#ジャンルのランキングを表示していたコード
+# ranking = 1
+# for i in result_dict:
+#     print(ranking, i[0], i[1],"  ")
+#     ranking += 1
 
 #データの書き込み
 f_w = open('aggregated_line_v2.js','w')
@@ -50,8 +51,17 @@ f_w.write("genre: [")
 genres = []
 # for key in genres_dict.keys():
 #     genres.append(key)
+
+#そのほかを除く上位50件のジャンルを抽出
+count = 0
 for i in result_dict:
+    # print(i[0][-5:])
+    if len(i[0])>6 and i[0][-5:]=="（その他）":
+        continue
+    count += 1
     genres.append(i[0])
+    if count>50:
+        break
 for i in range(len(genres)):
     if i == len(genres)-1:
         f_w.write("\""+genres[i]+"\"],\n")
