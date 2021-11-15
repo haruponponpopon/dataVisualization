@@ -80,6 +80,9 @@ function MakeGraphPre(data, id){
 			}
 		}
 		// add vertical axes labels.
+		if (svg.selectAll(".vlabelsPre").size()) {
+			svg.selectAll(".vlabelsPre").remove();
+		}
 		svg.append("g").attr("class","vlabelsPre")
 			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d%1==0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})

@@ -5,7 +5,7 @@ var color_dict;
 var genre_list;
 var dateMax;
 var dateMin;
-var graph_width=400, graph_height=300, graph_margin=20;
+var graph_width=400, graph_height=300, graph_margin=50;
 
 function pull_choice_data() {
     choice_legend = JSON.parse(sessionStorage.getItem("choice_genres"));
@@ -125,6 +125,12 @@ function MakeGraph(data, id){
 			.selectAll("text").data(d3.range(41).filter(function(d){return d%10==0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
+
+		svg.append("g").attr("class","htitle").attr("x", graph_width/2).attr("y", graph_height+30)
+			.attr("font-size",15).text("年");
+
+		svg.append("g").attr("class","vtitle").append("text").attr("x", -30).attr("y", 0)
+			.attr("transform","translate(-30,"+ graph_height/2 +"),rotate(-90)").attr("font-size",15).text("店舗数");
 
 		
 		var graph_line = d3.line().x(function(d) {return x(d.x); })
