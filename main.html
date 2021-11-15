@@ -253,18 +253,28 @@ function showPrefectureMap(svg){
 
     var path_pref = d3.geoPath().projection(projection_pref);
 
+    // Remove a map and plots if the map already exists.
+    if (svg.selectAll(".pref_map").size()){
+        svg.selectAll(".pref_map").remove();
+        svg.selectAll(".pref_plot").remove();
+    }
+
+    // Draw the map of the selected prefecture
     var selectedPref = svg.selectAll("path.pref")
         .data(prefecture.features)
         .enter().append("g")
         .append("path")
         .attr("d", path_pref)
         .attr("fill", "ivory")
-        .attr("stroke", "#333333");
+        .attr("stroke", "#333333")
+        .attr("class", "pref_map");
 
+    // Draw the plots of shops
     var plotPref = svg.selectAll("circle.plotPref")
         .data(getPlotDataPref())
         .enter().append("g")
         .append("circle")
+        .attr("class", "pref_plot")
         .attr("cx", function(d){
             return projection_pref(d.longitude_latitude)[0];
         })
