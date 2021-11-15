@@ -52,7 +52,8 @@ function MakeGraphPre(data, id){
 		var m = d3.min(pre_data[g]);
 		minT = m < minT ? m : minT;
     }
-    var vline_num = maxT - minT + 1;
+	var vline_num = (maxT - minT + 1 <= 25)?(maxT - minT + 1) : (maxT - minT + 1 /5);
+	var split = (maxT - minT + 1 <= 25)?1 : Math.round(maxT - minT + 1 /5);
 
 	
 	function draw(){
@@ -65,7 +66,12 @@ function MakeGraphPre(data, id){
 		//x and y axis maps.
 		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
         var y = d3.scaleLinear().domain([minT, maxT]).range([graph_height, 0]);
-        
+		
+		
+
+		if (svg.selectAll(".hlinesPre").size()) {
+			svg.selectAll(".hlinesPre").remove();
+		}
         //draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_num)).transition().duration(500)
         .attr("x1",function(d,i){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return d%10 ==0 && d!= 50? -12: 0;})
@@ -75,16 +81,15 @@ function MakeGraphPre(data, id){
         svg.selectAll(".hlinesPre").filter(function(d){return d%10==0}).style("stroke-opacity",0.7);
 		
 		function getVLabel(d,i){
-			if(type=="dist"){ // for dist use the maximum for sum of frequencies and divide it into 5 pieces.
-				return Math.round(minT + i);
-			}
+			return minT + split * i;
 		}
 		// add vertical axes labels.
 		if (svg.selectAll(".vlabelsPre").size()) {
 			svg.selectAll(".vlabelsPre").remove();
 		}
 		svg.append("g").attr("class","vlabelsPre")
-			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d%1==0; })).enter().append("text")
+			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d % split==0;}))
+			.enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
