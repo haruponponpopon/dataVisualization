@@ -170,6 +170,9 @@ function InitGraphPre(data, id){
 		
 	svg.append("g").attr("class","htitlePre").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", graph_width/2).attr("y", graph_height+30)
 		.attr("font-size",15).text("年");
+
+	svg.append("g").attr("class","vtitle").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", -30).attr("y", 0)
+		.attr("transform","translate(-30,"+ graph_height/2 +"),rotate(-90)").attr("font-size",15).text("店舗数");
         
 }
 
