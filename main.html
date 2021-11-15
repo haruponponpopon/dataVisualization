@@ -76,11 +76,13 @@ function push_all_data() {
 
 var svgJapanMap = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .attr("style", "outline: thin solid gray");
 
 var svgPrefectureMap = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .attr("style", "outline: thin solid gray");
 
 var data_selectedPrefecture = undefined;
 var topojsonPrefecture = makeTopojsonPrefecture();
