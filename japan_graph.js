@@ -126,10 +126,10 @@ function MakeGraph(data, id){
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
-		svg.append("g").attr("class","htitle").attr("x", graph_width/2).attr("y", graph_height+30)
+		svg.append("g").attr("class","htitle").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", graph_width/2).attr("y", graph_height+30)
 			.attr("font-size",15).text("年");
 
-		svg.append("g").attr("class","vtitle").append("text").attr("x", -30).attr("y", 0)
+		svg.append("g").attr("class","vtitle").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", -30).attr("y", 0)
 			.attr("transform","translate(-30,"+ graph_height/2 +"),rotate(-90)").attr("font-size",15).text("店舗数");
 
 		

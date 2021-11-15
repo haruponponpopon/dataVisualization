@@ -5,7 +5,7 @@ var color_dict;
 var genre_list;
 var dateMax;
 var dateMin;
-var graph_width=400, graph_height=300, graph_margin=20;
+var graph_width=400, graph_height=300, graph_margin=50;
 var current_pre;
 
 function pull_choice_data_pre() {
@@ -150,7 +150,7 @@ function InitGraphPre(data, id){
     // make every 10th line in the grid darker.	
     svg.selectAll(".vlinesPre").filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1}).style("stroke-opacity",0.7);
     svg.selectAll(".hlinesPre").data(d3.range(51)).enter().append("line").attr("class","hlinesPre")
-        .attr("x1",0).attr("y1",graph_height).attr("x2", graph_width).attr("y2",graph_height);
+		.attr("x1",0).attr("y1",graph_height).attr("x2", graph_width).attr("y2",graph_height);
 
     svg.selectAll(".selectDatePre").data(d3.range(1)).enter().append("line").attr("class", "selectDatePre")
         .attr("y1",0).attr("y2", graph_height)
@@ -166,7 +166,10 @@ function InitGraphPre(data, id){
     // add horizontal axis labels
     svg.append("g").attr("class","hlabelsPre")
         .selectAll("text").data(d3.range(data.data_num).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
-        .text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",graph_height+14);	
+		.text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",graph_height+14);
+		
+	svg.append("g").attr("class","htitlePre").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", graph_width/2).attr("y", graph_height+30)
+		.attr("font-size",15).text("年");
         
 }
 
