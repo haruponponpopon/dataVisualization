@@ -4,7 +4,6 @@ f_w = open('corrected_longitude.csv','w')
 f_w.write(datalist[0])
 
 for i in range(1,len(datalist)):
-    print(i)
     arr = datalist[i].split(',')
     f_w.write(arr[0]+","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+","+arr[6])
     #緯度と経度が入れ替わっていたら直す
