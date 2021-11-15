@@ -31,7 +31,7 @@ f_w = open('unagi_line.js','w')
 #最初の方の諸々データ
 f_w.write("var ShopData=[];\n")
 f_w.write("ShopData.push({title:'Unagi Data',\n")
-f_w.write("genre_num: "+str(len(genres_dict))+",\n")
+f_w.write("genre_num: 50,\n")
 #ジャンル
 f_w.write("genre: [")
 genres = []

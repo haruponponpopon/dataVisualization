@@ -60,7 +60,6 @@ for i in range(len(genres)):
         f_w.write("\""+genres[i]+"\"],\n")
     else:
         f_w.write("\""+genres[i]+"\", ")
-
 #描画されるデータの書き込み
 f_w.write("dist: {\n")
 for prefecture in prefectures:
@@ -76,8 +75,8 @@ for prefecture in prefectures:
                 date += "0"+str(month)
             else:
                 date += str(month)
-            if mydict.get((genre,date))!=None:
-                sum+=mydict[(genre,date)]
+            if mydict.get((genre,date,prefecture))!=None:
+                sum+=mydict[(genre,date,prefecture)]
             f_w.write(" "+str(sum)+",")
         #2012年-2020年
         for year in range(11,21):
@@ -87,8 +86,8 @@ for prefecture in prefectures:
                     date += "0"+str(month)
                 else:
                     date += str(month)
-                if mydict.get((genre,date))!=None:
-                    sum+=mydict[(genre,date)]
+                if mydict.get((genre,date,prefecture))!=None:
+                    sum+=mydict[(genre,date,prefecture)]
                 f_w.write(" "+str(sum)+",")
         #2021年
         for month in range(1,12):
