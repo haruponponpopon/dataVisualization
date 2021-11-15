@@ -11,12 +11,7 @@ function pull_choice_data() {
     choice_legend = JSON.parse(sessionStorage.getItem("choice_genres"));
     true_num = JSON.parse(sessionStorage.getItem("true_num"));
 	colors = JSON.parse(sessionStorage.getItem("colors"));
-    color_dict = {};
-    for (var index in colors) {
-        if (colors[index].genre !== undefined) {
-            color_dict[colors[index].genre] = index;
-        }
-    }
+	color_dict = JSON.parse(sessionStorage.getItem("color_dict"));
 }
 
 function push_choice_data() {
@@ -264,100 +259,147 @@ function MakeGraph(data, id){
 	// Draw the a graph.
 	draw("dist");			
         
-    
-	// draw legends.
-	var legRow = d3.select("#"+id).append("div").attr("class","legend")
-		.append("table").selectAll("tr").data(data.genre).enter().append("tr").append("td");
-    legRow.append("div")
-        .style("background",function(d){ 
-            if (choice_legend[d]) {
-                return colors[color_dict[d]].color;
-            }
-            return "#FFFFFF";})
-        .style("cursor","pointer")
-		.on("click", function(event,d) {
-			pull_choice_data();
-            if (choice_legend[d]) {
-				choice_legend[d] = false;
-				colors[color_dict[d]].genre = undefined;
-                true_num--;
-            }
-            else {
-				choice_legend[d] = true;
-				for (var index in colors) {
-					if (colors[index].genre === undefined) {
-						colors[index].genre = d;
-						color_dict[d] = index;
-						break;
-					}
-				}
-                true_num++;
-            }
-            push_choice_data();
-            legRow.style("background-color", function(d) {
-                    if (choice_legend[d]) {
-                        return "skyblue";
-                    }
-                    return "white";
-                });
-            legRow.selectAll("div")
-                .style("background",function(d){ 
-                    if (choice_legend[d]) {
-                        return colors[color_dict[d]].color;
-                    }
-                    return "#FFFFFF";
-                });	
-			transitionClick();
-			updateGanrePre(ShopPrefectureData, "contentDivPre");
-        });
+}
+
+function updateGraph(data, id) {
+	pull_choice_data();
+	var type = "dist";
+    var ganre_list;
+
+	var svg = d3.select("#"+id).select(".dist");
+	
+	function getPoints(_){
+		var zahyou = [];
+		ganre_list = []
+		for (var g in _) {
+			if (choice_legend[g]) { 
+				zahyou.push(_[g].map(function(d,j){ return {x:j, y:d};}));
+			}
+			else {
+				zahyou.push(_[g].map(function(d,j){ return {x:j, y:0};}))
+			}
+			ganre_list.push(g);
+		}		
+		return zahyou;
+	}
+	var maxT = 0;
+	var minT = 0;
+	for (var g in data[type]) {
+		var M = d3.max(data[type][g]);
+		maxT = M > maxT ? M : maxT;
+		var m = d3.min(data[type][g]);
+		minT = m < minT ? m : minT;
+	}
+
+
+	function transitionDefault(){
 		
-    legRow.append("span").text(function(d){ return d;})
-        .style("cursor","pointer")
-		.on("click", function(event,d) {
-            pull_choice_data();
-            if (choice_legend[d]) {
-				choice_legend[d] = false;
-				colors[color_dict[d]].genre = undefined;
-                true_num--;
-            }
-            else {
-				choice_legend[d] = true;
-				for (var index in colors) {
-					if (colors[index].genre === undefined) {
-						colors[index].genre = d;
-						color_dict[d] = index;
-						break;
-					}
+		function tW(d){ return x(d); }
+		function tH(d){ return y(minT + d*(maxT-minT)/50); }
+
+		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
+		var y = d3.scaleLinear().domain([minT, maxT]).range([graph_height, 0]);
+
+
+		// transition the lines, areas, and labels.
+		var svg = d3.select("#"+id).select("."+type);	
+
+		var graph_line = d3.line().x(function(d) { return x(d.x); })
+			.y(function(d) { return y(d.y); });
+
+		var dataset = getPoints(data[type]);
+
+		svg.selectAll("path")
+			.data(dataset)
+			.transition().duration(500)
+			.attr("d", graph_line)
+			.attr("stroke-width",function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return 2;
 				}
-                true_num++;
-            }
-            push_choice_data();
-            legRow.style("background-color", function(d) {
-                    if (choice_legend[d]) {
-                        return "skyblue";
-                    }
-                    return "white";
-                });
-            legRow.selectAll("div")
-                .style("background",function(d){ 
-                    if (choice_legend[d]) {
-                        return colors[color_dict[d]].color;
-                    }
-                    return "#FFFFFF";
-                });	
-			transitionClick();
-			updateGanrePre(ShopPrefectureData, "contentDivPre");
-        });
-    
+				return 0;
+			})
+			.attr("stroke", function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return colors[color_dict[ganre_list[i]]].color;
+				}
+				return "#000000";
+			})
+			.attr("fill", "none");
+
+		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			
+		svg.selectAll(".hlines").transition().duration(500).attr("y1",tH).attr("y2",tH);			
+		svg.selectAll(".vlabels").selectAll("text").transition().duration(500)
+			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
+			
+	}
+
+
+    function transitionClick(){
+        if (true_num == 0) {
+            transitionDefault();
+            return;
+        }
+		var maxCurrent = 0;
+		var minCurrent = 0;
+		for (var g in data[type]) {
+			if (choice_legend[g]) {
+				var M = d3.max(data[type][g]);
+				maxCurrent = M > maxCurrent ? M : maxCurrent;
+				var m = d3.min(data[type][g]);
+				minCurrent = m < minCurrent ? m : minCurrent;
+			}
+		}
+		
+		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
+		var y = d3.scaleLinear().domain([minCurrent, maxCurrent]).range([graph_height, 0]);
+		
+		function tW(d){ return x(d); }
+		function tH(d){ return y(minT + d*(maxT-minT)/50); }
+
+		var svg = d3.select("#"+id).select("."+type);
+		//transition all the lines, labels, and areas.
+		var graph_line = d3.line().x(function(d) {return x(d.x); })
+			.y(function(d) { return y(d.y); });
+
+		var dataset = getPoints(data[type]);
+
+		svg.selectAll("path")
+			.data(dataset)
+			.transition().duration(500)
+			.attr("d", graph_line).attr("fill", "none")
+			.attr("stroke-width",function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return 2;
+				}
+				return 0;
+			})
+			.attr("stroke", function(d, i) {
+				if (choice_legend[ganre_list[i]]) {
+					return colors[color_dict[ganre_list[i]]].color;
+				}
+				return "#000000";
+			});
+
+			
+		svg.selectAll(".vlines").transition().duration(500).attr("x1",tW).attr("x2", tW);			
+		svg.selectAll(".hlines").transition().duration(500).attr("y1",tH).attr("y2",tH);						
+		svg.selectAll(".vlabels").selectAll("text").transition().duration(500)
+			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
+	}
+	transitionClick();
+
 }
 
 function drawAll(data, id){
-	import("./prefecture_graph.js").then(module => {
-		var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
-			.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
-			
-		d3.range(data.length).forEach(function(d,i){MakeGraph(data[i], "segment"+i );});
-	});
+	var seg = d3.select("#"+id).selectAll("div").data(d3.range(data.length)).enter()
+		.append("div").attr("id",function(d,i){ return "segment"+i;}).attr("class","shopdatadiv");
+		
+	d3.range(data.length).forEach(function(d,i){MakeGraph(data[i], "segment"+i );});
+}
+
+function updateGanre(data, id){
+	d3.range(data.length).forEach(function(d,i){updateGraph(data[i], "segment"+i );});
 }
 
 function updateVline(input_data, id){
