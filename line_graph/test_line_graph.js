@@ -44,7 +44,8 @@ function MakeGraph(data, id){
 
 	function toComma(x) {    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 		
-	var width=400, height=300, margin=20;
+	var WIDTH = 400, HEIGHT = 300;
+	var width=400, height=300, margin=40;
 
 	var min_date_list = data.min_date.split("-");
 	var max_date_list = data.max_date.split("-");
@@ -104,14 +105,20 @@ function MakeGraph(data, id){
 		}
 		// add horizontal axis labels
 		svg.append("g").attr("class","hlabels")
-			.selectAll("text").data(d3.range(data.data_num).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
+			.selectAll(".hlabels").data(d3.range(data.data_num).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
 			.text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",height+14);	
 			
 		// add vertical axes labels.
 		svg.append("g").attr("class","vlabels")
-			.selectAll("text").data(d3.range(41).filter(function(d){return d%10==0; })).enter().append("text")
+			.selectAll(".vlabels").data(d3.range(41).filter(function(d){return d%10==0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
-			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
+			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});
+			
+		svg.selectAll(".hlabels").append("text").attr("x", width/2).attr("y", height+30)
+			.attr("font-size",15).text("年");
+
+		svg.selectAll(".vlabels").append("text").attr("x", -30).attr("y", height/2)
+		.attr("transform","translate(-30,"+ height/2 +"),rotate(-90)").attr("font-size",15).text("店舗数");
 		
 		var graph_line = d3.line().x(function(d) {return x(d.x); })
 			.y(function(d) { return y(d.y); });

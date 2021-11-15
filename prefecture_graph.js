@@ -5,7 +5,7 @@ var color_dict;
 var genre_list;
 var dateMax;
 var dateMin;
-var graph_width=400, graph_height=300, graph_margin=20;
+var graph_width=400, graph_height=300, graph_margin=50;
 var current_pre;
 
 function pull_choice_data_pre() {
@@ -52,7 +52,8 @@ function MakeGraphPre(data, id){
 		var m = d3.min(pre_data[g]);
 		minT = m < minT ? m : minT;
     }
-    var vline_num = maxT - minT + 1;
+	var vline_num = (maxT - minT + 1 <= 25)?(maxT - minT + 1) : (maxT - minT + 1 /5);
+	var split = (maxT - minT + 1 <= 25)?1 : Math.round(maxT - minT + 1 /5);
 
 	
 	function draw(){
@@ -65,7 +66,12 @@ function MakeGraphPre(data, id){
 		//x and y axis maps.
 		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
         var y = d3.scaleLinear().domain([minT, maxT]).range([graph_height, 0]);
-        
+		
+		
+
+		if (svg.selectAll(".hlinesPre").size()) {
+			svg.selectAll(".hlinesPre").remove();
+		}
         //draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_num)).transition().duration(500)
         .attr("x1",function(d,i){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return d%10 ==0 && d!= 50? -12: 0;})
@@ -75,13 +81,15 @@ function MakeGraphPre(data, id){
         svg.selectAll(".hlinesPre").filter(function(d){return d%10==0}).style("stroke-opacity",0.7);
 		
 		function getVLabel(d,i){
-			if(type=="dist"){ // for dist use the maximum for sum of frequencies and divide it into 5 pieces.
-				return Math.round(minT + i);
-			}
+			return minT + split * i;
 		}
 		// add vertical axes labels.
+		if (svg.selectAll(".vlabelsPre").size()) {
+			svg.selectAll(".vlabelsPre").remove();
+		}
 		svg.append("g").attr("class","vlabelsPre")
-			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d%1==0; })).enter().append("text")
+			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d % split==0;}))
+			.enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
@@ -147,7 +155,7 @@ function InitGraphPre(data, id){
     // make every 10th line in the grid darker.	
     svg.selectAll(".vlinesPre").filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1}).style("stroke-opacity",0.7);
     svg.selectAll(".hlinesPre").data(d3.range(51)).enter().append("line").attr("class","hlinesPre")
-        .attr("x1",0).attr("y1",graph_height).attr("x2", graph_width).attr("y2",graph_height);
+		.attr("x1",0).attr("y1",graph_height).attr("x2", graph_width).attr("y2",graph_height);
 
     svg.selectAll(".selectDatePre").data(d3.range(1)).enter().append("line").attr("class", "selectDatePre")
         .attr("y1",0).attr("y2", graph_height)
@@ -163,7 +171,13 @@ function InitGraphPre(data, id){
     // add horizontal axis labels
     svg.append("g").attr("class","hlabelsPre")
         .selectAll("text").data(d3.range(data.data_num).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
-        .text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",graph_height+14);	
+		.text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",graph_height+14);
+		
+	svg.append("g").attr("class","htitlePre").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", graph_width/2).attr("y", graph_height+30)
+		.attr("font-size",15).text("年");
+
+	svg.append("g").attr("class","vtitle").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", -30).attr("y", 0)
+		.attr("transform","translate(-30,"+ graph_height/2 +"),rotate(-90)").attr("font-size",15).text("店舗数");
         
 }
 

@@ -82,7 +82,7 @@ function MakeGraphPre(data, id){
 		// add vertical axes labels.
 		svg.append("g").attr("class","vlabelsPre")
 			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d%1==0; })).enter().append("text")
-			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
+			.attr("transform",function(d,i){return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
 		
@@ -238,7 +238,7 @@ function updateGraphPre(data, id) {
 		svg.selectAll(".vlinesPre").transition().duration(500).attr("x1",tW).attr("x2", tW);			
 		svg.selectAll(".hlinesPre").transition().duration(500).attr("y1",tH).attr("y2",tH);			
 		svg.selectAll(".vlabelsPre").selectAll("text").transition().duration(500)
-			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
+			.attr("transform",function(d,i){return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
 			
 	}
 
@@ -292,7 +292,7 @@ function updateGraphPre(data, id) {
 		svg.selectAll(".vlinesPre").transition().duration(500).attr("x1",tW).attr("x2", tW);			
 		svg.selectAll(".hlinesPre").transition().duration(500).attr("y1",tH).attr("y2",tH);						
 		svg.selectAll(".vlabelsPre").selectAll("text").transition().duration(500)
-			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
+			.attr("transform",function(d,i){return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
 		
     }
     transitionClick();
