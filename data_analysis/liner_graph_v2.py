@@ -44,7 +44,7 @@ f_w = open('aggregated_line_v2.js','w')
 #最初の方の諸々データ
 f_w.write("var ShopData=[];\n")
 f_w.write("ShopData.push({title:'Shop Data',\n")
-f_w.write("genre_num: "+str(len(genres_dict))+",\n")
+f_w.write("genre_num: 50,\n")
 f_w.write("data_num: 136,\n")
 #ジャンル
 f_w.write("genre: [")
@@ -62,6 +62,7 @@ for i in result_dict:
     genres.append(i[0])
     if count>50:
         break
+# print(genres)
 for i in range(len(genres)):
     if i == len(genres)-1:
         f_w.write("\""+genres[i]+"\"],\n")
