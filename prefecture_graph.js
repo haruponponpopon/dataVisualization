@@ -7,6 +7,7 @@ var dateMax;
 var dateMin;
 var graph_width=400, graph_height=300, graph_margin=50;
 var current_pre;
+var memori_line_p, memori_label_p, vline_upper_p, vline_lower_p;
 
 function pull_choice_data_pre() {
     choice_legend = JSON.parse(sessionStorage.getItem("choice_genres"));
@@ -19,6 +20,60 @@ function pull_choice_data_pre() {
 function currentVline() {
 	var current_date = JSON.parse(sessionStorage.getItem("current_date"));
 	return (current_date - dateMin) / (dateMax - dateMin) * graph_width;
+}
+
+function CalcMemoriPre(maxT, minT) {
+	var order = maxT - minT;
+	if (order <= 50) {
+		memori_line_p = 1;
+		if (order <= 10) {
+			memori_label_p = 1;
+		}
+		else {
+			memori_label_p = 5;
+		}
+	} 
+	else if (order <= 250) {
+		memori_line_p = 5;
+		if (order <= 150) {
+			memori_label_p = 10;
+		}
+		else {
+			memori_label_p = 50;
+		}
+	}
+	else if(order <= 500) {
+		memori_line_p = 10;
+		memori_label_p = 50;
+	}
+	else if(order <= 2500) {
+		memori_line_p = 50;
+		if (order <= 1500) {
+			memori_label_p = 100;
+		}
+		else {
+			memori_label_p = 500;
+		}
+	}
+	else {
+		memori_line_p = 100;
+		memori_label_p = 500;
+	}
+	vline_upper_p = maxT > 0 ? Math.floor(maxT / memori_line_p) + 1 : 0;
+	vline_lower_p = minT < 0 ? Math.floor(-minT / memori_line_p) + 1 : 0;
+}
+
+function calcZahyouPre (index) {
+	return -1 * vline_lower_p * memori_line_p + index*memori_line_p;
+}
+
+function resetVlinesPre(svg) {
+	if (svg.selectAll(".hlinesPre").size()) {
+		svg.selectAll(".hlinesPre").remove();
+	}
+	if (svg.selectAll(".vlabelsPre").size()) {
+		svg.selectAll(".vlabelsPre").remove();
+	}
 }
 
 function MakeGraphPre(data, id){
@@ -42,7 +97,6 @@ function MakeGraphPre(data, id){
 		return zahyou;
 	}
 
-	function toComma(x) {    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 		
 	var maxT = 0;
 	var minT = 0;
@@ -52,43 +106,32 @@ function MakeGraphPre(data, id){
 		var m = d3.min(pre_data[g]);
 		minT = m < minT ? m : minT;
     }
-	var vline_num = (maxT - minT + 1 <= 25)?(maxT - minT + 1) : (maxT - minT + 1 /5);
-	var split = (maxT - minT + 1 <= 25)?1 : Math.round(maxT - minT + 1 /5);
-
 	
 	function draw(){
-		
-        function tH(d){ return y(minT + d); }
+		CalcMemoriPre(maxT, minT);
+        function tH(d){ return y(calcZahyouPre(d)); }
 		
         var svg =d3.select("#"+id).select(".distPre");
-
+		resetVlinesPre(svg);
 		
 		//x and y axis maps.
 		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
-        var y = d3.scaleLinear().domain([minT, maxT]).range([graph_height, 0]);
+		var y = d3.scaleLinear().domain([-1 * vline_lower_p * memori_line_p, vline_upper_p * memori_line_p]).range([graph_height, 0]);
 		
-		
-
-		if (svg.selectAll(".hlinesPre").size()) {
-			svg.selectAll(".hlinesPre").remove();
-		}
         //draw horizontal lines of the grid.
-		svg.selectAll(".hlinesPre").data(d3.range(vline_num)).transition().duration(500)
-        .attr("x1",function(d,i){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return d%10 ==0 && d!= 50? -12: 0;})
-        .attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
+		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
+		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
         
         // make every 10th line in the grid darker.	
-        svg.selectAll(".hlinesPre").filter(function(d){return d%10==0}).style("stroke-opacity",0.7);
+        svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);
 		
 		function getVLabel(d,i){
-			return minT + split * i;
+			return calcZahyouPre(d);
 		}
-		// add vertical axes labels.
-		if (svg.selectAll(".vlabelsPre").size()) {
-			svg.selectAll(".vlabelsPre").remove();
-		}
+
 		svg.append("g").attr("class","vlabelsPre")
-			.selectAll("text").data(d3.range(vline_num).filter(function(d){return d % split==0;}))
+			.selectAll("text").data(d3.range(vline_lower_p+vline_upper_p+1).filter(function(d){return calcZahyouPre(d)%memori_label_p==0;}))
 			.enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
@@ -193,8 +236,8 @@ function updateGraphPre(data, id) {
     var ganre_list;
     var pre_data = data[type][current_pre];
 
-    var svg = d3.select("#"+id).select(".distPre");
-    var vline_num = maxT - minT + 1;
+	var svg = d3.select("#"+id).select(".distPre");
+	resetVlinesPre(svg);
 
 	function getPoints(_){
 		var zahyou = [];
@@ -210,8 +253,6 @@ function updateGraphPre(data, id) {
 		}		
 		return zahyou;
 	}
-
-	function toComma(x) {    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 		
 	var maxT = 0;
 	var minT = 0;
@@ -222,13 +263,29 @@ function updateGraphPre(data, id) {
 		minT = m < minT ? m : minT;
     }
     function transitionDefault(){
-		
+		CalcMemoriPre(maxT, minT);
 		function tW(d){ return x(d); }
-		function tH(d){ return y(minT + d); }
+		function tH(d){ return y(calcZahyouPre(d)); }
 
 		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
-		var y = d3.scaleLinear().domain([minT, maxT]).range([graph_height, 0]);
+		var y = d3.scaleLinear().domain([-1 * vline_lower_p * memori_line_p, vline_upper_p * memori_line_p]).range([graph_height, 0]);
 
+        //draw horizontal lines of the grid.
+		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
+		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
+		// make every 10th line in the grid darker.	
+		svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);
+		
+		function getVLabel(d,i){
+			return calcZahyouPre(d);
+		}
+
+		svg.append("g").attr("class","vlabelsPre")
+			.selectAll("text").data(d3.range(vline_lower_p+vline_upper_p+1).filter(function(d){return calcZahyouPre(d)%memori_label_p==0;}))
+			.enter().append("text")
+			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
+			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
 		// transition the lines, areas, and labels.
 
@@ -256,10 +313,6 @@ function updateGraphPre(data, id) {
 			.attr("fill", "none");
 
 		svg.selectAll(".vlinesPre").transition().duration(500).attr("x1",tW).attr("x2", tW);			
-		svg.selectAll(".hlinesPre").transition().duration(500).attr("y1",tH).attr("y2",tH);			
-		svg.selectAll(".vlabelsPre").selectAll("text").transition().duration(500)
-			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
-			
 	}
 
 
@@ -278,12 +331,30 @@ function updateGraphPre(data, id) {
 				minCurrent = m < minCurrent ? m : minCurrent;
 			}
 		}
+		CalcMemoriPre(maxCurrent, minCurrent);
 		
 		var x = d3.scaleLinear().domain([0, data.data_num - 1]).range([0, graph_width]);
-		var y = d3.scaleLinear().domain([minCurrent, maxCurrent]).range([graph_height, 0]);
+		var y = d3.scaleLinear().domain([-1 * vline_lower_p * memori_line_p, vline_upper_p * memori_line_p]).range([graph_height, 0]);
 		
 		function tW(d){ return x(d); }
-		function tH(d){ return y(minT + d); }
+		function tH(d){ return y(calcZahyouPre(d)); }
+
+		//draw horizontal lines of the grid.
+		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
+		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
+		// make every 10th line in the grid darker.	
+		svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);
+		
+		function getVLabel(d,i){
+			return calcZahyouPre(d);
+		}
+
+		svg.append("g").attr("class","vlabelsPre")
+			.selectAll("text").data(d3.range(vline_lower_p+vline_upper_p+1).filter(function(d){return calcZahyouPre(d)%memori_label_p==0 || calcZahyouPre(d) == 0;}))
+			.enter().append("text")
+			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
+			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
 		//transition all the lines, labels, and areas.
 		var graph_line = d3.line().x(function(d) {return x(d.x); })
@@ -310,10 +381,6 @@ function updateGraphPre(data, id) {
 
 			
 		svg.selectAll(".vlinesPre").transition().duration(500).attr("x1",tW).attr("x2", tW);			
-		svg.selectAll(".hlinesPre").transition().duration(500).attr("y1",tH).attr("y2",tH);						
-		svg.selectAll(".vlabelsPre").selectAll("text").transition().duration(500)
-			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";});	
-		
     }
     transitionClick();
 
