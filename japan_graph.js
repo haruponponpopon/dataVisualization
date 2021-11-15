@@ -139,7 +139,7 @@ function MakeGraph(data, id){
 
 		resetVlines(svg);
 		//draw horizontal lines of the grid.
-		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper)).enter().append("line").attr("class","hlines")
+		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper+1)).enter().append("line").attr("class","hlines")
 			.attr("x1",function(d,i){ return calcZahyou(d)%memori_label == 0 && d!= vline_lower+vline_upper? -12: 0;})
 			.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		
@@ -168,7 +168,7 @@ function MakeGraph(data, id){
 			
 		// add vertical axes labels.
 		svg.append("g").attr("class","vlabels")
-			.selectAll("text").data(d3.range(vline_lower+vline_upper).filter(function(d){return calcZahyou(d)%memori_label == 0; })).enter().append("text")
+			.selectAll("text").data(d3.range(vline_lower+vline_upper+1).filter(function(d){return calcZahyou(d)%memori_label == 0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
@@ -259,7 +259,7 @@ function updateGraph(data, id) {
 		var svg = d3.select("#"+id).select("."+type);
 		resetVlines(svg);
 		//draw horizontal lines of the grid.
-		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper)).enter().append("line").attr("class","hlines")
+		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper+1)).enter().append("line").attr("class","hlines")
 			.attr("x1",function(d,i){ return calcZahyou(d)%memori_label == 0 && d!= vline_lower+vline_upper? -12: 0;})
 			.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		
@@ -271,7 +271,7 @@ function updateGraph(data, id) {
 		}
 		// add vertical axes labels.
 		svg.append("g").attr("class","vlabels")
-			.selectAll("text").data(d3.range(vline_lower+vline_upper).filter(function(d){return calcZahyou(d)%memori_label == 0; })).enter().append("text")
+			.selectAll("text").data(d3.range(vline_lower+vline_upper+1).filter(function(d){return calcZahyou(d)%memori_label == 0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
@@ -329,7 +329,7 @@ function updateGraph(data, id) {
 
 		resetVlines(svg);
 		//draw horizontal lines of the grid.
-		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper)).enter().append("line").attr("class","hlines")
+		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper+1)).enter().append("line").attr("class","hlines")
 			.attr("x1",function(d,i){ return calcZahyou(d)%memori_label == 0 && d!= vline_lower+vline_upper? -12: 0;})
 			.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		
@@ -341,7 +341,7 @@ function updateGraph(data, id) {
 		}
 		// add vertical axes labels.
 		svg.append("g").attr("class","vlabels")
-			.selectAll("text").data(d3.range(vline_lower+vline_upper).filter(function(d){return calcZahyou(d)%memori_label == 0; })).enter().append("text")
+			.selectAll("text").data(d3.range(vline_lower+vline_upper+1).filter(function(d){return calcZahyou(d)%memori_label == 0; })).enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
 			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
