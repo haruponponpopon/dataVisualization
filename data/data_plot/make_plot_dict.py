@@ -20,10 +20,12 @@ with open(inputfile, 'r') as f:
         date = row[1].split('-')
         year = int(date[0])
         month = int(date[1])
+        longitude = max(float(row[3]), float(row[4]))
+        latitude = min(float(row[3]), float(row[4]))
         
         shopData = {"name": row[0],
                     "prefecture": row[2],
-                    "longitude_latitude": [float(row[3]), float(row[4])],
+                    "longitude_latitude": [longitude, latitude],
                     "open": int(row[5])}
         
         dict.setdefault(year, {})
