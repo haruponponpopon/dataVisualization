@@ -58,6 +58,8 @@ for i in result_dict:
     # print(i[0][-5:])
     if len(i[0])>6 and i[0][-5:]=="（その他）":
         continue
+    if i[0] == "その他":
+        continue
     count += 1
     genres.append(i[0])
     if count>50:
