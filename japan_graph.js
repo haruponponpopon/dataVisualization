@@ -72,7 +72,7 @@ function calcZahyou (index) {
 	return -1 * vline_lower * memori_line + index*memori_line;
 }
 
-function reset_vlines(svg) {
+function resetVlines(svg) {
 	if (svg.selectAll(".hlines").size()) {
 		svg.selectAll(".hlines").remove();
 	}
@@ -137,7 +137,7 @@ function MakeGraph(data, id){
 			.attr("x1",tW).attr("y1",0)
 			.attr("x2", tW).attr("y2",function(d,i){ return  (Number(min_date_list[1]) + d) % 12 == 1 && (Number(min_date_list[1]) + d) % 12 != 1? graph_height+12: graph_height;});
 
-		reset_vlines(svg);
+		resetVlines(svg);
 		//draw horizontal lines of the grid.
 		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper)).enter().append("line").attr("class","hlines")
 			.attr("x1",function(d,i){ return calcZahyou(d)%memori_label == 0 && d!= vline_lower+vline_upper? -12: 0;})
@@ -257,7 +257,7 @@ function updateGraph(data, id) {
 
 		// transition the lines, areas, and labels.
 		var svg = d3.select("#"+id).select("."+type);
-		reset_vlines(svg);
+		resetVlines(svg);
 		//draw horizontal lines of the grid.
 		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper)).enter().append("line").attr("class","hlines")
 			.attr("x1",function(d,i){ return calcZahyou(d)%memori_label == 0 && d!= vline_lower+vline_upper? -12: 0;})
@@ -327,7 +327,7 @@ function updateGraph(data, id) {
 
 		var svg = d3.select("#"+id).select("."+type);
 
-		reset_vlines(svg);
+		resetVlines(svg);
 		//draw horizontal lines of the grid.
 		svg.selectAll(".hlines").data(d3.range(vline_lower+vline_upper)).enter().append("line").attr("class","hlines")
 			.attr("x1",function(d,i){ return calcZahyou(d)%memori_label == 0 && d!= vline_lower+vline_upper? -12: 0;})
