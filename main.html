@@ -76,11 +76,13 @@ function push_all_data() {
 
 var svgJapanMap = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .attr("style", "outline: thin solid gray");
 
 var svgPrefectureMap = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .attr("style", "outline: thin solid gray");
 
 var data_selectedPrefecture = undefined;
 var topojsonPrefecture = makeTopojsonPrefecture();
@@ -245,26 +247,40 @@ function showJapanMap(svg, svgPrefectureMap){
 function showPrefectureMap(svg){
     var prefecture = topojson.feature(...topojsonPrefecture[data_selectedPrefecture.properties.id]);
     var center = d3.geoCentroid(data_selectedPrefecture);
+    const bounds = d3.geoBounds(prefecture);
+    const dx = bounds[1][0] - bounds[0][0];
 
+    const dy = bounds[1][1] - bounds[0][1];
+    
     var projection_pref = d3.geoMercator()
         .center(center)
         .translate([width/2, height/2])
-        .scale(4500);
+        .scale(4500 / Math.max(dx, dy) * 6);
 
     var path_pref = d3.geoPath().projection(projection_pref);
 
+    // Remove a map and plots if the map already exists.
+    if (svg.selectAll(".pref_map").size()){
+        svg.selectAll(".pref_map").remove();
+        svg.selectAll(".pref_plot").remove();
+    }
+
+    // Draw the map of the selected prefecture
     var selectedPref = svg.selectAll("path.pref")
         .data(prefecture.features)
         .enter().append("g")
         .append("path")
         .attr("d", path_pref)
         .attr("fill", "ivory")
-        .attr("stroke", "#333333");
+        .attr("stroke", "#333333")
+        .attr("class", "pref_map");
 
+    // Draw the plots of shops
     var plotPref = svg.selectAll("circle.plotPref")
         .data(getPlotDataPref())
         .enter().append("g")
         .append("circle")
+        .attr("class", "pref_plot")
         .attr("cx", function(d){
             return projection_pref(d.longitude_latitude)[0];
         })
@@ -286,6 +302,15 @@ function showPrefectureMap(svg){
         });
         return result;
     }
+
+    var zoom = d3.zoom()
+        .scaleExtent([1, 20])
+        .on("zoom", function(event){
+            selectedPref.attr("transform", event.transform);
+            plotPref.attr("transform", event.transform);
+        })
+        
+    svg.call(zoom);
 }
 
 </script>
