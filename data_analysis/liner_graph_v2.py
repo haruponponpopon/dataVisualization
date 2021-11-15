@@ -58,13 +58,13 @@ for i in result_dict:
     # print(i[0][-5:])
     if len(i[0])>6 and i[0][-5:]=="（その他）":
         continue
-    if i[0] == "その他":
+    if i[0] == "その他" or i[0] == "カレーライス":
         continue
     count += 1
     genres.append(i[0])
     if count>50:
         break
-# print(genres)
+print(genres)
 for i in range(len(genres)):
     if i == len(genres)-1:
         f_w.write("\""+genres[i]+"\"],\n")
