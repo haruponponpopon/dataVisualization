@@ -355,6 +355,15 @@ function updateJapanPlot(svg){
     }
 }
 
+function getScale(dx, dy){
+    switch(currentPrefecture){
+        case "北海道": return 6000;
+        case "東京都": return 19000;
+        case "沖縄県": return 6000;
+    }
+    return 4500 / Math.max(dx, dy) * 6;
+}
+
 function showPrefectureMap(svg){
     var prefecture = topojson.feature(...topojsonPrefecture[data_selectedPrefecture.properties.id]);
     var center = d3.geoCentroid(data_selectedPrefecture);
@@ -365,7 +374,7 @@ function showPrefectureMap(svg){
     var projection_prefecture = d3.geoMercator()
         .center(center)
         .translate([width/2, height/2])
-        .scale(4500 / Math.max(dx, dy) * 6);
+        .scale(getScale(dx, dy));
 
     var path_prefecture = d3.geoPath().projection(projection_prefecture);
 
@@ -411,7 +420,7 @@ function updatePrefecturePlot(svg){
     var projection_prefecture = d3.geoMercator()
         .center(center)
         .translate([width/2, height/2])
-        .scale(4500 / Math.max(dx, dy) * 6);
+        .scale(getScale(dx, dy));
 
     if (svg.selectAll(".prefecture_plot").size()){
         svg.selectAll(".prefecture_plot").remove();
