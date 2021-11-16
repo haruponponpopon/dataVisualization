@@ -250,7 +250,7 @@ const setCurrentValue = (val) => {
     sessionStorage.setItem("current_date" , JSON.stringify(current_date));
     sessionStorage.setItem("current_year" , JSON.stringify(year));
     sessionStorage.setItem("current_month" , JSON.stringify(month));
-    year_current_value.innerText = "" + year + "-" + month;
+    year_current_value.innerText = "" + year + "年" + month + "月";
     updateVline(ShopData, "contentDiv");
     updateVlinePre(ShopPrefectureData, "contentDivPre");
     updateJapanPlot(svgJapanMap);

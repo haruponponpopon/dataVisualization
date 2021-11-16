@@ -71,6 +71,14 @@ path{
 .hlabels text, .vlabels text{
 	color:rgb(150,148,109);
 	font-size:12px;
+	font-family: 'Quicksand', sans-serif;
+}
+.htitle text, .vtitle text{
+	font-family: 'Noto Serif JP', sans-serif;
+}
+
+.htitlePre text, .vtitlePre text{
+	font-family: 'Noto Serif JP', sans-serif;
 }
 
 svg{
@@ -136,6 +144,7 @@ svg{
 .hlabelsPre text, .vlabelsPre text{
 	color:rgb(150,148,109);
 	font-size:12px;
+	font-family: 'Quicksand', sans-serif;
 }
 .shopdatadivPre{
 	clear:both;
@@ -244,8 +253,9 @@ input[type=range] {
 
 #yearCurrentValue {
 	color: white;
-	font-family: 'Quicksand', sans-serif;
+	/* font-family: 'Quicksand', sans-serif; */
 	/* font-family: 'Noto Serif JP', sans-serif; */
+	font-family: 'Shippori Mincho B1', serif; 
 	font-size: 40px;
 }
 #LegendsTitle {
