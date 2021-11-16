@@ -1,4 +1,6 @@
-|  都道府県  | 都道府県コード | GeoJson | TopoJson|
+The data of this folder is cited from https://github.com/niiyz/JapanCityGeoJson/tree/master/topojson/prefectures .
+
+|  都道府県 | 都道府県コード | GeoJson | TopoJson|
 |-----------|--------------|---------|--------- |
 | 北海道 | 01 | [北海道](/geojson/prefectures/01.json) | [北海道](/topojson/prefectures/01.topojson)
 | 青森県 | 02 | [青森県](/geojson/prefectures/02.json) | [青森県](/topojson/prefectures/02.topojson)
