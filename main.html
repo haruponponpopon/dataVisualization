@@ -3,16 +3,14 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
         <link rel="stylesheet" href="style.css">
-        <title>Stores in Japan</title>
+        <title>グルメトレンド</title>
         <script src="./d3.js" charset="utf-8"></script>
         <script src="./topojson.js" charset="utf-8"></script>
         <script src="./data/data_plot/aggregated_plot.js" charset="utf-8"></script>
-        <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./data/data_graph/aggregated_line_v2.js" charset="utf-8"></script>
         <script src="./data/data_graph/aggregated_line_pref_v2.js" charset="utf-8"></script>
         <script src="./japan_graph.js" charset="utf-8"></script>
         <script src="./prefecture_graph.js" charset="utf-8"></script>
-        <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
 <nav>
@@ -23,10 +21,15 @@
     <div id="Legends"></div>
 </nav>
 <main>
-    <div id="japanMap"></div>
-    <div id="prefectureMap"></div>
-    <div id="contentDiv"></div>
-    <div id="contentDivPre"></div>
+    <div class="map">
+        <div id="japanMap"></div>
+        <div id="prefectureMap"></div>
+    </div>
+    
+    <div class="graph">
+        <div id="contentDiv"></div>
+        <div id="contentDivPre"></div>
+    </div>
 </main>
 
 <script type="text/javascript">
