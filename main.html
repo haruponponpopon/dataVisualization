@@ -99,8 +99,6 @@ var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
 var data_selectedPrefecture = undefined;
 var topojsonPrefecture = makeTopojsonPrefecture();
 
-let selectedGenre = "うなぎ";
-
 // ジャンル選択ボタン
 var legends_width = 500;
 var legends_height = 400;
@@ -147,6 +145,8 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                 });	
 			updateGanre(ShopData, "contentDiv");
 			updateGanrePre(ShopPrefectureData, "contentDivPre");
+            updateJapanPlot(svgJapanMap);
+            updatePrefecturePlot(svgPrefectureMap);
         });
 		
     legRow.append("span").text(function(d){ return d;})
@@ -185,6 +185,8 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                 });	
 			updateGanre(ShopData, "contentDiv");
 			updateGanrePre(ShopPrefectureData, "contentDivPre");
+            updateJapanPlot(svgJapanMap);
+            updatePrefecturePlot(svgPrefectureMap);
         });
 
 // 年度指定のスクロールバー
@@ -338,12 +340,19 @@ function updateJapanPlot(svg){
     }
 
     function getPlotDataJapan(){
-        if (genreMap.get(selectedGenre) &&
-        genreMap.get(selectedGenre)[currentYear] &&
-        genreMap.get(selectedGenre)[currentYear][currentMonth]){
-            return genreMap.get(selectedGenre)[currentYear][currentMonth];
+        const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
+        let result = [];
+
+        for (let selectedGenre in genres){
+            if (genres[selectedGenre] &&
+                genreMap.get(selectedGenre) &&
+                genreMap.get(selectedGenre)[currentYear] &&
+                genreMap.get(selectedGenre)[currentYear][currentMonth]){
+                result = result.concat(genreMap.get(selectedGenre)[currentYear][currentMonth]);
+            }
         }
-        return undefined;
+        console.log(result);
+        return result;
     }
 }
 
@@ -429,19 +438,25 @@ function updatePrefecturePlot(svg){
     }
     
     function getPlotDataPrefecture(){
-        if (genreMap.get(selectedGenre) &&
-            genreMap.get(selectedGenre)[currentYear] &&
-            genreMap.get(selectedGenre)[currentYear][currentMonth]) {
-            let result = [];
-            const data = genreMap.get(selectedGenre)[currentYear][currentMonth];
-            data.forEach(function(element){
-                if (element.prefecture === data_selectedPrefecture.properties.nam_ja){
-                    result.push(element);
-                }
-            });
-            return result;
+        const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
+        let resultData = [];
+        
+        for (let selectedGenre in genres){
+            if (genres[selectedGenre] &&
+                genreMap.get(selectedGenre) &&
+                genreMap.get(selectedGenre)[currentYear] &&
+                genreMap.get(selectedGenre)[currentYear][currentMonth]) {
+                let result = [];
+                const data = genreMap.get(selectedGenre)[currentYear][currentMonth];
+                data.forEach(function(element){
+                    if (element.prefecture === data_selectedPrefecture.properties.nam_ja){
+                        result.push(element);
+                    }
+                });
+                resultData = resultData.concat(result);
+            }
         }
-        return undefined;
+        return resultData;
     }
 }
 
