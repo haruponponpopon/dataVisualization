@@ -9,21 +9,24 @@
         <script src="./data/data_plot/unagi_plot.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./prefecture_map.js" charset="utf-8"></script>
-        <script src="./data/data_graph/unagi_line_v2.js" charset="utf-8"></script>
-        <script src="./data/data_graph/unagi_line_pref_v2.js" charset="utf-8"></script>
+        <script src="./data/data_graph/aggregated_line_v2.js" charset="utf-8"></script>
+        <script src="./data/data_graph/aggregated_line_pref_v2.js" charset="utf-8"></script>
         <script src="./japan_graph.js" charset="utf-8"></script>
         <script src="./prefecture_graph.js" charset="utf-8"></script>
         <!-- <script src="./prefecture_graph.js" charset="utf-8"></script> -->
 </head>
 <body>
-<input type="range" id = "yearInput">
-<h2><span id="yearCurrentValue"></span></h2>
-
-<div id="Legends"></div>
-<div id="japanMap"></div>
-<div id="prefectureMap"></div>
-<div id="contentDiv"></div>
-<div id="contentDivPre"></div>
+<nav>
+    <input type="range" id = "yearInput">
+    <h2><span id="yearCurrentValue"></span></h2>
+    <div id="Legends"></div>
+</nav>
+<main>
+    <div id="japanMap"></div>
+    <div id="prefectureMap"></div>
+    <div id="contentDiv"></div>
+    <div id="contentDivPre"></div>
+</main>
 
 <script type="text/javascript">
 var width = 800;
@@ -137,7 +140,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                     if (choice_genres[d]) {
                         return "skyblue";
                     }
-                    return "white";
+                    return "rgb(97, 217, 238)";
                 });
             legRow.selectAll("div")
                 .style("background",function(d){ 
@@ -175,7 +178,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                     if (choice_genres[d]) {
                         return "skyblue";
                     }
-                    return "white";
+                    return "rgb(97, 217, 238)";
                 });
             legRow.selectAll("div")
                 .style("background",function(d){ 
