@@ -106,6 +106,7 @@ var data_selectedPrefecture = undefined;
 
 // ジャンル選択ボタン
 var nav_background_color = "rgb(146, 197, 249)";
+var choiced_color = "#7885bb";
 var legends_width = 500;
 var legends_height = 400;
 var legRow = d3.select("#Legends").append("div").attr("class","legend")
@@ -122,7 +123,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
             legRow.style("background-color", function(d) {
                 if (d == now) {return "silver";}
                 if (choice_genres[d]) {
-                    return "skyblue";
+                    return choiced_color ;
                 }
                 return nav_background_color;
             });
@@ -130,7 +131,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
         .on("mouseout", function(event, d) {
             legRow.style("background-color", function(d) {
                 if (choice_genres[d]) {
-                    return "skyblue";
+                    return choiced_color ;
                 }
                 return nav_background_color;
             });
@@ -156,7 +157,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
             push_all_data();
             legRow.style("background-color", function(d) {
                     if (choice_genres[d]) {
-                        return "skyblue";
+                        return choiced_color ;
                     }
                     return nav_background_color;
                 });
@@ -180,7 +181,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
             legRow.style("background-color", function(d) {
                 if (d == now) {return "silver";}
                 if (choice_genres[d]) {
-                    return "skyblue";
+                    return choiced_color ;
                 }
                 return nav_background_color;
             });
@@ -188,7 +189,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
         .on("mouseout", function(event, d) {
             legRow.style("background-color", function(d) {
                 if (choice_genres[d]) {
-                    return "skyblue";
+                    return choiced_color ;
                 }
                 return nav_background_color;
             });
@@ -214,7 +215,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
             push_all_data();
             legRow.style("background-color", function(d) {
                     if (choice_genres[d]) {
-                        return "skyblue";
+                        return choiced_color ;
                     }
                     return nav_background_color;
                 });

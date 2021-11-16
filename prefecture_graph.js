@@ -120,7 +120,7 @@ function MakeGraphPre(data, id){
 		
         //draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
-		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("x1",function(d,i){ return calcZahyouPre(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
 		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
         
         // make every 10th line in the grid darker.	
@@ -272,7 +272,7 @@ function updateGraphPre(data, id) {
 
         //draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
-		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("x1",function(d,i){ return calcZahyouPre(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
 		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		// make every 10th line in the grid darker.	
 		svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);
@@ -341,7 +341,7 @@ function updateGraphPre(data, id) {
 
 		//draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
-		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("x1",function(d,i){ return calcZahyouPre(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
 		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		// make every 10th line in the grid darker.	
 		svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);

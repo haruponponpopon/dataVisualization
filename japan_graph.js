@@ -7,6 +7,7 @@ var dateMax;
 var dateMin;
 var graph_width=400, graph_height=300, graph_margin=50;
 var memori_line, memori_label, vline_upper, vline_lower;
+var current_year,  current_month;
 
 function pull_choice_data() {
     choice_legend = JSON.parse(sessionStorage.getItem("choice_genres"));
@@ -25,6 +26,11 @@ function push_choice_data() {
 function currentVline() {
 	var current_date = JSON.parse(sessionStorage.getItem("current_date"));
 	return (current_date - dateMin) / (dateMax - dateMin) * graph_width;
+}
+
+function pull_current_date() {
+	current_year = JSON.parse(sessionStorage.getItem("current_year"));
+	current_month = JSON.parse(sessionStorage.getItem("current_month"));
 }
 
 function CalcMemori(maxT, minT) {
@@ -385,6 +391,7 @@ function drawAll(data, id){
 }
 
 function updateGanre(data, id){
+	d3.range(data.length).forEach(function(d,i){updateGraph(data[i], "segment"+i );});
 	d3.range(data.length).forEach(function(d,i){updateGraph(data[i], "segment"+i );});
 }
 
