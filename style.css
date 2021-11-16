@@ -45,8 +45,9 @@ main{
   }
  
 .bar:hover {
-    fill: Brown;
+	fill: Brown;
 }
+
 
 path{
 	fill-opacity:0.8;
