@@ -89,13 +89,15 @@ function push_all_data() {
 var svgJapanMap = d3.select("#japanMap").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("style", "outline: thin solid gray");
+    .style("outline", "thin solid gray")
+    .style("background-color", "white");
 
 var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("style", "outline: thin solid gray");
-
+    .style("outline", "thin solid gray")
+    .style("background-color", "white");
+    
 var data_selectedPrefecture = undefined;
 var topojsonPrefecture = makeTopojsonPrefecture();
 
