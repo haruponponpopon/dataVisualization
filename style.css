@@ -1,12 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=Quicksand);
 @import url(https://fonts.googleapis.com/css?family=Oswald:700);
-
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+JP');
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1&display=swap');
 
 body{
 	width:1150px;
 	margin:10px auto;
 	background-color: rgb(26,29,33);
 	color: white;
+	/* font-family: 'Noto Serif JP', sans-serif; */
+	font-family: 'Shippori Mincho B1', serif; 
 }
 nav{
     font-family: sans-serif;
@@ -45,8 +48,9 @@ main{
   }
  
 .bar:hover {
-    fill: Brown;
+	fill: Brown;
 }
+
 
 path{
 	fill-opacity:0.8;
@@ -67,6 +71,14 @@ path{
 .hlabels text, .vlabels text{
 	color:rgb(150,148,109);
 	font-size:12px;
+	font-family: 'Quicksand', sans-serif;
+}
+.htitle text, .vtitle text{
+	font-family: 'Noto Serif JP', sans-serif;
+}
+
+.htitlePre text, .vtitlePre text{
+	font-family: 'Noto Serif JP', sans-serif;
 }
 
 svg{
@@ -82,6 +94,8 @@ svg{
 	max-height:300px;
 	min-width:190px;
 	overflow:auto;
+	color: black;
+	font-family: 'Noto Serif JP', sans-serif;
 }
 .legend table{
 	border-collapse:collapse;
@@ -130,6 +144,7 @@ svg{
 .hlabelsPre text, .vlabelsPre text{
 	color:rgb(150,148,109);
 	font-size:12px;
+	font-family: 'Quicksand', sans-serif;
 }
 .shopdatadivPre{
 	clear:both;
@@ -238,14 +253,17 @@ input[type=range] {
 
 #yearCurrentValue {
 	color: white;
-	font-family: 'Quicksand', sans-serif;
+	/* font-family: 'Quicksand', sans-serif; */
+	/* font-family: 'Noto Serif JP', sans-serif; */
+	font-family: 'Shippori Mincho B1', serif; 
 	font-size: 40px;
 }
 #LegendsTitle {
 	color: #1e366a;
-	font-family: 'Quicksand', sans-serif;
+	/* font-family: 'Quicksand', sans-serif; */
+	font-family: 'Noto Serif JP', sans-serif;
 	font-size: 20px;
 }
-#japanMap {
-	background-color: white;
+#prefectureMap {
+	margin: 10px 0;
 }
