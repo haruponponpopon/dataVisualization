@@ -306,6 +306,7 @@ function showJapanMap(svg, svgPrefectureMap){
                 tooltip
                     .style("visibility", "visible")
                     .html(d.properties.nam_ja);
+                d3.select(this).style("cursor", "pointer");
             })
             .on("mousemove", function(event, d){
                 tooltip
@@ -314,6 +315,7 @@ function showJapanMap(svg, svgPrefectureMap){
             })
             .on("mouseout", function() {
                 tooltip.style("visibility", "hidden");
+                d3.select(this).style("cursor", "default");
             })
             .on("click", prefectureClicked);
 
@@ -331,6 +333,22 @@ function showJapanMap(svg, svgPrefectureMap){
             .attr("x", 20)
             .attr("y", 60)
             .text(defaultText);
+
+        var legend = svg.selectAll("legend")
+            .data([100, 125])
+            .enter();
+
+        legend.append("circle")
+            .attr("cx", 30)
+            .attr("cy", function(d){ return d;})
+            .attr("r", 3)
+            .attr("fill", function(d, i){ return i === 0 ? "red" : "blue";});
+        
+        legend.append("text")
+            .attr("x", 40)
+            .attr("y", function(d){ return d + 5.5;})
+            .text(function(d, i){ return i === 0 ? "開店" : "閉店"})
+            .attr("fill", "black");
 
         function prefectureClicked(event, d){
             data_selectedPrefecture = d;
