@@ -134,7 +134,7 @@ function MakeGraphPre(data, id){
 			.selectAll("text").data(d3.range(vline_lower_p+vline_upper_p+1).filter(function(d){return calcZahyouPre(d)%memori_label_p==0;}))
 			.enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
-			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
+			.attr("fill", "white").text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
 		
 		var graph_line = d3.line().x(function(d) {return x(d.x); })
@@ -214,13 +214,13 @@ function InitGraphPre(data, id){
     // add horizontal axis labels
     svg.append("g").attr("class","hlabelsPre")
         .selectAll("text").data(d3.range(data.data_num).filter(function(d){ return (Number(min_date_list[1]) + d) % 12 == 1;})).enter().append("text")
-		.text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",graph_height+14);
+		.attr("fill", "white").text(getHLabel).attr("x",function(d,i){ return tW(d)+5;}).attr("y",graph_height+14);
 		
 	svg.append("g").attr("class","htitlePre").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", graph_width/2).attr("y", graph_height+30)
-		.attr("font-size",15).text("年");
+		.attr("font-size",15).attr("fill", "white").text("年");
 
 	svg.append("g").attr("class","vtitle").selectAll("text").data(d3.range(1)).enter().append("text").attr("x", -30).attr("y", 0)
-		.attr("transform","translate(-30,"+ graph_height/2 +"),rotate(-90)").attr("font-size",15).text("店舗数");
+		.attr("transform","translate(-30,"+ graph_height/2 +"),rotate(-90)").attr("font-size",15).attr("fill", "white").text("店舗数");
         
 }
 
@@ -285,7 +285,7 @@ function updateGraphPre(data, id) {
 			.selectAll("text").data(d3.range(vline_lower_p+vline_upper_p+1).filter(function(d){return calcZahyouPre(d)%memori_label_p==0;}))
 			.enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
-			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
+			.attr("fill", "white").text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
 		// transition the lines, areas, and labels.
 
@@ -354,7 +354,7 @@ function updateGraphPre(data, id) {
 			.selectAll("text").data(d3.range(vline_lower_p+vline_upper_p+1).filter(function(d){return calcZahyouPre(d)%memori_label_p==0 || calcZahyouPre(d) == 0;}))
 			.enter().append("text")
 			.attr("transform",function(d,i){ return "translate(-10,"+(tH(d)-14)+")rotate(-90)";})
-			.text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
+			.attr("fill", "white").text(getVLabel).attr("x",-10).attr("y",function(d){ return 5;});	
 
 		//transition all the lines, labels, and areas.
 		var graph_line = d3.line().x(function(d) {return x(d.x); })

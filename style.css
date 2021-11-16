@@ -1,20 +1,31 @@
 @import url(https://fonts.googleapis.com/css?family=Quicksand);
 @import url(https://fonts.googleapis.com/css?family=Oswald:700);
 
+
+body{
+	width:1150px;
+	margin:10px auto;
+	background-color: rgb(26,29,33);
+	color: white;
+}
 nav{
     font-family: sans-serif;
     border: 1px solid #cccccc;
-    background-color: rgb(97, 217, 238);
+    background-color: rgb(146, 197, 249);
     position: fixed;
     left: 0px;
     width: 200px;
-    min-height: 1000px;
-    top: 0px;
+	top: 0px;
+	height: 100%;
+}
+
+#pageTitle {
+	width: 100%
 }
 
 main{
     position: absolute;
-    left: 300px;
+	left: 300px;
 }
 
 
@@ -29,7 +40,8 @@ main{
     -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
     -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-    visibility: hidden;
+	visibility: hidden;
+	color: black;
   }
  
 .bar:hover {
@@ -56,20 +68,18 @@ path{
 	color:rgb(150,148,109);
 	font-size:12px;
 }
-body{
-	width:1150px;
-	margin:10px auto;
-}
+
 svg{
 	display:inline;
 	float:left;
+	color: white;
 }
 .legend{
 	display:inline-block;
 	margin:10px;
 	margin-top:30px;
 	margin-left:0;
-	max-height:280px;
+	max-height:300px;
 	min-width:190px;
 	overflow:auto;
 }
@@ -134,9 +144,9 @@ svg{
 
 input[type=range] {
 	-webkit-appearance: none;
-	margin: 10px 0;
+	margin: 10px;
 	width: 80%;
-	background: rgb(97, 217, 238)
+	background: rgb(146, 197, 249)
 	}
   input[type=range]:focus {
 	outline: none;
@@ -146,13 +156,13 @@ input[type=range] {
 	height: 12.8px;
 	cursor: pointer;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: #6d6e6e;
+	background: #888a8a;
 	border-radius: 25px;
 	border: 0px solid #000101;
   }
   input[type=range]::-webkit-slider-thumb {
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	border: 1px solid #000000;
+	border: 1px solid #303030;
 	height: 20px;
 	width: 39px;
 	border-radius: 7px;
@@ -162,7 +172,7 @@ input[type=range] {
 	margin-top: -3.6px;
   }
   input[type=range]:focus::-webkit-slider-runnable-track {
-	background: #6d6e6e;
+	background: #888a8a;
   }
   input[type=range]::-moz-range-track {
 	width: 100%;
@@ -170,13 +180,13 @@ input[type=range] {
 	cursor: pointer;
 	animate: 0.2s;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: #6d6e6e;
+	background: #888a8a;
 	border-radius: 25px;
-	border: 1px solid #000101;
+	border: 0px solid #000101;
   }
   input[type=range]::-moz-range-thumb {
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	border: 1px solid #000000;
+	border: 0px solid #000000;
 	height: 20px;
 	width: 39px;
 	border-radius: 7px;
@@ -194,13 +204,13 @@ input[type=range] {
 	color: transparent;
   }
   input[type=range]::-ms-fill-lower {
-	background: #6d6e6e;
+	background: #888a8a;
 	border: 0px solid #000101;
 	border-radius: 50px;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   }
   input[type=range]::-ms-fill-upper {
-	background: #6d6e6e;
+	background: #888a8a;
 	border: 0px solid #000101;
 	border-radius: 50px;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
@@ -215,10 +225,10 @@ input[type=range] {
 	cursor: pointer;
   }
   input[type=range]:focus::-ms-fill-lower {
-	background: #6d6e6e;
+	background: #888a8a;
   }
   input[type=range]:focus::-ms-fill-upper {
-	background: #6d6e6e;
+	background: #888a8a;
   }
   
   body {
@@ -227,7 +237,15 @@ input[type=range] {
 
 
 #yearCurrentValue {
+	color: white;
+	font-family: 'Quicksand', sans-serif;
+	font-size: 40px;
+}
+#LegendsTitle {
 	color: #1e366a;
 	font-family: 'Quicksand', sans-serif;
-	font-size: 50px;
+	font-size: 20px;
+}
+#japanMap {
+	background-color: white;
 }
