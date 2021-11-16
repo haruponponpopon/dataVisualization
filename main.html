@@ -17,9 +17,10 @@
 </head>
 <body>
 <nav>
-    <h1 id = "pageTitle">Food<br>Trend<br>Log<h1>
-    <input type="range" id = "yearInput">
+    <img src="titleimage.png" id = "pageTitle">
     <h2><span id="yearCurrentValue"></span></h2>
+    <input type="range" id = "yearInput">
+    <h2 id = "LegendsTitle">Genres</h2>
     <div id="Legends"></div>
 </nav>
 <main>
@@ -107,6 +108,7 @@ const genreMap = new Map([
 let selectedGenre = "unagi";
 
 // ジャンル選択ボタン
+var nav_background_color = "rgb(146, 197, 249)";
 var legends_width = 500;
 var legends_height = 400;
 var legRow = d3.select("#Legends").append("div").attr("class","legend")
@@ -118,6 +120,24 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
             }
             return "#FFFFFF";})
         .style("cursor","pointer")
+        .on("mouseover", function(event, d) {
+            var now = d;
+            legRow.style("background-color", function(d) {
+                if (d == now) {return "silver";}
+                if (choice_genres[d]) {
+                    return "skyblue";
+                }
+                return nav_background_color;
+            });
+        })
+        .on("mouseout", function(event, d) {
+            legRow.style("background-color", function(d) {
+                if (choice_genres[d]) {
+                    return "skyblue";
+                }
+                return nav_background_color;
+            });
+        })
 		.on("click", function(event,d) {
 			pull_all_data();
             if (choice_genres[d]) {
@@ -141,7 +161,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                     if (choice_genres[d]) {
                         return "skyblue";
                     }
-                    return "rgb(108, 240, 250)";
+                    return nav_background_color;
                 });
             legRow.selectAll("div")
                 .style("background",function(d){ 
@@ -156,6 +176,24 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
 		
     legRow.append("span").text(function(d){ return d;})
         .style("cursor","pointer")
+        .on("mouseover", function(event, d) {
+            var now = d;
+            legRow.style("background-color", function(d) {
+                if (d == now) {return "silver";}
+                if (choice_genres[d]) {
+                    return "skyblue";
+                }
+                return nav_background_color;
+            });
+        })
+        .on("mouseout", function(event, d) {
+            legRow.style("background-color", function(d) {
+                if (choice_genres[d]) {
+                    return "skyblue";
+                }
+                return nav_background_color;
+            });
+        })
 		.on("click", function(event,d) {
             pull_all_data();
             if (choice_genres[d]) {
@@ -179,7 +217,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                     if (choice_genres[d]) {
                         return "skyblue";
                     }
-                    return "rgb(108, 240, 250)";
+                    return nav_background_color;
                 });
             legRow.selectAll("div")
                 .style("background",function(d){ 
