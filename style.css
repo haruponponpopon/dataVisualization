@@ -4,12 +4,18 @@
 nav{
     font-family: sans-serif;
     border: 1px solid #cccccc;
-    background-color: rgb(97, 217, 238);
+    background-color: rgb(108, 240, 250);
     position: fixed;
     left: 0px;
     width: 200px;
-    min-height: 1000px;
-    top: 0px;
+	top: 0px;
+	height: 100%;
+}
+
+#pageTitle {
+	color: #1e366a;
+	font-family: 'Quicksand', sans-serif;
+	font-size: 50px;
 }
 
 main{
@@ -69,7 +75,7 @@ svg{
 	margin:10px;
 	margin-top:30px;
 	margin-left:0;
-	max-height:280px;
+	max-height:300px;
 	min-width:190px;
 	overflow:auto;
 }
@@ -134,7 +140,7 @@ svg{
 
 input[type=range] {
 	-webkit-appearance: none;
-	margin: 10px 0;
+	margin: 10px;
 	width: 80%;
 	background: rgb(97, 217, 238)
 	}
@@ -146,7 +152,7 @@ input[type=range] {
 	height: 12.8px;
 	cursor: pointer;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: #6d6e6e;
+	background: #888a8a;
 	border-radius: 25px;
 	border: 0px solid #000101;
   }
@@ -162,7 +168,7 @@ input[type=range] {
 	margin-top: -3.6px;
   }
   input[type=range]:focus::-webkit-slider-runnable-track {
-	background: #6d6e6e;
+	background: #888a8a;
   }
   input[type=range]::-moz-range-track {
 	width: 100%;
@@ -170,7 +176,7 @@ input[type=range] {
 	cursor: pointer;
 	animate: 0.2s;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-	background: #6d6e6e;
+	background: #888a8a;
 	border-radius: 25px;
 	border: 1px solid #000101;
   }
@@ -194,13 +200,13 @@ input[type=range] {
 	color: transparent;
   }
   input[type=range]::-ms-fill-lower {
-	background: #6d6e6e;
+	background: #888a8a;
 	border: 0px solid #000101;
 	border-radius: 50px;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   }
   input[type=range]::-ms-fill-upper {
-	background: #6d6e6e;
+	background: #888a8a;
 	border: 0px solid #000101;
 	border-radius: 50px;
 	box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
@@ -215,10 +221,10 @@ input[type=range] {
 	cursor: pointer;
   }
   input[type=range]:focus::-ms-fill-lower {
-	background: #6d6e6e;
+	background: #888a8a;
   }
   input[type=range]:focus::-ms-fill-upper {
-	background: #6d6e6e;
+	background: #888a8a;
   }
   
   body {
@@ -227,7 +233,7 @@ input[type=range] {
 
 
 #yearCurrentValue {
-	color: #1e366a;
+	color: #015f5f;
 	font-family: 'Quicksand', sans-serif;
-	font-size: 50px;
+	font-size: 40px;
 }

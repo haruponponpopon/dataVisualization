@@ -17,6 +17,7 @@
 </head>
 <body>
 <nav>
+    <h1 id = "pageTitle">Food<br>Trend<br>Log<h1>
     <input type="range" id = "yearInput">
     <h2><span id="yearCurrentValue"></span></h2>
     <div id="Legends"></div>
@@ -140,7 +141,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                     if (choice_genres[d]) {
                         return "skyblue";
                     }
-                    return "rgb(97, 217, 238)";
+                    return "rgb(108, 240, 250)";
                 });
             legRow.selectAll("div")
                 .style("background",function(d){ 
@@ -178,7 +179,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                     if (choice_genres[d]) {
                         return "skyblue";
                     }
-                    return "rgb(97, 217, 238)";
+                    return "rgb(108, 240, 250)";
                 });
             legRow.selectAll("div")
                 .style("background",function(d){ 
