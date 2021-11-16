@@ -82,6 +82,7 @@ svg{
 	max-height:300px;
 	min-width:190px;
 	overflow:auto;
+	color: black;
 }
 .legend table{
 	border-collapse:collapse;
@@ -246,6 +247,6 @@ input[type=range] {
 	font-family: 'Quicksand', sans-serif;
 	font-size: 20px;
 }
-#japanMap {
-	background-color: white;
+#prefectureMap {
+	margin: 10px 0;
 }

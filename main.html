@@ -32,6 +32,7 @@
 <script type="text/javascript">
 var width = 800;
 var height = 800;
+var map_margin = 20;
 
 var choice_genres = {};
 for(var i of ShopData[0].genre) {
@@ -90,14 +91,16 @@ function push_all_data() {
 var svgJapanMap = d3.select("#japanMap").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .style("margin", "20 0")
     .style("outline", "thin solid gray")
-    .style("background-color", "white");
+    .style("background-color", "rgb(97, 217, 238)");
 
 var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .style("margin", "20  0")
     .style("outline", "thin solid gray")
-    .style("background-color", "white");
+    .style("background-color", "rgb(97, 217, 238)");
     
 var data_selectedPrefecture = undefined;
 
