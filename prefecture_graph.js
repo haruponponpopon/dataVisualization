@@ -120,7 +120,7 @@ function MakeGraphPre(data, id){
 		
         //draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
-		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("x1",function(d,i){ return calcZahyouPre(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
 		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
         
         // make every 10th line in the grid darker.	
@@ -238,6 +238,7 @@ function updateGraphPre(data, id) {
 
 	var svg = d3.select("#"+id).select(".distPre");
 	resetVlinesPre(svg);
+	var tooltip = d3.select(".tooltip");
 
 	function getPoints(_){
 		var zahyou = [];
@@ -272,7 +273,7 @@ function updateGraphPre(data, id) {
 
         //draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
-		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("x1",function(d,i){ return calcZahyouPre(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
 		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		// make every 10th line in the grid darker.	
 		svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);
@@ -341,7 +342,7 @@ function updateGraphPre(data, id) {
 
 		//draw horizontal lines of the grid.
 		svg.selectAll(".hlinesPre").data(d3.range(vline_lower_p+vline_upper_p+1)).enter().append("line").attr("class","hlinesPre")
-		.attr("x1",function(d,i){ return calcZahyou(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
+		.attr("x1",function(d,i){ return calcZahyouPre(d)%memori_label_p == 0 && d!= vline_lower_p+vline_upper_p? -12: 0;})
 		.attr("y1",tH).attr("x2", graph_width).attr("y2",tH);
 		// make every 10th line in the grid darker.	
 		svg.selectAll(".hlinesPre").filter(function(d){ return calcZahyouPre(d)%memori_label_p == 0}).style("stroke-opacity",0.7);
@@ -364,8 +365,28 @@ function updateGraphPre(data, id) {
 
 		svg.selectAll("path")
 			.data(dataset)
+			.on("mouseover", function(event, d) {
+				var sa = Math.round((current_date - dateMin)*12);
+				var now_g = ganre_list[event.target.id];
+				var now_data = pre_data[now_g][sa];
+				tooltip.style("visibility", "visible")
+					.html(function() {
+						return now_g +" (" + current_year+"年" + current_month + "月)  :<br>   "+  now_data + "件";
+					});
+			})
+			.on("mousemove", function(event, d) {
+				tooltip
+					.style("top", (event.pageY - 20) + "px")
+					.style("left", (event.pageX + 10) + "px");
+			})
+			.on("mouseout", function(event, d) {
+				tooltip.style("visibility", "hidden");
+			})
 			.transition().duration(500)
 			.attr("d", graph_line).attr("fill", "none")
+			.attr("id", function(d,i){
+				return i;
+			})
 			.attr("stroke-width",function(d, i) {
 				if (choice_legend[ganre_list[i]]) {
 					return 2;
