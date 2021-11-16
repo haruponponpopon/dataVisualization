@@ -6,7 +6,7 @@
         <title>Stores in Japan</title>
         <script src="./d3.js" charset="utf-8"></script>
         <script src="./topojson.js" charset="utf-8"></script>
-        <script src="./data/data_plot/unagi_plot.js" charset="utf-8"></script>
+        <script src="./data/data_plot/aggregated_plot.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./prefecture_map.js" charset="utf-8"></script>
         <script src="./data/data_graph/unagi_line_v2.js" charset="utf-8"></script>
@@ -96,11 +96,7 @@ var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
 var data_selectedPrefecture = undefined;
 var topojsonPrefecture = makeTopojsonPrefecture();
 
-const genreMap = new Map([
-    ["unagi", unagi]
-]);
-
-let selectedGenre = "unagi";
+let selectedGenre = "うなぎ";
 
 // ジャンル選択ボタン
 var legends_width = 500;
