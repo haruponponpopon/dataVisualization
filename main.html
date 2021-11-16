@@ -52,13 +52,13 @@ for (var c of color_palette) {
 }
 var color_dict;
 var current_date;
-var current_pre = undefined;
+var currentPrefecture = undefined;
 
 
 sessionStorage.setItem("choice_genres" , JSON.stringify(choice_genres));
 sessionStorage.setItem("true_num", true_num);
 sessionStorage.setItem("colors" , JSON.stringify(colors));
-sessionStorage.setItem("current_pre" , current_pre);
+sessionStorage.setItem("current_pre" , currentPrefecture);
 
 
 // 選択状態の更新用関数
@@ -242,7 +242,6 @@ initAllPre(ShopPrefectureData, "contentDivPre");
 
 function showJapanMap(svg, svgPrefectureMap){
     var tooltip = d3.select("body").append("div").attr("class", "tooltip");
-    var selectedPrefecture = undefined;
 
     d3.json("./japan.topojson").then(function(data){
         var japan = topojson.feature(data, data.objects.japan);
@@ -292,14 +291,14 @@ function showJapanMap(svg, svgPrefectureMap){
 
         function prefectureClicked(event, d){
             data_selectedPrefecture = d;
-            selectedPrefecture = d.properties.nam_ja;
+            currentPrefecture = d.properties.nam_ja;
             prefectures.attr("fill", function(d){
-                    return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
+                    return d.properties.nam_ja === currentPrefecture ? "lightgreen" : "ivory";
                 });
             
-            textShowPrefecture.text(`選択された都道府県：${selectedPrefecture}`);
+            textShowPrefecture.text(`選択された都道府県：${currentPrefecture}`);
 
-            sessionStorage.setItem("current_pre" , selectedPrefecture);
+            sessionStorage.setItem("current_pre" , currentPrefecture);
             drawAllPre(ShopPrefectureData, "contentDivPre");
             showPrefectureMap(svgPrefectureMap);
             updatePrefecturePlot(svgPrefectureMap)
