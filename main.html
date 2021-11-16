@@ -243,7 +243,6 @@ initAllPre(ShopPrefectureData, "contentDivPre");
 function showJapanMap(svg, svgPrefectureMap){
     var tooltip = d3.select("body").append("div").attr("class", "tooltip");
     var selectedPrefecture = undefined;
-    var isSelected = false;
 
     d3.json("./japan.topojson").then(function(data){
         var japan = topojson.feature(data, data.objects.japan);
@@ -253,8 +252,6 @@ function showJapanMap(svg, svgPrefectureMap){
             .translate([width/2, height/2])
             .scale(1500);
         var path = d3.geoPath().projection(projection);
-
-        svg.on("click", svgClicked);
 
         var prefectures = svg.selectAll("path")
             .data(japan.features)
@@ -293,31 +290,17 @@ function showJapanMap(svg, svgPrefectureMap){
             .attr("y", 60)
             .text(defaultText);
 
-        function svgClicked(){
-            if (isSelected){
-                isSelected = false;
-            } else{
-                prefectures.attr("fill", "ivory");
-                selectedPrefecture = undefined;
-                data_selectedPrefecture = undefined;
-            }
-
-            textShowPrefecture.text(function() {
-                return selectedPrefecture ? `選択された都道府県：${selectedPrefecture}` : defaultText;
-            });
-
-           sessionStorage.setItem("current_pre" , selectedPrefecture);
-           drawAllPre(ShopPrefectureData, "contentDivPre");
-        }
-
         function prefectureClicked(event, d){
-            isSelected = true;
             data_selectedPrefecture = d;
             selectedPrefecture = d.properties.nam_ja;
             prefectures.attr("fill", function(d){
                     return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
                 });
             
+            textShowPrefecture.text(`選択された都道府県：${selectedPrefecture}`);
+
+            sessionStorage.setItem("current_pre" , selectedPrefecture);
+            drawAllPre(ShopPrefectureData, "contentDivPre");
             showPrefectureMap(svgPrefectureMap);
             updatePrefecturePlot(svgPrefectureMap)
         }
