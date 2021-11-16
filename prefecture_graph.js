@@ -238,6 +238,7 @@ function updateGraphPre(data, id) {
 
 	var svg = d3.select("#"+id).select(".distPre");
 	resetVlinesPre(svg);
+	var tooltip = d3.select(".tooltip");
 
 	function getPoints(_){
 		var zahyou = [];
@@ -364,8 +365,28 @@ function updateGraphPre(data, id) {
 
 		svg.selectAll("path")
 			.data(dataset)
+			.on("mouseover", function(event, d) {
+				var sa = Math.round((current_date - dateMin)*12);
+				var now_g = ganre_list[event.target.id];
+				var now_data = pre_data[now_g][sa];
+				tooltip.style("visibility", "visible")
+					.html(function() {
+						return now_g +" (" + current_year+"年" + current_month + "月)  :<br>   "+  now_data + "件";
+					});
+			})
+			.on("mousemove", function(event, d) {
+				tooltip
+					.style("top", (event.pageY - 20) + "px")
+					.style("left", (event.pageX + 10) + "px");
+			})
+			.on("mouseout", function(event, d) {
+				tooltip.style("visibility", "hidden");
+			})
 			.transition().duration(500)
 			.attr("d", graph_line).attr("fill", "none")
+			.attr("id", function(d,i){
+				return i;
+			})
 			.attr("stroke-width",function(d, i) {
 				if (choice_legend[ganre_list[i]]) {
 					return 2;
