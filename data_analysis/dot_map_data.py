@@ -10,7 +10,7 @@ genre = "unagi"
 ################
 
 inputfile = f"./corrected_longitude.csv"
-outputfile = f"./total_plot.js"
+outputfile = f"./aggregated_plot.js"
 # inputfile = f"./sampledata.csv"
 # outputfile = f"./sample_plot.js"
 print(inputfile)
@@ -57,7 +57,7 @@ for genre in variable_num_dict.keys():
         pprint(dict, stream=g)
     index += 1
 
-f_w = open('total_plot.js', 'a')
+f_w = open('aggregated_plot.js', 'a')
 f_w.write("const genreMap = new Map([\n")
 count = 0
 for key in variable_dict.keys():
