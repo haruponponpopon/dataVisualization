@@ -28,11 +28,6 @@ function currentVline() {
 	return (current_date - dateMin) / (dateMax - dateMin) * graph_width;
 }
 
-function pull_current_date() {
-	current_year = JSON.parse(sessionStorage.getItem("current_year"));
-	current_month = JSON.parse(sessionStorage.getItem("current_month"));
-}
-
 function CalcMemori(maxT, minT) {
 	var order = maxT - minT;
 	if (order <= 50) {
@@ -86,6 +81,7 @@ function resetVlines(svg) {
 		svg.selectAll(".vlabels").remove();
 	}
 }
+
 
 function MakeGraph(data, id){
 	pull_choice_data();
@@ -215,7 +211,7 @@ function MakeGraph(data, id){
 	// add svg and set attributes for distribution.
 	d3.select("#"+id).append("svg").attr("width",graph_width+2*graph_margin).attr("height",graph_height+2*graph_margin)
 		.append("g").attr("transform","translate("+graph_margin+","+graph_margin+")").attr("class","dist");
-		
+	
 	// Draw the a graph.
 	draw("dist");			
         
@@ -251,6 +247,7 @@ function updateGraph(data, id) {
 		minT = m < minT ? m : minT;
 	}
 
+	var tooltip = d3.select(".tooltip");
 
 	function transitionDefault(){
 		CalcMemori(maxT, minT);
@@ -360,8 +357,28 @@ function updateGraph(data, id) {
 
 		svg.selectAll("path")
 			.data(dataset)
+			.on("mouseover", function(event, d) {
+				var sa = Math.round((current_date - dateMin)*12);
+				var now_g = ganre_list[event.target.id];
+				var now_data = data[type][now_g][sa];
+				tooltip.style("visibility", "visible")
+					.html(function() {
+						return now_g +" (" + current_year+"年" + current_month + "月)  :<br> "+  now_data + "件";
+					});
+			})
+			.on("mousemove", function(event, d) {
+				tooltip
+					.style("top", (event.pageY - 20) + "px")
+					.style("left", (event.pageX + 10) + "px");
+			})
+			.on("mouseout", function(event, d) {
+				tooltip.style("visibility", "hidden");
+			})
 			.transition().duration(500)
 			.attr("d", graph_line).attr("fill", "none")
+			.attr("id", function(d,i){
+				return i;
+			})
 			.attr("stroke-width",function(d, i) {
 				if (choice_legend[ganre_list[i]]) {
 					return 2;
@@ -392,10 +409,11 @@ function drawAll(data, id){
 
 function updateGanre(data, id){
 	d3.range(data.length).forEach(function(d,i){updateGraph(data[i], "segment"+i );});
-	d3.range(data.length).forEach(function(d,i){updateGraph(data[i], "segment"+i );});
 }
 
 function updateVline(input_data, id){
+	current_year = JSON.parse(sessionStorage.getItem("current_year"));
+	current_month = JSON.parse(sessionStorage.getItem("current_month"));
 	var svg = d3.select("#"+id).select("."+"dist");	
 	svg.selectAll(".selectDate").transition().duration(50)
 		.attr("x1",currentVline).attr("x2",currentVline);
