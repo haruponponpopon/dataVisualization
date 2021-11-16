@@ -8,7 +8,6 @@
         <script src="./topojson.js" charset="utf-8"></script>
         <script src="./data/data_plot/aggregated_plot.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
-        <script src="./prefecture_map.js" charset="utf-8"></script>
         <script src="./data/data_graph/aggregated_line_v2.js" charset="utf-8"></script>
         <script src="./data/data_graph/aggregated_line_pref_v2.js" charset="utf-8"></script>
         <script src="./japan_graph.js" charset="utf-8"></script>
@@ -99,7 +98,6 @@ var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
     .style("background-color", "white");
     
 var data_selectedPrefecture = undefined;
-var topojsonPrefecture = makeTopojsonPrefecture();
 
 // ジャンル選択ボタン
 var legends_width = 500;
@@ -357,6 +355,12 @@ function updateJapanPlot(svg){
     }
 }
 
+function isPrefectureId(number){
+    let prefecture_id = number;
+    prefecture_id = prefecture_id < 10 ? '0' + String(prefecture_id) : String(prefecture_id);
+    return prefecture_id;
+}
+
 function getScale(dx, dy){
     switch(currentPrefecture){
         case "北海道": return 6000;
@@ -366,44 +370,49 @@ function getScale(dx, dy){
     return 4500 / Math.max(dx, dy) * 6;
 }
 
+
 function showPrefectureMap(svg){
-    var prefecture = topojson.feature(...topojsonPrefecture[data_selectedPrefecture.properties.id]);
-    var center = d3.geoCentroid(data_selectedPrefecture);
-    const bounds = d3.geoBounds(prefecture);
-    const dx = bounds[1][0] - bounds[0][0];
-    const dy = bounds[1][1] - bounds[0][1];
-    
-    var projection_prefecture = d3.geoMercator()
-        .center(center)
-        .translate([width/2, height/2])
-        .scale(getScale(dx, dy));
+    const prefecture_id = isPrefectureId(data_selectedPrefecture.properties.id);
 
-    var path_prefecture = d3.geoPath().projection(projection_prefecture);
-
-    // Remove a map and plots if the map already exists.
-    if (svg.selectAll(".prefecture_map").size()){
-        svg.selectAll(".prefecture_map").remove();
-        svg.selectAll(".prefecture_plot").remove();
-    }
-
-    // Draw the map of the selected prefecture
-    var selectedPrefecture = svg.selectAll("path.prefecture")
-        .data(prefecture.features)
-        .enter().append("g")
-        .append("path")
-        .attr("d", path_prefecture)
-        .attr("fill", "ivory")
-        .attr("stroke", "#333333")
-        .attr("class", "prefecture_map");
-
-    // var zoom = d3.zoom()
-    //     .scaleExtent([1, 20])
-    //     .on("zoom", function(event){
-    //         selectedPrefecture.attr("transform", event.transform);
-    //         svg.selectAll(".prefecture_plot").attr("transform", event.transform);
-    //     })
+    d3.json(`./prefectures/${prefecture_id}.topojson`).then(function(data){
+        var prefecture = topojson.feature(data, data.objects[prefecture_id]);
+        var center = d3.geoCentroid(data_selectedPrefecture);
+        const bounds = d3.geoBounds(prefecture);
+        const dx = bounds[1][0] - bounds[0][0];
+        const dy = bounds[1][1] - bounds[0][1];
         
-    // svg.call(zoom);
+        var projection_prefecture = d3.geoMercator()
+            .center(center)
+            .translate([width/2, height/2])
+            .scale(getScale(dx, dy));
+
+        var path_prefecture = d3.geoPath().projection(projection_prefecture);
+
+        // Remove a map and plots if the map already exists.
+        if (svg.selectAll(".prefecture_map").size()){
+            svg.selectAll(".prefecture_map").remove();
+            svg.selectAll(".prefecture_plot").remove();
+        }
+
+        // Draw the map of the selected prefecture
+        var selectedPrefecture = svg.selectAll("path.prefecture")
+            .data(prefecture.features)
+            .enter().append("g")
+            .append("path")
+            .attr("d", path_prefecture)
+            .attr("fill", "ivory")
+            .attr("stroke", "#333333")
+            .attr("class", "prefecture_map");
+
+        // var zoom = d3.zoom()
+        //     .scaleExtent([1, 20])
+        //     .on("zoom", function(event){
+        //         selectedPrefecture.attr("transform", event.transform);
+        //         svg.selectAll(".prefecture_plot").attr("transform", event.transform);
+        //     })
+            
+        // svg.call(zoom);
+        });
 }
 
 function updatePrefecturePlot(svg){
@@ -412,76 +421,79 @@ function updatePrefecturePlot(svg){
     var tooltip = d3.select("body").append("div").attr("class", "tooltip");
     const currentYear = JSON.parse(sessionStorage.getItem("current_year"));
     const currentMonth = JSON.parse(sessionStorage.getItem("current_month"));
+    const prefecture_id = isPrefectureId(data_selectedPrefecture.properties.id);
 
-    var prefecture = topojson.feature(...topojsonPrefecture[data_selectedPrefecture.properties.id]);
-    var center = d3.geoCentroid(data_selectedPrefecture);
-    const bounds = d3.geoBounds(prefecture);
-    const dx = bounds[1][0] - bounds[0][0];
-    const dy = bounds[1][1] - bounds[0][1];
-    
-    var projection_prefecture = d3.geoMercator()
-        .center(center)
-        .translate([width/2, height/2])
-        .scale(getScale(dx, dy));
-
-    if (svg.selectAll(".prefecture_plot").size()){
-        svg.selectAll(".prefecture_plot").remove();
-    }
-
-    // Draw the plots of shops
-    const plotData = getPlotDataPrefecture()
-    if (plotData){
-        var plotPrefecture = svg.selectAll("circle.plotPrefecture")
-            .data(plotData)
-            .enter().append("g")
-            .append("circle")
-            .attr("class", "prefecture_plot")
-            .attr("cx", function(d){
-                return projection_prefecture(d.longitude_latitude)[0];
-            })
-            .attr("cy", function(d){
-                return projection_prefecture(d.longitude_latitude)[1];
-            })
-            .attr("r", 5)
-            .attr("fill", function(d){
-                return d.open ? "red" : "blue";
-            })
-            .on("mouseover", function(event, d){
-                tooltip
-                    .style("visibility", "visible")
-                    .html(d.name);
-            })
-            .on("mousemove", function(event, d){
-                tooltip
-                    .style("top", (event.pageY - 40) + "px")
-                    .style("left", (event.pageX - 30) + "px");
-            })
-            .on("mouseout", function() {
-                tooltip.style("visibility", "hidden");
-            });
-    }
-    
-    function getPlotDataPrefecture(){
-        const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
-        let resultData = [];
+    d3.json(`./prefectures/${prefecture_id}.topojson`).then(function(data){
+        var prefecture = topojson.feature(data, data.objects[prefecture_id]);
+        var center = d3.geoCentroid(data_selectedPrefecture);
+        const bounds = d3.geoBounds(prefecture);
+        const dx = bounds[1][0] - bounds[0][0];
+        const dy = bounds[1][1] - bounds[0][1];
         
-        for (let selectedGenre in genres){
-            if (genres[selectedGenre] &&
-                genreMap.get(selectedGenre) &&
-                genreMap.get(selectedGenre)[currentYear] &&
-                genreMap.get(selectedGenre)[currentYear][currentMonth]) {
-                let result = [];
-                const data = genreMap.get(selectedGenre)[currentYear][currentMonth];
-                data.forEach(function(element){
-                    if (element.prefecture === data_selectedPrefecture.properties.nam_ja){
-                        result.push(element);
-                    }
-                });
-                resultData = resultData.concat(result);
-            }
+        var projection_prefecture = d3.geoMercator()
+            .center(center)
+            .translate([width/2, height/2])
+            .scale(getScale(dx, dy));
+
+        if (svg.selectAll(".prefecture_plot").size()){
+            svg.selectAll(".prefecture_plot").remove();
         }
-        return resultData;
-    }
+
+        // Draw the plots of shops
+        const plotData = getPlotDataPrefecture()
+        if (plotData){
+            var plotPrefecture = svg.selectAll("circle.plotPrefecture")
+                .data(plotData)
+                .enter().append("g")
+                .append("circle")
+                .attr("class", "prefecture_plot")
+                .attr("cx", function(d){
+                    return projection_prefecture(d.longitude_latitude)[0];
+                })
+                .attr("cy", function(d){
+                    return projection_prefecture(d.longitude_latitude)[1];
+                })
+                .attr("r", 5)
+                .attr("fill", function(d){
+                    return d.open ? "red" : "blue";
+                })
+                .on("mouseover", function(event, d){
+                    tooltip
+                        .style("visibility", "visible")
+                        .html(d.name);
+                })
+                .on("mousemove", function(event, d){
+                    tooltip
+                        .style("top", (event.pageY - 40) + "px")
+                        .style("left", (event.pageX - 30) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.style("visibility", "hidden");
+                });
+        }
+        
+        function getPlotDataPrefecture(){
+            const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
+            let resultData = [];
+            
+            for (let selectedGenre in genres){
+                if (genres[selectedGenre] &&
+                    genreMap.get(selectedGenre) &&
+                    genreMap.get(selectedGenre)[currentYear] &&
+                    genreMap.get(selectedGenre)[currentYear][currentMonth]) {
+                    let result = [];
+                    const data = genreMap.get(selectedGenre)[currentYear][currentMonth];
+                    data.forEach(function(element){
+                        if (element.prefecture === data_selectedPrefecture.properties.nam_ja){
+                            result.push(element);
+                        }
+                    });
+                    resultData = resultData.concat(result);
+                }
+            }
+            return resultData;
+        }
+    });
 }
 
 </script>
