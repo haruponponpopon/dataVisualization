@@ -2,6 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Oswald:700);
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+JP');
 @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1&display=swap');
+@import url('https://fonts.googleapis.com/css?family=M+PLUS+1p');
 
 body{
 	width:1150px;
@@ -14,7 +15,7 @@ body{
 nav{
     font-family: sans-serif;
     border: 1px solid #cccccc;
-    background-color: rgb(146, 197, 249);
+    background-color: rgb(136, 187, 238);
     position: fixed;
     left: 0px;
     width: 201px;
@@ -101,11 +102,11 @@ path{
 	font-family: 'Quicksand', sans-serif;
 }
 .htitle text, .vtitle text{
-	font-family: 'Noto Serif JP', sans-serif;
+	font-family: 'M PLUS 1p', sans-serif;
 }
 
 .htitlePre text, .vtitlePre text{
-	font-family: 'Noto Serif JP', sans-serif;
+	font-family: 'M PLUS 1p', sans-serif;
 }
 
 svg{
@@ -157,7 +158,7 @@ svg{
 }
 
 .vlinesPre, .hlinesPre{
-	stroke:rgb(150,148,109);
+	stroke:rgb(109, 150, 150);
 	shape-rendering:crispEdges;
 	stroke-width:1px;
 	stroke-opacity:0.3;
@@ -190,7 +191,7 @@ svg{
 
 
 #yearCurrentValue {
-	color: white;
+	color: #1e366a;
 	/* font-family: 'Quicksand', sans-serif; */
 	/* font-family: 'Noto Serif JP', sans-serif; */
 	font-family: 'Shippori Mincho B1', serif; 
@@ -241,7 +242,7 @@ svg{
 	height: 42px;
 	width: 22px;
 	border-radius: 22px;
-	background: white;
+	background: #1e366a;
 	cursor: pointer;
 	-webkit-appearance: none;
 	margin-top: -20px;
