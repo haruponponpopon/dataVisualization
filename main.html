@@ -275,14 +275,14 @@ function showJapanMap(svg, svgPrefectureMap){
             })
             .on("click", prefectureClicked);
 
-        var zoom = d3.zoom()
-            .scaleExtent([1, 10])
-            .on("zoom", function(event){
-                prefectures.attr("transform", event.transform);
-                svg.selectAll(".japan_plot").attr("transform", event.transform);
-            })
+        // var zoom = d3.zoom()
+        //     .scaleExtent([1, 10])
+        //     .on("zoom", function(event){
+        //         prefectures.attr("transform", event.transform);
+        //         svg.selectAll(".japan_plot").attr("transform", event.transform);
+        //     })
         
-        svg.call(zoom);
+        // svg.call(zoom);
 
         const defaultText = "都道府県を選択してください";
         var textShowPrefecture = svg.append("text")
@@ -351,7 +351,6 @@ function updateJapanPlot(svg){
                 result = result.concat(genreMap.get(selectedGenre)[currentYear][currentMonth]);
             }
         }
-        console.log(result);
         return result;
     }
 }
@@ -386,14 +385,14 @@ function showPrefectureMap(svg){
         .attr("stroke", "#333333")
         .attr("class", "prefecture_map");
 
-    var zoom = d3.zoom()
-        .scaleExtent([1, 20])
-        .on("zoom", function(event){
-            selectedPrefecture.attr("transform", event.transform);
-            svg.selectAll(".prefecture_plot").attr("transform", event.transform);
-        })
+    // var zoom = d3.zoom()
+    //     .scaleExtent([1, 20])
+    //     .on("zoom", function(event){
+    //         selectedPrefecture.attr("transform", event.transform);
+    //         svg.selectAll(".prefecture_plot").attr("transform", event.transform);
+    //     })
         
-    svg.call(zoom);
+    // svg.call(zoom);
 }
 
 function updatePrefecturePlot(svg){
