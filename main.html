@@ -355,41 +355,41 @@ function showPrefectureMap(svg){
     const dx = bounds[1][0] - bounds[0][0];
     const dy = bounds[1][1] - bounds[0][1];
     
-    var projection_pref = d3.geoMercator()
+    var projection_prefecture = d3.geoMercator()
         .center(center)
         .translate([width/2, height/2])
         .scale(4500 / Math.max(dx, dy) * 6);
 
-    var path_pref = d3.geoPath().projection(projection_pref);
+    var path_prefecture = d3.geoPath().projection(projection_prefecture);
 
     // Remove a map and plots if the map already exists.
-    if (svg.selectAll(".pref_map").size()){
-        svg.selectAll(".pref_map").remove();
-        svg.selectAll(".pref_plot").remove();
+    if (svg.selectAll(".prefecture_map").size()){
+        svg.selectAll(".prefecture_map").remove();
+        svg.selectAll(".prefecture_plot").remove();
     }
 
     // Draw the map of the selected prefecture
-    var selectedPref = svg.selectAll("path.pref")
+    var selectedPrefecture = svg.selectAll("path.prefecture")
         .data(prefecture.features)
         .enter().append("g")
         .append("path")
-        .attr("d", path_pref)
+        .attr("d", path_prefecture)
         .attr("fill", "ivory")
         .attr("stroke", "#333333")
-        .attr("class", "pref_map");
+        .attr("class", "prefecture_map");
 
     var zoom = d3.zoom()
         .scaleExtent([1, 20])
         .on("zoom", function(event){
-            selectedPref.attr("transform", event.transform);
-            svg.selectAll(".pref_plot").attr("transform", event.transform);
+            selectedPrefecture.attr("transform", event.transform);
+            svg.selectAll(".prefecture_plot").attr("transform", event.transform);
         })
         
     svg.call(zoom);
 }
 
 function updatePrefecturePlot(svg){
-    if (svg.selectAll(".pref_map").size() === 0) return;
+    if (svg.selectAll(".prefecture_map").size() === 0) return;
 
     const currentYear = JSON.parse(sessionStorage.getItem("current_year"));
     const currentMonth = JSON.parse(sessionStorage.getItem("current_month"));
@@ -400,28 +400,28 @@ function updatePrefecturePlot(svg){
     const dx = bounds[1][0] - bounds[0][0];
     const dy = bounds[1][1] - bounds[0][1];
     
-    var projection_pref = d3.geoMercator()
+    var projection_prefecture = d3.geoMercator()
         .center(center)
         .translate([width/2, height/2])
         .scale(4500 / Math.max(dx, dy) * 6);
 
-    if (svg.selectAll(".pref_plot").size()){
-        svg.selectAll(".pref_plot").remove();
+    if (svg.selectAll(".prefecture_plot").size()){
+        svg.selectAll(".prefecture_plot").remove();
     }
 
     // Draw the plots of shops
-    const plotData = getPlotDataPref()
+    const plotData = getPlotDataPrefecture()
     if (plotData){
-        var plotPref = svg.selectAll("circle.plotPref")
+        var plotPrefecture = svg.selectAll("circle.plotPrefecture")
             .data(plotData)
             .enter().append("g")
             .append("circle")
-            .attr("class", "pref_plot")
+            .attr("class", "prefecture_plot")
             .attr("cx", function(d){
-                return projection_pref(d.longitude_latitude)[0];
+                return projection_prefecture(d.longitude_latitude)[0];
             })
             .attr("cy", function(d){
-                return projection_pref(d.longitude_latitude)[1];
+                return projection_prefecture(d.longitude_latitude)[1];
             })
             .attr("r", 3)
             .attr("fill", function(d){
@@ -429,7 +429,7 @@ function updatePrefecturePlot(svg){
             });
     }
     
-    function getPlotDataPref(){
+    function getPlotDataPrefecture(){
         if (genreMap.get(selectedGenre) &&
             genreMap.get(selectedGenre)[currentYear] &&
             genreMap.get(selectedGenre)[currentYear][currentMonth]) {
