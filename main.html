@@ -264,6 +264,7 @@ function showJapanMap(svg, svgPrefectureMap){
                 tooltip
                     .style("visibility", "visible")
                     .html(d.properties.nam_ja);
+                d3.select(this).style("cursor", "pointer");
             })
             .on("mousemove", function(event, d){
                 tooltip
@@ -272,6 +273,7 @@ function showJapanMap(svg, svgPrefectureMap){
             })
             .on("mouseout", function() {
                 tooltip.style("visibility", "hidden");
+                d3.select(this).style("cursor", "default");
             })
             .on("click", prefectureClicked);
 
