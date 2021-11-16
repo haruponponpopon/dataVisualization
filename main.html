@@ -6,7 +6,7 @@
         <title>Stores in Japan</title>
         <script src="./d3.js" charset="utf-8"></script>
         <script src="./topojson.js" charset="utf-8"></script>
-        <script src="./data/data_plot/unagi_plot.js" charset="utf-8"></script>
+        <script src="./data/data_plot/aggregated_plot.js" charset="utf-8"></script>
         <!-- <script src="./japan_graph.js" charset="utf-8"></script> -->
         <script src="./prefecture_map.js" charset="utf-8"></script>
         <script src="./data/data_graph/aggregated_line_v2.js" charset="utf-8"></script>
@@ -99,12 +99,6 @@ var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
 var data_selectedPrefecture = undefined;
 var topojsonPrefecture = makeTopojsonPrefecture();
 
-const genreMap = new Map([
-    ["unagi", unagi]
-]);
-
-let selectedGenre = "unagi";
-
 // ジャンル選択ボタン
 var legends_width = 500;
 var legends_height = 400;
@@ -151,6 +145,8 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                 });	
 			updateGanre(ShopData, "contentDiv");
 			updateGanrePre(ShopPrefectureData, "contentDivPre");
+            updateJapanPlot(svgJapanMap);
+            updatePrefecturePlot(svgPrefectureMap);
         });
 		
     legRow.append("span").text(function(d){ return d;})
@@ -189,6 +185,8 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
                 });	
 			updateGanre(ShopData, "contentDiv");
 			updateGanrePre(ShopPrefectureData, "contentDivPre");
+            updateJapanPlot(svgJapanMap);
+            updatePrefecturePlot(svgPrefectureMap);
         });
 
 // 年度指定のスクロールバー
@@ -277,14 +275,14 @@ function showJapanMap(svg, svgPrefectureMap){
             })
             .on("click", prefectureClicked);
 
-        var zoom = d3.zoom()
-            .scaleExtent([1, 10])
-            .on("zoom", function(event){
-                prefectures.attr("transform", event.transform);
-                svg.selectAll(".japan_plot").attr("transform", event.transform);
-            })
+        // var zoom = d3.zoom()
+        //     .scaleExtent([1, 10])
+        //     .on("zoom", function(event){
+        //         prefectures.attr("transform", event.transform);
+        //         svg.selectAll(".japan_plot").attr("transform", event.transform);
+        //     })
         
-        svg.call(zoom);
+        // svg.call(zoom);
 
         const defaultText = "都道府県を選択してください";
         var textShowPrefecture = svg.append("text")
@@ -342,12 +340,18 @@ function updateJapanPlot(svg){
     }
 
     function getPlotDataJapan(){
-        if (genreMap.get(selectedGenre) &&
-        genreMap.get(selectedGenre)[currentYear] &&
-        genreMap.get(selectedGenre)[currentYear][currentMonth]){
-            return genreMap.get(selectedGenre)[currentYear][currentMonth];
+        const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
+        let result = [];
+
+        for (let selectedGenre in genres){
+            if (genres[selectedGenre] &&
+                genreMap.get(selectedGenre) &&
+                genreMap.get(selectedGenre)[currentYear] &&
+                genreMap.get(selectedGenre)[currentYear][currentMonth]){
+                result = result.concat(genreMap.get(selectedGenre)[currentYear][currentMonth]);
+            }
         }
-        return undefined;
+        return result;
     }
 }
 
@@ -381,14 +385,14 @@ function showPrefectureMap(svg){
         .attr("stroke", "#333333")
         .attr("class", "prefecture_map");
 
-    var zoom = d3.zoom()
-        .scaleExtent([1, 20])
-        .on("zoom", function(event){
-            selectedPrefecture.attr("transform", event.transform);
-            svg.selectAll(".prefecture_plot").attr("transform", event.transform);
-        })
+    // var zoom = d3.zoom()
+    //     .scaleExtent([1, 20])
+    //     .on("zoom", function(event){
+    //         selectedPrefecture.attr("transform", event.transform);
+    //         svg.selectAll(".prefecture_plot").attr("transform", event.transform);
+    //     })
         
-    svg.call(zoom);
+    // svg.call(zoom);
 }
 
 function updatePrefecturePlot(svg){
@@ -433,19 +437,25 @@ function updatePrefecturePlot(svg){
     }
     
     function getPlotDataPrefecture(){
-        if (genreMap.get(selectedGenre) &&
-            genreMap.get(selectedGenre)[currentYear] &&
-            genreMap.get(selectedGenre)[currentYear][currentMonth]) {
-            let result = [];
-            const data = genreMap.get(selectedGenre)[currentYear][currentMonth];
-            data.forEach(function(element){
-                if (element.prefecture === data_selectedPrefecture.properties.nam_ja){
-                    result.push(element);
-                }
-            });
-            return result;
+        const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
+        let resultData = [];
+        
+        for (let selectedGenre in genres){
+            if (genres[selectedGenre] &&
+                genreMap.get(selectedGenre) &&
+                genreMap.get(selectedGenre)[currentYear] &&
+                genreMap.get(selectedGenre)[currentYear][currentMonth]) {
+                let result = [];
+                const data = genreMap.get(selectedGenre)[currentYear][currentMonth];
+                data.forEach(function(element){
+                    if (element.prefecture === data_selectedPrefecture.properties.nam_ja){
+                        result.push(element);
+                    }
+                });
+                resultData = resultData.concat(result);
+            }
         }
-        return undefined;
+        return resultData;
     }
 }
 
