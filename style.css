@@ -236,6 +236,7 @@ body {
 
 .titles {
     color: rgb(94, 253, 219);
+    /* color: rgb(214, 39, 161) ; */
     /* font-family: 'Quicksand', sans-serif; */
     /* font-family: 'Noto Serif JP', sans-serif; */
     font-family: 'Shippori Mincho B1', serif;
@@ -284,7 +285,8 @@ body {
     width: 22px;
     border-radius: 22px;
     /* background: #1e366a; */
-    background: rgb(214, 118, 39);
+    /* background: rgb(214, 118, 39); */
+    background: rgb(214, 39, 161);
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -20px;
