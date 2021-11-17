@@ -3,46 +3,56 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif+JP');
 @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1&display=swap');
 @import url('https://fonts.googleapis.com/css?family=M+PLUS+1p');
-
-body{
-	width:1150px;
-	margin:10px auto;
-	background-color: rgb(26,29,33);
-	color: white;
-	/* font-family: 'Noto Serif JP', sans-serif; */
-	font-family: 'Shippori Mincho B1', serif; 
+body {
+    width: 1150px;
+    margin: 10px auto;
+    background-color: rgb(26, 29, 33);
+    color: white;
+    /* font-family: 'Noto Serif JP', sans-serif; */
+    font-family: 'Shippori Mincho B1', serif;
 }
-nav{
+
+nav {
     font-family: sans-serif;
-    border: 1px solid #cccccc;
-    background-color: rgb(136, 187, 238);
+    /* border: 1px solid #cccccc; */
+    /* background-color: rgb(136, 187, 238); */
+    background-color: rgb(51, 43, 122);
     position: fixed;
     left: 0px;
     width: 201px;
-	top: 0px;
-	height: 100%;
-	padding: 20px;
+    top: 0px;
+    height: 100%;
+    padding: 20px;
 }
 
 #pageTitle {
-	width: 100%
+    width: 100%
 }
 
-main{
+main {
     position: absolute;
-	left: 300px;
+    left: 300px;
 }
 
-.map{
-	display: flex;
-	gap: 0px 20px;
-	flex-wrap: wrap;
+.Japan {
+    display: flex;
 }
 
-.graph{
-	display: flex;
-	gap: 0px 150px;
-	flex-wrap: wrap;
+.Prefecture {
+    display: flex;
+}
+
+.map {
+    display: flex;
+    gap: 0px 20px;
+    flex-wrap: wrap;
+}
+
+.graph {
+    display: flex;
+    gap: 0px 150px;
+    flex-wrap: wrap;
+    margin-top: 50px;
 }
 
 .tooltip {
@@ -52,216 +62,249 @@ main{
     height: auto;
     padding: 5px;
     font: 12px;
-    background:white;
+    background: white;
     -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
     -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-	visibility: hidden;
-	color: black;
-  }
+    visibility: hidden;
+    color: black;
+}
 
-  .tooltipGraph {
+.tooltipGraph {
     position: absolute;
     text-align: left;
     width: auto;
     height: auto;
     padding: 5px;
     font: 12px;
-    background:white;
+    background: white;
     -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
     -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-	visibility: hidden;
-	color: black;
-  }
- 
+    visibility: hidden;
+    color: black;
+    /* color: rgb(45, 52, 73) */
+}
+
 .bar:hover {
-	fill: Brown;
+    fill: Brown;
 }
 
-
-path{
-	fill-opacity:0.8;
-	/* stroke-opacity:1; */
-}
-.vlines, .hlines{
-	stroke:rgb(150,148,109);
-	shape-rendering:crispEdges;
-	stroke-width:1px;
-	stroke-opacity:0.3;
-}
-.hlabels line, .vlabels line{
-	stroke:rgb(150,148,109);
-	shape-rendering:crispEdges;
-	stroke-width:1px;
-	stroke-opacity:0.7;
-}
-.hlabels text, .vlabels text{
-	color:rgb(150,148,109);
-	font-size:12px;
-	font-family: 'Quicksand', sans-serif;
-}
-.htitle text, .vtitle text{
-	font-family: 'M PLUS 1p', sans-serif;
+path {
+    fill-opacity: 0.8;
+    /* stroke-opacity:1; */
 }
 
-.htitlePre text, .vtitlePre text{
-	font-family: 'M PLUS 1p', sans-serif;
+.vlines,
+.hlines {
+    stroke: rgb(109, 150, 150);
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+    stroke-opacity: 0.3;
 }
 
-svg{
-	display:inline;
-	float:left;
-	color: white;
-}
-.legend{
-	display:inline-block;
-	margin:10px;
-	margin-top:0px;
-	margin-left:0;
-	max-height:300px;
-	min-width:190px;
-	overflow:auto;
-	color: black;
-	font-family: 'Noto Serif JP', sans-serif;
-}
-.legend table{
-	border-collapse:collapse;
-	border-spacing:0;
-}
-.legend tr, .legend td, .legend div{
-	margin:0;
-	padding:0;
-}
-.legend div{
-	width:20px;
-	height:20px;
-  float: left;
-  border: 1px solid #505050;
-}
-.legend span{
-	padding: 0 5px;
-	margin:0;
-}
-.legend tr:hover{
-	background:silver;
-}
-.shopdatadiv{
-	clear:both;
-	padding:10px;
-	overflow:hidden;
-	margin: 10px;
-}
-.shopdatadiv h3{
-	padding-left: 40px;
-	margin-bottom:0;
+.hlabels line,
+.vlabels line {
+    stroke: rgb(109, 150, 150);
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+    stroke-opacity: 0.7;
 }
 
-.vlinesPre, .hlinesPre{
-	stroke:rgb(109, 150, 150);
-	shape-rendering:crispEdges;
-	stroke-width:1px;
-	stroke-opacity:0.3;
+.hlabels text,
+.vlabels text {
+    color: rgb(109, 150, 150);
+    font-size: 12px;
+    font-family: 'Quicksand', sans-serif;
 }
-.hlabelsPre line, .vlabelsPre line{
-	stroke:rgb(150,148,109);
-	shape-rendering:crispEdges;
-	stroke-width:1px;
-	stroke-opacity:0.7;
-}
-.hlabelsPre text, .vlabelsPre text{
-	color:rgb(150,148,109);
-	font-size:12px;
-	font-family: 'Quicksand', sans-serif;
-}
-.shopdatadivPre{
-	clear:both;
-	padding:10px;
-	overflow:hidden;
-	margin: 10px;
-}
-.shopdatadivPre h3{
-	padding-left: 40px;
-	margin-bottom:0;
-}
-  
-  body {
-	padding: 30px;
-  }
 
+.htitle text,
+.vtitle text {
+    font-family: 'M PLUS 1p', sans-serif;
+}
+
+.htitlePre text,
+.vtitlePre text {
+    font-family: 'M PLUS 1p', sans-serif;
+}
+
+svg {
+    display: inline;
+    float: left;
+    color: white;
+}
+
+.legend {
+    display: inline-block;
+    margin: 10px;
+    margin-top: 0px;
+    margin-left: 0;
+    max-height: 325px;
+    min-width: 190px;
+    overflow: scroll;
+    color: white;
+    font-family: 'Noto Serif JP', sans-serif;
+}
+
+.legend table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.legend tr,
+.legend td,
+.legend div {
+    margin: 0;
+    padding: 0;
+}
+
+.legend div {
+    width: 20px;
+    height: 20px;
+    float: left;
+    border: 1px solid #505050;
+}
+
+.legend span {
+    padding: 0 5px;
+    margin: 0;
+}
+
+.legend tr:hover {
+    background: silver;
+}
+
+.shopdatadiv {
+    clear: both;
+    padding: 10px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.shopdatadiv h3 {
+    padding-left: 40px;
+    margin-bottom: 0;
+}
+
+.vlinesPre,
+.hlinesPre {
+    stroke: rgb(109, 150, 150);
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+    stroke-opacity: 0.3;
+}
+
+.hlabelsPre line,
+.vlabelsPre line {
+    stroke: rgb(109, 150, 150);
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+    stroke-opacity: 0.7;
+}
+
+.hlabelsPre text,
+.vlabelsPre text {
+    color: rgb(109, 150, 150);
+    font-size: 12px;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.shopdatadivPre {
+    clear: both;
+    padding: 10px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.shopdatadivPre h3 {
+    padding-left: 40px;
+    margin-bottom: 0;
+}
+
+body {
+    padding: 30px;
+}
 
 #yearCurrentValue {
-	color: #1e366a;
-	/* font-family: 'Quicksand', sans-serif; */
-	/* font-family: 'Noto Serif JP', sans-serif; */
-	font-family: 'Shippori Mincho B1', serif; 
-	font-size: 35px;
-}
-#LegendsTitle {
-	color: #1e366a;
-	/* font-family: 'Quicksand', sans-serif; */
-	font-family: 'Noto Serif JP', sans-serif;
-	font-size: 20px;
-	margin-top: 50px;
+    color: white;
+    /* font-family: 'Quicksand', sans-serif; */
+    /* font-family: 'Noto Serif JP', sans-serif; */
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 35px;
+    text-align: center;
 }
 
-  .rs-range {
-	margin-top: 29px;
-	width: 100%;
-	-webkit-appearance: none;
-  }
-  
-  .rs-range:focus {
-	outline: none;
-  }
-  
-  .rs-range::-webkit-slider-runnable-track {
-	width: 100%;
-	height: 1px;
-	cursor: pointer;
-	box-shadow: none;
-	background: #ffffff;
-	border-radius: 0px;
-	border: 0px solid #010101;
-  }
-  
-  .rs-range::-moz-range-track {
-	width: 100%;
-	height: 1px;
-	cursor: pointer;
-	box-shadow: none;
-	background: #ffffff;
-	border-radius: 0px;
-	border: 0px solid #010101;
-  }
-  
-  .rs-range::-webkit-slider-thumb {
-	box-shadow: none;
-	border: 0px solid #ffffff;
-	box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
-	height: 42px;
-	width: 22px;
-	border-radius: 22px;
-	background: #1e366a;
-	cursor: pointer;
-	-webkit-appearance: none;
-	margin-top: -20px;
-  }
-  
-  .rs-range::-moz-range-thumb {
-	box-shadow: none;
-	border: 0px solid #ffffff;
-	box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
-	height: 42px;
-	width: 22px;
-	border-radius: 22px;
-	background: white;
-	cursor: pointer;
-	-webkit-appearance: none;
-	margin-top: -20px;
-  }
-  
-  .rs-range::-moz-focus-outer {
-	border: 0;
-  }
-  
+.titles {
+    color: rgb(94, 253, 219);
+    /* color: rgb(214, 39, 161) ; */
+    /* font-family: 'Quicksand', sans-serif; */
+    /* font-family: 'Noto Serif JP', sans-serif; */
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 20px;
+}
+
+#LegendsTitle {
+    margin-top: 50px;
+}
+
+.rs-range {
+    margin-top: 29px;
+    width: 100%;
+    -webkit-appearance: none;
+}
+
+.rs-range:focus {
+    outline: none;
+}
+
+.rs-range::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 2px;
+    cursor: pointer;
+    box-shadow: none;
+    background: #ffffff;
+    border-radius: 0px;
+    border: 0px solid #010101;
+}
+
+.rs-range::-moz-range-track {
+    width: 100%;
+    height: 1px;
+    cursor: pointer;
+    box-shadow: none;
+    background: #ffffff;
+    border-radius: 0px;
+    border: 0px solid #010101;
+}
+
+.rs-range::-webkit-slider-thumb {
+    box-shadow: none;
+    border: 0px solid #ffffff;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
+    height: 42px;
+    width: 22px;
+    border-radius: 22px;
+    /* background: #1e366a; */
+    /* background: rgb(214, 118, 39); */
+    background: rgb(214, 39, 161);
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -20px;
+}
+
+.rs-range::-moz-range-thumb {
+    box-shadow: none;
+    border: 0px solid #ffffff;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
+    height: 42px;
+    width: 22px;
+    border-radius: 22px;
+    background: white;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -20px;
+}
+
+.rs-range::-moz-focus-outer {
+    border: 0;
+}

@@ -14,22 +14,22 @@
 </head>
 <body>
 <nav>
-    <img src="titleimage.png" id = "pageTitle">
+    <img src="title_logo_ver2.png" id = "pageTitle">
+    <h2 id = "DateTitle" class = "titles">Date</h2>
     <h2><span id="yearCurrentValue"></span></h2>
     <input id="yearInput" class="rs-range" type="range" >
 
-    <h2 id = "LegendsTitle">Genres</h2>
+    <h2 id = "LegendsTitle" class = "titles">Genres</h2>
     <div id="Legends"></div>
 </nav>
 <main>
-    <div class="map">
-        <div id="japanMap"></div>
-        <div id="prefectureMap"></div>
+    <div class="Japan">
+        <div id="japanMap" class="map"></div>
+        <div id="contentDiv" class="graph"></div>
     </div>
-    
-    <div class="graph">
-        <div id="contentDiv"></div>
-        <div id="contentDivPre"></div>
+    <div class = "Prefecture">
+        <div id="prefectureMap" class="map"></div>
+        <div id="contentDivPre" class="graph"></div>
     </div>
 </main>
 
@@ -97,19 +97,19 @@ var svgJapanMap = d3.select("#japanMap").append("svg")
     .attr("height", height)
     .style("margin", "20 0")
     .style("outline", "thin solid gray")
-    .style("background-color", "rgb(103, 133, 199)");
+    .style("background-color", "#94c0f8ff");
 
 var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
     .attr("width", width)
     .attr("height", height)
     .style("margin", "20  0")
     .style("outline", "thin solid gray")
-    .style("background-color", "rgb(103, 133, 199)");
+    .style("background-color", "#94c0f8ff");
     
 var data_selectedPrefecture = undefined;
 
 // ジャンル選択ボタン
-var nav_background_color = "rgb(136, 187, 238)";
+var nav_background_color = "rgb(43, 45, 122)";
 var choiced_color = "#7885bb";
 var legends_width = 500;
 var legends_height = 400;
