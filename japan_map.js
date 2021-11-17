@@ -47,7 +47,7 @@ function showJapanMap(svg){
                 selectedPrefecture = d.properties.nam_ja;
                 svg.selectAll("path")
                     .attr("fill", function(d){
-                        return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "ivory";
+                        return d.properties.nam_ja === selectedPrefecture ? "lightgreen" : "#797979";
                     });
             });
         
