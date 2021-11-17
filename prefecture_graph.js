@@ -163,7 +163,7 @@ function MakeGraphPre(data, id) {
 
 function InitGraphPre(data, id) {
     // add title.
-    d3.select("#" + id).append("h3").style("letter-spacing", "0.3em").style("text-decoration", "underline").text("都道府県ごとの店舗数遷移");
+    d3.select("#" + id).append("h3").style("letter-spacing", "0.3em").style("text-decoration", "underline").text("都道府県ごとの店舗数推移");
 
     // add svg and set attributes for distribution.
     d3.select("#" + id).append("svg").attr("width", graph_width + graph_margin).attr("height", graph_height + 2 * graph_margin)
@@ -222,9 +222,9 @@ function InitGraphPre(data, id) {
 
 function updateGraphPre(data, id) {
     if (current_pre == undefined) {
-        d3.select("#" + id).select("h3").style("letter-spacing", "0.3em").style("text-decoration", "underline").text("都道府県ごとの店舗数遷移");
+        d3.select("#" + id).select("h3").style("letter-spacing", "0.3em").style("text-decoration", "underline").text("都道府県ごとの店舗数推移");
     } else {
-        d3.select("#" + id).select("h3").style("letter-spacing", "0.3em").style("text-decoration", "underline").text(current_pre + "の店舗数遷移");
+        d3.select("#" + id).select("h3").style("letter-spacing", "0.3em").style("text-decoration", "underline").text(current_pre + "の店舗数推移");
     }
     pull_choice_data_pre();
     var type = "dist";
