@@ -30,7 +30,13 @@ https://ashikapengin.com/2021/01/10/scraping3/
 サイト内のiframeタグを探し、その中で`maps`という文字が入っているリンクを探す。
 #### 緯度、経度の探し方
 !2d、!3dという文字列を探し、その後の数字を抽出。  
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3276.5422452944144!2d135.68890491568408!3d34.79229738581382!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6001194139cd40e3%3A0x6ce14c67c351de2!2z44CSNTc2LTAwNTEg5aSn6Ziq5bqc5Lqk6YeO5biC5YCJ5rK777yR5LiB55uu77yV77yV4oiSNjI255Wq!5e0!3m2!1sja!2sjp!4v1637108848787!5m2!1sja!2sjp" width="640" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>  
+例えばこんな感じのgoogle mapのリンクがあります。
+```
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3276.5422452944144!2d135.68890491568408!3d34.79229738581382
+!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6001194139cd40e3%3A0x6ce14c67c351de2!2z44CSNTc2LTAwNTEg5aSn6Ziq5bqc5Lqk6Y
+eO5biC5YCJ5rK777yR5LiB55uu77yV77yV4oiSNjI255Wq!5e0!3m2!1sja!2sjp!4v1637108848787!5m2!1sja!2sjp" width="640" height="350" 
+style="border:0;" allowfullscreen="" loading="lazy"></iframe>  
+```
 google　mapのリンクはワンパターンではなく、見つからない場合もある。  
 見つからなかったら、sll, llなどの文字列を探し、その後ろの数字を持ってくる。  
 持ってきた数字が適切かどうかは、数字が日本国内の緯度、経度を指しているかどうかで判断。  
