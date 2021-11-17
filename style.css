@@ -10,6 +10,7 @@ body {
     color: white;
     /* font-family: 'Noto Serif JP', sans-serif; */
     font-family: 'Shippori Mincho B1', serif;
+    z-index: 1;
 }
 
 nav {
@@ -23,6 +24,7 @@ nav {
     top: 0px;
     height: 100%;
     padding: 20px;
+    z-index: 2;
 }
 
 #pageTitle {
