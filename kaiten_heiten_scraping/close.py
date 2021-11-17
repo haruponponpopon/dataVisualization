@@ -1,4 +1,5 @@
 ## reference https://qiita.com/Yuki-Dragon/items/bbce2d8c1d596a7c7be6
+## reference https://ashikapengin.com/2021/01/10/scraping3/
 from bs4 import BeautifulSoup
 from urllib import request
 import datetime
