@@ -15,21 +15,21 @@
 <body>
 <nav>
     <img src="title_logo_ver2.png" id = "pageTitle">
+    <h2 id = "DateTitle" class = "titles">Date</h2>
     <h2><span id="yearCurrentValue"></span></h2>
     <input id="yearInput" class="rs-range" type="range" >
 
-    <h2 id = "LegendsTitle">Genres</h2>
+    <h2 id = "LegendsTitle" class = "titles">Genres</h2>
     <div id="Legends"></div>
 </nav>
 <main>
-    <div class="map">
-        <div id="japanMap"></div>
-        <div id="prefectureMap"></div>
+    <div class="Japan">
+        <div id="japanMap" class="map"></div>
+        <div id="contentDiv" class="graph"></div>
     </div>
-    
-    <div class="graph">
-        <div id="contentDiv"></div>
-        <div id="contentDivPre"></div>
+    <div class = "Prefecture">
+        <div id="prefectureMap" class="map"></div>
+        <div id="contentDivPre" class="graph"></div>
     </div>
 </main>
 
