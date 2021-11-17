@@ -62,7 +62,7 @@ for i in result_dict:
         continue
     count += 1
     genres.append(i[0])
-    if count>50:
+    if count>=50:
         break
 print(genres)
 for i in range(len(genres)):
