@@ -25,6 +25,7 @@ nav {
     height: 100%;
     padding: 20px;
     z-index: 2;
+    /* overflow: auto; */
 }
 
 #pageTitle {
@@ -141,9 +142,11 @@ svg {
     margin: 10px;
     margin-top: 0px;
     margin-left: 0;
-    max-height: 325px;
+    height: 50%;
+    /* max-height: 325px; */
     min-width: 190px;
-    overflow: scroll;
+    position: fixed;
+    overflow: auto;
     color: white;
     font-family: 'Noto Serif JP', sans-serif;
 }
