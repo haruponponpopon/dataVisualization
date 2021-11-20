@@ -35,10 +35,12 @@ const genreMap = new Map([
 ```JavaScript
 var unagi = {2021: {11:[{name: "名代 宇奈とと 四条河原町店",
                         longitude_latitude: [135.76802728152623, 35.00137705544553],
-                        open: 1},
+                        open: 1,
+                        prefecture: "京都府"},
                         {name: "うな泰 錦店",
                         longitude_latitude: [136.90145854578213, 35.1692864476607],
-                        open: 1},
+                        open: 1,
+                        prefecture: "愛知県"},
                         ]
             }};
 
