@@ -243,15 +243,6 @@ body {
     padding: 30px;
 }
 
-#yearCurrentValue {
-    color: white;
-    /* font-family: 'Quicksand', sans-serif; */
-    /* font-family: 'Noto Serif JP', sans-serif; */
-    font-family: 'Shippori Mincho B1', serif;
-    font-size: 35px;
-    text-align: center;
-}
-
 .titles {
     color: rgb(94, 253, 219);
     /* color: rgb(214, 39, 161) ; */
@@ -260,11 +251,19 @@ body {
     font-family: 'Shippori Mincho B1', serif;
     font-size: 20px;
 }
-.auto_play_button{
-    color: rgb(255,0,0);
-    background-color:rgb(51, 43, 122);
-    float:right;
-    vertical-align:middle;
+
+.auto_play_button {
+    color: rgb(255, 0, 0);
+    background-color: rgb(51, 43, 122);
+    float: right;
+    vertical-align: middle;
+}
+
+.year_input_key {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 25px;
+    background-color: rgb(51, 43, 122);
+    color: white;
 }
 
 #LegendsTitle {

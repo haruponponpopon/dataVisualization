@@ -19,7 +19,7 @@
         <a id = "DateTitle" class = "titles">Date</a>
         <button id="playStart" class = "auto_play_button">o</button>
     </div>
-    <h2><span id="yearCurrentValue"></span></h2>
+    <input type="month" id="yearInputKey" class="year_input_key" min="2010-08" max="2021-11" value = "2010-08">
     <input id="yearInput" class="rs-range" type="range" >
 
     <h2 id = "LegendsTitle" class = "titles">Genres</h2>
@@ -241,6 +241,7 @@ var legRow = d3.select("#Legends").append("div").attr("class","legend")
 
 // 年度指定のスクロールバー
 var year_input = document.getElementById("yearInput");
+var year_input_key = document.getElementById("yearInputKey");
 var min_date_list = ShopData[0].min_date.split("-");
 var max_date_list = ShopData[0].max_date.split("-");
 dateMin = Number(min_date_list[0]) + 1/12*(Number(min_date_list[1])-1);
@@ -258,7 +259,27 @@ const setCurrentValue = (val) => {
     sessionStorage.setItem("current_date" , JSON.stringify(current_date));
     sessionStorage.setItem("current_year" , JSON.stringify(year));
     sessionStorage.setItem("current_month" , JSON.stringify(month));
+    if (month < 10) {
+        month = "0" + month;
+    }
+    year_input_key.value = "" + year + "-" + month;
+    updateVline(ShopData, "contentDiv");
+    updateVlinePre(ShopPrefectureData, "contentDivPre");
+    updateJapanPlot(svgJapanMap);
+    updatePrefecturePlot(svgPrefectureMap);
+}
+
+// キーボード入力→range
+const setCurrentValueKey = (val) => {
+    var date_list = val.split("-");
+    var year = Number(date_list[0]);
+    var month = Number(date_list[1]);;
+    current_date = year + (month-1) * (1/12);
+    sessionStorage.setItem("current_date" , JSON.stringify(current_date));
+    sessionStorage.setItem("current_year" , JSON.stringify(year));
+    sessionStorage.setItem("current_month" , JSON.stringify(month));
     year_current_value.innerText = "" + year + "年" + month + "月";
+    year_input.value = current_date;
     updateVline(ShopData, "contentDiv");
     updateVlinePre(ShopPrefectureData, "contentDivPre");
     updateJapanPlot(svgJapanMap);
@@ -270,8 +291,13 @@ const rangeOnChange = (e) =>{
     setCurrentValue(e.target.value);
 }
 
+const rangeOnChangeKey = (e) =>{
+    setCurrentValueKey(e.target.value);
+}
+
 window.onload = () => {
     year_input.addEventListener('input', rangeOnChange); // スライダー変化時にイベントを発火
+    year_input_key.addEventListener('input',rangeOnChangeKey );
     setCurrentValue(year_input.value); // ページ読み込み時に値をセット
 }
 
