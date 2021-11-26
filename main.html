@@ -17,7 +17,7 @@
     <img src="title_logo_ver2.png" id = "pageTitle">
     <div>
         <a id = "DateTitle" class = "titles">Date</a>
-        <button id="playStart" class = "auto_play_button">o</button>
+        <button id="playStart" class = "auto_play_button">▶︎</button>
     </div>
     <input type="month" id="yearInputKey" class="year_input_key" min="2010-08" max="2021-11" value = "2010-08">
     <input id="yearInput" class="rs-range" type="range" >
@@ -303,8 +303,16 @@ window.onload = () => {
 
 
 //自動再生ボタンの繰り返す関数
-////todo 自動割り込み、数字が135で固定、1月がなぜか
+////todo 数字が140で固定されているのでなおせるといいね
+var now_playing = false;//再生ボタンが押されているか、離されているか
 d3.select("#playStart").on("click",function(){
+    if (now_playing===true){
+        now_playing = false;
+        document.getElementById("playStart").textContent = "▶︎";
+        return;
+    }
+    now_playing = true;
+    document.getElementById("playStart").textContent = "■";
     var current_date_num = parseFloat(year_input.value);
     var diff = parseFloat(year_input.step);
 
@@ -316,14 +324,21 @@ d3.select("#playStart").on("click",function(){
     }
 
     // ループさせたい処理を用意する
+    var already_finish = false;//日付を進める必要があるかないか
     const exampleFunc = () => {
-        if (current_date_num>parseFloat(year_input.max))return;
+        //既に再生ボタンが離された処理がしてあったら、何もしないで終了する
+        if (already_finish===true)return;
+        //再生ボタンが離されたか、日付が上限に達したら処理は中断する
+        if (now_playing===false||current_date_num>parseFloat(year_input.max)){
+            already_finish = true;
+            return;
+        }
         current_date_num += diff;
         year_input.value = current_date_num.toFixed(10);
         setCurrentValue(year_input.value);
     };
-    // 1秒ごとに135回繰り返す
-    loopSlowly(exampleFunc, 135, 500);
+    // 1秒ごとに140回繰り返す
+    loopSlowly(exampleFunc, 140, 500);
 });
 
 
