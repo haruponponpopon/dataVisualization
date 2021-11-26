@@ -15,10 +15,16 @@
 <body>
 <nav>
     <img src="title_logo_ver2.png" id = "pageTitle">
+    <div class="container auto_play_button">
+        <div id="playStart" class="playBtn play">
+            <span class="bar bar-1"></span>
+            <span class="bar bar-2"></span>				
+        </div>
+    </div>
     <div>
         <a id = "DateTitle" class = "titles">Date</a>
-        <button id="playStart" class = "auto_play_button">▶︎</button>
     </div>
+        <!-- <p id="playStart" class = "auto_play_button">▶︎</p> -->
     <input type="month" id="yearInputKey" class="year_input_key" min="2010-08" max="2021-11" value = "2010-08">
     <input id="yearInput" class="rs-range" type="range" >
 
@@ -305,14 +311,20 @@ window.onload = () => {
 //自動再生ボタンの繰り返す関数
 ////todo 数字が140で固定されているのでなおせるといいね
 var now_playing = false;//再生ボタンが押されているか、離されているか
+const div = document.getElementById('playStart');
+div.classList.add('pause');
 d3.select("#playStart").on("click",function(){
     if (now_playing===true){
         now_playing = false;
-        document.getElementById("playStart").textContent = "▶︎";
+        div.classList.remove('pause');
+        div.classList.add('play');
+        // document.getElementById("playStart").textContent = "▶︎";
         return;
     }
     now_playing = true;
-    document.getElementById("playStart").textContent = "■";
+    div.classList.remove('play');
+    div.classList.add('pause');
+    // document.getElementById("playStart").textContent = "■";
     var current_date_num = parseFloat(year_input.value);
     var diff = parseFloat(year_input.step);
 
