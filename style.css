@@ -349,9 +349,9 @@ body {
 	width: 20%;
     height: 100%;
 	border: white 3px solid;
-	/* border-radius: 3px;
+	border-radius: 3px;
 	cursor: pointer;
-    transition: border 0.1s ease-in-out; */
+    transition: border 0.1s ease-in-out;
 }
 .playBtn:hover {
     border: rgb(109, 150, 150) 3px solid;

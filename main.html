@@ -318,13 +318,11 @@ d3.select("#playStart").on("click",function(){
         now_playing = false;
         div.classList.remove('pause');
         div.classList.add('play');
-        // document.getElementById("playStart").textContent = "▶︎";
         return;
     }
     now_playing = true;
     div.classList.remove('play');
     div.classList.add('pause');
-    // document.getElementById("playStart").textContent = "■";
     var current_date_num = parseFloat(year_input.value);
     var diff = parseFloat(year_input.step);
 
