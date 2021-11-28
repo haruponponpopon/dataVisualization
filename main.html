@@ -473,7 +473,8 @@ function updateJapanPlot(svg){
             .attr("r", 3)
             .attr("fill", function(d){
                 return d.open ? "red" : "blue";
-            });
+            })
+            .attr("opacity", 0.5);
     }
 
     function getPlotDataJapan(){
@@ -587,6 +588,7 @@ function updatePrefecturePlot(svg){
             .attr("fill", function(d){
                 return d.open ? "red" : "blue";
             })
+            .attr("opacity", 0.5)
             .on("mouseover", function(event, d){
                 tooltip
                     .style("visibility", "visible")
