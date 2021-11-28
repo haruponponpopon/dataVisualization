@@ -39,22 +39,20 @@ main {
 
 .Japan {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .Prefecture {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .map {
-    display: flex;
     gap: 0px 20px;
-    flex-wrap: wrap;
 }
 
 .graph {
-    display: flex;
     gap: 0px 150px;
-    flex-wrap: wrap;
     margin-top: 50px;
 }
 

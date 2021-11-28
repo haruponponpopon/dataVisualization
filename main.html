@@ -101,12 +101,22 @@ function push_all_data() {
     sessionStorage.setItem("current_date" , JSON.stringify(current_date));
 }
 
+d3.select("#japanMap").append("h3")
+    .style("letter-spacing", "0.3em")
+    .style("text-decoration", "underline")
+    .text("開店・閉店した店舗の位置");
+
 var svgJapanMap = d3.select("#japanMap").append("svg")
     .attr("width", width)
     .attr("height", height)
     .style("margin", "20 0")
     .style("outline", "white")
     .style("background-color", "#2d3449");
+
+d3.select("#prefectureMap").append("h3")
+    .style("letter-spacing", "0.3em")
+    .style("text-decoration", "underline")
+    .text("都道府県ごとの開店・閉店した店舗の位置");
 
 var svgPrefectureMap = d3.select("#prefectureMap").append("svg")
     .attr("width", width)
@@ -419,22 +429,10 @@ function showJapanMap(svg, svgPrefectureMap){
             .attr("y", 60)
             .text(defaultText)
             .attr("fill", "white");
-
-        var legend = svg.selectAll("legend")
-            .data([100, 125])
-            .enter();
-
-        legend.append("circle")
-            .attr("cx", 30)
-            .attr("cy", function(d){ return d;})
-            .attr("r", 3)
-            .attr("fill", function(d, i){ return i === 0 ? "red" : "blue";});
         
-        legend.append("text")
-            .attr("x", 40)
-            .attr("y", function(d){ return d + 5.5;})
-            .text(function(d, i){ return i === 0 ? "開店" : "閉店"})
-            .attr("fill", "white");
+        showLegend(svg, [100, 125]);
+        showLegend(svgPrefectureMap, [50, 75]);
+
 //////////選択した後の都道府県の色も灰色にしました
         function prefectureClicked(event, d){
             data_selectedPrefecture = d;
@@ -452,12 +450,33 @@ function showJapanMap(svg, svgPrefectureMap){
     });
 }
 
+function showLegend(svg, yList){
+    var legend = svg.selectAll("legend")
+        .data(yList)
+        .enter();
+
+    legend.append("circle")
+        .attr("cx", 30)
+        .attr("cy", function(d){ return d;})
+        .attr("r", 3)
+        .attr("fill", function(d, i){ return i === 0 ? "red" : "blue";});
+    
+    legend.append("text")
+        .attr("x", 40)
+        .attr("y", function(d){ return d + 5.5;})
+        .text(function(d, i){ return i === 0 ? "開店" : "閉店"})
+        .attr("fill", "white");
+}
+
 function updateJapanPlot(svg){   
     if (svg.selectAll(".japan_plot").size()){
         svg.selectAll(".japan_plot").remove();
     }
 
+    const currentYear = JSON.parse(sessionStorage.getItem("current_year"));
+    const currentMonth = JSON.parse(sessionStorage.getItem("current_month"));
     const plotData = getPlotDataJapan();
+
     if (plotData){
         svg.selectAll("circle.plot")
             .data(plotData)
@@ -473,12 +492,13 @@ function updateJapanPlot(svg){
             .attr("r", 3)
             .attr("fill", function(d){
                 return d.open ? "red" : "blue";
-            });
+            })
+            .attr("opacity", 0.5);
     }
 
+    d3.select("#japanMap").select("h3").text(`${currentYear}年${currentMonth}月に開店・閉店した店舗の位置`);
+
     function getPlotDataJapan(){
-        const currentYear = JSON.parse(sessionStorage.getItem("current_year"));
-        const currentMonth = JSON.parse(sessionStorage.getItem("current_month"));
         const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
         let result = [];
 
@@ -570,7 +590,10 @@ function updatePrefecturePlot(svg){
     }
 
     // Draw the plots of shops
+    const currentYear = JSON.parse(sessionStorage.getItem("current_year"));
+    const currentMonth = JSON.parse(sessionStorage.getItem("current_month"));
     const plotData = getPlotDataPrefecture()
+
     if (plotData){
         var plotPrefecture = svg.selectAll("circle.plotPrefecture")
             .data(plotData)
@@ -583,10 +606,11 @@ function updatePrefecturePlot(svg){
             .attr("cy", function(d){
                 return projection_prefecture(d.longitude_latitude)[1];
             })
-            .attr("r", 5)
+            .attr("r", 6)
             .attr("fill", function(d){
                 return d.open ? "red" : "blue";
             })
+            .attr("opacity", 0.5)
             .on("mouseover", function(event, d){
                 tooltip
                     .style("visibility", "visible")
@@ -602,9 +626,10 @@ function updatePrefecturePlot(svg){
             });
     }
     
+    d3.select("#prefectureMap").select("h3")
+        .text(`${currentYear}年${currentMonth}月に${data_selectedPrefecture.properties.nam_ja}で開店・閉店した店舗の位置`);
+
     function getPlotDataPrefecture(){
-        const currentYear = JSON.parse(sessionStorage.getItem("current_year"));
-        const currentMonth = JSON.parse(sessionStorage.getItem("current_month"));
         const genres = JSON.parse(sessionStorage.getItem("choice_genres"));
         let resultData = [];
         
