@@ -429,22 +429,10 @@ function showJapanMap(svg, svgPrefectureMap){
             .attr("y", 60)
             .text(defaultText)
             .attr("fill", "white");
-
-        var legend = svg.selectAll("legend")
-            .data([100, 125])
-            .enter();
-
-        legend.append("circle")
-            .attr("cx", 30)
-            .attr("cy", function(d){ return d;})
-            .attr("r", 3)
-            .attr("fill", function(d, i){ return i === 0 ? "red" : "blue";});
         
-        legend.append("text")
-            .attr("x", 40)
-            .attr("y", function(d){ return d + 5.5;})
-            .text(function(d, i){ return i === 0 ? "開店" : "閉店"})
-            .attr("fill", "white");
+        showLegend(svg, [100, 125]);
+        showLegend(svgPrefectureMap, [50, 75]);
+
 //////////選択した後の都道府県の色も灰色にしました
         function prefectureClicked(event, d){
             data_selectedPrefecture = d;
@@ -460,6 +448,24 @@ function showJapanMap(svg, svgPrefectureMap){
             showPrefectureMap(svgPrefectureMap);
         }
     });
+}
+
+function showLegend(svg, yList){
+    var legend = svg.selectAll("legend")
+        .data(yList)
+        .enter();
+
+    legend.append("circle")
+        .attr("cx", 30)
+        .attr("cy", function(d){ return d;})
+        .attr("r", 3)
+        .attr("fill", function(d, i){ return i === 0 ? "red" : "blue";});
+    
+    legend.append("text")
+        .attr("x", 40)
+        .attr("y", function(d){ return d + 5.5;})
+        .text(function(d, i){ return i === 0 ? "開店" : "閉店"})
+        .attr("fill", "white");
 }
 
 function updateJapanPlot(svg){   
